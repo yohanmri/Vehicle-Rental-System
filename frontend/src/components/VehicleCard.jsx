@@ -1,0 +1,88 @@
+import { Link } from 'react-router-dom';
+import { Heart, Users, Fuel, Settings2 } from 'lucide-react';
+
+const VehicleCard = ({ vehicle }) => {
+    // Determine image source - handle both relative paths and absolute URLs
+    // Using a default car image if none is provided
+    let imageUrl = "https://images.unsplash.com/photo-1550355291-bbee04a92027?auto=format&fit=crop&q=80&w=1036"; // Fallback
+    
+    if (vehicle.image) {
+        imageUrl = vehicle.image;
+        // If image is just a filename like 'Car.png', point it to the assets folder requested by user
+        if (!imageUrl.includes('http') && !imageUrl.includes('/')) {
+            imageUrl = `/assets/images/vehicle/${imageUrl}`;
+        } else if (imageUrl.startsWith('/assets/')) {
+            // It's already correctly mapped
+            imageUrl = vehicle.image;
+        }
+    }
+
+    return (
+        <div className="bg-[#f1f5f9] rounded-[20px] p-5 shadow-sm border border-[#1e2a3b]/10 hover:shadow-xl transition-all duration-300 flex flex-col h-full group">
+            {/* Header: Title and Heart */}
+            <div className="flex justify-between items-start mb-2">
+                <div>
+                    <h3 className="text-[18px] font-bold text-gray-900 group-hover:text-[#ffc107] transition-colors line-clamp-1">
+                        {vehicle.name}
+                    </h3>
+                    <span className="text-[13px] text-gray-400 font-medium">
+                        {vehicle.type || 'Standard'}
+                    </span>
+                </div>
+                <button className="text-gray-300 hover:text-red-500 transition-colors">
+                    <Heart className="w-5 h-5" />
+                </button>
+            </div>
+
+            {/* Main Image */}
+            <div className="relative w-full h-40 my-4 flex items-center justify-center overflow-hidden">
+                <img 
+                    src={imageUrl} 
+                    alt={vehicle.name} 
+                    className="max-h-full max-w-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                        // Fallback if image path is broken
+                        e.target.onerror = null;
+                        e.target.src = "https://images.unsplash.com/photo-1550355291-bbee04a92027?auto=format&fit=crop&q=80&w=1036";
+                    }}
+                />
+            </div>
+
+            {/* Specifications Row */}
+            <div className="flex items-center justify-between mt-auto pt-4 pb-6">
+                <div className="flex items-center space-x-1.5 text-gray-400">
+                    <Fuel className="w-4 h-4 text-gray-400" />
+                    <span className="text-[13px] font-medium">70L</span>
+                </div>
+                <div className="flex items-center space-x-1.5 text-gray-400">
+                    <Settings2 className="w-4 h-4 text-gray-400" />
+                    <span className="text-[13px] font-medium">Manual</span>
+                </div>
+                <div className="flex items-center space-x-1.5 text-gray-400">
+                    <Users className="w-4 h-4 text-gray-400" />
+                    <span className="text-[13px] font-medium">{vehicle.capacity || 4} People</span>
+                </div>
+            </div>
+
+            {/* Bottom: Pricing and Action */}
+            <div className="flex items-center justify-between mt-2 pt-4 border-t border-[#1e2a3b]/10">
+                <div>
+                    <div className="text-[20px] font-bold text-gray-900 flex items-end leading-none">
+                        LKR {parseFloat(vehicle.price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}<span className="text-[14px] text-gray-400 font-medium ml-1 mb-0.5">/ day</span>
+                    </div>
+                    <div className="text-[13px] text-gray-400 line-through mt-1">
+                        LKR {(parseFloat(vehicle.price) + 2000).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    </div>
+                </div>
+                <Link 
+                    to={`/vehicles/${vehicle._id}`}
+                    className="bg-[#1e2a3b] text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-[#ffc107] hover:text-[#1e2a3b] transition-colors"
+                >
+                    Rent Now
+                </Link>
+            </div>
+        </div>
+    );
+};
+
+export default VehicleCard;
