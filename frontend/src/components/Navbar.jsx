@@ -41,12 +41,12 @@ const Navbar = () => {
                     
                     {/* Left: Logo & Links */}
                     <div className="flex items-center">
-                        <Link to="/" className="flex items-center mr-6 shrink-0" onClick={() => setIsOpen(false)}>
+                        <Link to="/" className="flex items-center mr-3 sm:mr-6 shrink-0" onClick={() => setIsOpen(false)}>
                             <div className="flex flex-col -space-y-1">
-                                <span className="text-xl font-bold tracking-tight text-[#ffc107] italic">
+                                <span className="text-lg sm:text-xl font-bold tracking-tight text-[#ffc107] italic">
                                     Zameer
                                 </span>
-                                <span className="text-xl font-bold tracking-tight text-white bg-[#1e2a3b] px-1 italic border border-white rounded-sm mt-0.5">
+                                <span className="text-lg sm:text-xl font-bold tracking-tight text-white bg-[#1e2a3b] px-1 italic border border-white rounded-sm mt-0.5">
                                     Cabs
                                 </span>
                             </div>

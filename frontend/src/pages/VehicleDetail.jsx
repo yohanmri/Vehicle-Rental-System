@@ -230,16 +230,16 @@ const VehicleDetail = () => {
                         {/* Left Side: Images */}
                         <div className="flex flex-col gap-4 sm:gap-6">
                             {/* Main Image Card */}
-                            <div className="bg-[#1e2a3b] rounded-[10px] sm:rounded-[20px] p-6 sm:p-10 relative overflow-hidden h-[250px] sm:h-[400px] lg:h-auto lg:aspect-[4/3] flex flex-col">
+                            <div className="bg-[#1e2a3b] rounded-[10px] sm:rounded-[20px] p-6 sm:p-10 relative overflow-hidden h-[300px] sm:h-[400px] lg:h-auto lg:aspect-[4/3] flex flex-col">
                                 <div className="relative z-10 max-w-[280px]">
-                                    <h2 className="text-white text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">The Best Platform for Car Rental</h2>
+                                    <h2 className="text-white text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 leading-tight">The Best Platform for Car Rental</h2>
                                     <p className="text-white/80 text-[13px] sm:text-[15px] leading-relaxed mb-6 sm:mb-8">Ease of doing car rental safely and reliably. Of course at a low price.</p>
                                 </div>
-                                <div className="mt-auto relative z-10 flex justify-center lg:justify-start">
+                                <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center lg:justify-start lg:relative lg:bottom-auto lg:mt-auto">
                                     <img 
                                         src={imageUrl} 
                                         alt={vehicle.name} 
-                                        className="w-[80%] sm:w-full max-w-[400px] object-contain drop-shadow-2xl transform hover:scale-105 transition-transform duration-500" 
+                                        className="w-[85%] sm:w-full max-w-[400px] object-contain drop-shadow-2xl transform hover:scale-105 transition-transform duration-500 lg:translate-y-4" 
                                     />
                                 </div>
                                 <div className="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] bg-[#ffc107]/10 rounded-full blur-3xl"></div>
