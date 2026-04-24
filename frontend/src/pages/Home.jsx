@@ -119,13 +119,13 @@ const Home = () => {
                     <p className="text-gray-400 mb-12 text-center text-lg">See why people love Zameer Cabs</p>
 
                     <div className="w-full max-w-7xl">
-                        <div className="bg-[#2a3b50] rounded-xl p-6 mb-8 flex justify-between items-center shadow-lg mx-auto w-full max-w-6xl">
-                            <div>
-                                <div className="text-xl font-bold text-white flex items-center space-x-2">
+                        <div className="bg-[#2a3b50] rounded-xl p-6 mb-8 flex flex-col sm:flex-row justify-between items-center gap-6 shadow-lg mx-auto w-full max-w-6xl">
+                            <div className="text-center sm:text-left">
+                                <div className="text-xl font-bold text-white flex items-center justify-center sm:justify-start space-x-2">
                                     <span className="text-blue-400 font-extrabold text-2xl">G</span>
                                     <span>Google Zameer Cabs Reviews</span>
                                 </div>
-                                <div className="flex items-center space-x-2 mt-1">
+                                <div className="flex items-center justify-center sm:justify-start space-x-2 mt-1">
                                     <span className="text-yellow-400 font-bold text-lg">4.5</span>
                                     <div className="flex">
                                         {[...Array(5)].map((_, star) => (
@@ -135,7 +135,7 @@ const Home = () => {
                                     <span className="text-gray-400 text-sm">(3,372)</span>
                                 </div>
                             </div>
-                            <button className="bg-[#1a2530] text-white px-6 py-2.5 rounded-full font-semibold border border-gray-600 hover:bg-gray-800 transition-colors text-sm">
+                            <button className="bg-[#1a2530] text-white px-6 py-2.5 rounded-full font-semibold border border-gray-600 hover:bg-gray-800 transition-colors text-sm w-full sm:w-auto">
                                 Review us on Google
                             </button>
                         </div>

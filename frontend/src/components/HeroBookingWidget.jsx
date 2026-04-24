@@ -51,7 +51,7 @@ const HeroBookingWidget = () => {
                             {vehicles.map((v) => (
                                 <button
                                     key={v.id}
-                                    onClick={() => setSelectedVehicle(v)}
+                                    onClick={() => navigate('/vehicles')}
                                     className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all aspect-square sm:w-[72px] sm:h-[72px] ${
                                         selectedVehicle.id === v.id
                                             ? 'bg-[#ffc107] text-gray-900 shadow-md border border-[#ffc107]'
@@ -72,7 +72,7 @@ const HeroBookingWidget = () => {
                         <div className="flex justify-between items-start mb-4">
                             <div className="flex items-center">
                                 <h3 className="font-bold text-gray-900 text-[15px]">{selectedVehicle.model}</h3>
-                                <button onClick={() => navigate('/vehicles/1')} className="text-blue-600 text-sm font-semibold ml-2 hover:underline">View</button>
+                                <button onClick={() => navigate('/vehicles')} className="text-blue-600 text-sm font-semibold ml-2 hover:underline">View</button>
                             </div>
                             <div className="bg-gray-100 rounded-md px-2.5 py-1 flex items-center shadow-sm border border-gray-200">
                                 <span className="text-[13px] font-bold text-gray-900 mr-1.5">Est. LKR {selectedVehicle.price}</span>
@@ -149,7 +149,7 @@ const HeroBookingWidget = () => {
 
                     {/* Book Now Button */}
                     <button 
-                        onClick={() => navigate('/vehicles/1')}
+                        onClick={() => navigate('/vehicles')}
                         className="bg-[#1e2a3b] text-white px-8 py-3 rounded-full font-bold hover:bg-[#2c3e50] transition-colors w-full lg:w-auto shadow-md shrink-0 text-[15px]"
                     >
                         Book Now

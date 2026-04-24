@@ -161,7 +161,7 @@ const VehicleDetail = () => {
                                 </div>
                                 <span className="font-bold text-gray-900">Pick - Up</span>
                             </div>
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div>
                                     <label className="block text-gray-900 font-bold text-sm mb-1">Locations</label>
                                     <div className="flex items-center justify-between text-gray-400 text-xs">
@@ -199,7 +199,7 @@ const VehicleDetail = () => {
                                 </div>
                                 <span className="font-bold text-gray-900">Drop - Off</span>
                             </div>
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div>
                                     <label className="block text-gray-900 font-bold text-sm mb-1">Locations</label>
                                     <div className="flex items-center justify-between text-gray-400 text-xs">

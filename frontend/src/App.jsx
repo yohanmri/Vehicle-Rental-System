@@ -21,9 +21,9 @@ import ManageBookings from './pages/admin/ManageBookings';
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col overflow-x-hidden w-full">
       <Navbar />
-      <main className="flex-grow">
+      <main className="flex-grow w-full overflow-x-hidden">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />

@@ -182,7 +182,7 @@ const Vehicles = () => {
                                 <span className="font-bold text-[#1e2a3b] text-sm sm:text-base">Pick - Up</span>
                             </div>
 
-                            <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
                                 <div className="border-r border-gray-200 pr-2 sm:pr-4">
                                     <h4 className="font-bold text-[#1e2a3b] text-[11px] sm:text-[13px] mb-0.5 whitespace-nowrap">Locations</h4>
                                     <select className="bg-transparent text-gray-500 text-[10px] sm:text-[11px] outline-none w-full cursor-pointer truncate">
@@ -218,7 +218,7 @@ const Vehicles = () => {
                                 <span className="font-bold text-[#1e2a3b] text-sm sm:text-base">Drop - Off</span>
                             </div>
 
-                            <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
                                 <div className="border-r border-gray-200 pr-2 sm:pr-4">
                                     <h4 className="font-bold text-[#1e2a3b] text-[11px] sm:text-[13px] mb-0.5 whitespace-nowrap">Locations</h4>
                                     <select className="bg-transparent text-gray-500 text-[10px] sm:text-[11px] outline-none w-full cursor-pointer truncate">
