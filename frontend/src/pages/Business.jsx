@@ -52,7 +52,7 @@ const Business = () => {
                             Corporate Mobility <br/> Solutions
                         </h1>
                         <p className="text-gray-400 max-w-2xl text-lg mb-10">
-                            Partner with Zameer Cabs to provide your team and clients with the most reliable, safe, and professional transport service in Sri Lanka.
+                            Partner with Pick 'N' Go 360 Pvt Ltd. to provide your team and clients with the most reliable, safe, and professional transport service in Sri Lanka.
                         </p>
                         <button className="bg-[#ffc107] text-[#1e2a3b] px-10 py-4 rounded-full font-bold hover:bg-[#e0a800] transition-colors shadow-lg">
                             Register Your Business
@@ -85,7 +85,7 @@ const Business = () => {
                 {/* Benefits Section */}
                 <div className="flex flex-col lg:flex-row gap-16 items-center">
                     <div className="lg:w-1/2 space-y-8">
-                        <h2 className="text-3xl md:text-4xl font-bold text-[#1e2a3b]">Why Choose Zameer Cabs for Business?</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold text-[#1e2a3b]">Why Choose Pick 'N' Go 360 Pvt Ltd. for Business?</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                             {benefits.map((benefit, i) => (
                                 <div key={i} className="flex gap-4">
@@ -118,7 +118,7 @@ const Business = () => {
                         <div className="relative z-10">
                             <h2 className="text-3xl md:text-4xl font-bold text-[#1e2a3b] mb-6">Ready to upgrade your corporate travel?</h2>
                             <p className="text-[#1e2a3b]/70 mb-10 font-medium max-w-xl mx-auto">
-                                Join over 500+ Sri Lankan companies who trust Zameer Cabs for their daily transport needs.
+                                Join over 500+ Sri Lankan companies who trust Pick 'N' Go 360 Pvt Ltd. for their daily transport needs.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                 <button className="bg-[#1e2a3b] text-white px-10 py-4 rounded-full font-bold hover:bg-[#2a3b50] transition-colors">

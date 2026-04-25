@@ -7,10 +7,10 @@ const Home = () => {
     const [openFaq, setOpenFaq] = useState(0);
 
     const faqs = [
-        { category: 'Zameer Cabs booking a ride from airport', question: 'How do I book a Zameer Cab from the airport?', answer: 'You can easily book a ride through our mobile app or website before your arrival. Alternatively, you can visit our dedicated airport counters located in the arrival lounge.' },
-        { category: 'Zameer Cabs payment methods', question: 'Can I pay by card or do I need cash?', answer: 'We offer flexible payment options. You can pay using major credit/debit cards directly in the cab, via our app, or choose to pay with cash.' },
-        { category: 'Zameer Cabs drivers', question: 'Are your drivers licensed and reliable?', answer: 'Absolutely. All our drivers hold professional licenses, undergo strict background checks, and receive regular training to ensure your safety and comfort.' },
-        { category: 'Zameer Cabs English-speaking drivers', question: 'Will I get an English-speaking driver?', answer: 'Yes, we prioritize assigning drivers who are fluent in English for all our airport transfers to ensure clear and easy communication.' }
+        { category: 'Pick \'N\' Go 360 Pvt Ltd. booking a ride from airport', question: 'How do I book a Pick \'N\' Go Cab from the airport?', answer: 'You can easily book a ride through our mobile app or website before your arrival. Alternatively, you can visit our dedicated airport counters located in the arrival lounge.' },
+        { category: 'Pick \'N\' Go 360 Pvt Ltd. payment methods', question: 'Can I pay by card or do I need cash?', answer: 'We offer flexible payment options. You can pay using major credit/debit cards directly in the cab, via our app, or choose to pay with cash.' },
+        { category: 'Pick \'N\' Go 360 Pvt Ltd. drivers', question: 'Are your drivers licensed and reliable?', answer: 'Absolutely. All our drivers hold professional licenses, undergo strict background checks, and receive regular training to ensure your safety and comfort.' },
+        { category: 'Pick \'N\' Go 360 Pvt Ltd. English-speaking drivers', question: 'Will I get an English-speaking driver?', answer: 'Yes, we prioritize assigning drivers who are fluent in English for all our airport transfers to ensure clear and easy communication.' }
     ];
 
     return (
@@ -36,7 +36,7 @@ const Home = () => {
                     >
                         <h1 className="text-[28px] sm:text-[42px] md:text-[52px] font-bold mb-4 text-white leading-[1.2] font-sans tracking-tight">
                             Your Journey with <br className="sm:hidden" />
-                            <span className="text-[#ffc107]">Zameer Cabs</span> <br />
+                            <span className="text-[#ffc107]">Pick 'N' Go 360 Pvt Ltd.</span> <br />
                             Starts Here
                         </h1>
                         <p className="text-[14px] sm:text-[18px] text-white/90 mb-6 font-medium max-w-lg mx-auto">
@@ -116,14 +116,14 @@ const Home = () => {
             <section className="py-24 bg-[#1a2530]">
                 <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
                     <h2 className="text-3xl md:text-5xl font-bold text-white mb-2 text-center">Our Passenger's <span className="font-extrabold">Stories</span></h2>
-                    <p className="text-gray-400 mb-12 text-center text-lg">See why people love Zameer Cabs</p>
+                    <p className="text-gray-400 mb-12 text-center text-lg">See why people love Pick 'N' Go 360 Pvt Ltd.</p>
 
                     <div className="w-full max-w-7xl">
                         <div className="bg-[#2a3b50] rounded-xl p-6 mb-8 flex flex-col sm:flex-row justify-between items-center gap-6 shadow-lg mx-auto w-full max-w-6xl">
                             <div className="text-center sm:text-left">
                                 <div className="text-xl font-bold text-white flex items-center justify-center sm:justify-start space-x-2">
                                     <span className="text-blue-400 font-extrabold text-2xl">G</span>
-                                    <span>Google Zameer Cabs Reviews</span>
+                                    <span>Google Pick 'N' Go Reviews</span>
                                 </div>
                                 <div className="flex items-center justify-center sm:justify-start space-x-2 mt-1">
                                     <span className="text-yellow-400 font-bold text-lg">4.5</span>
@@ -142,7 +142,7 @@ const Home = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {[
-                                { name: 'Ketpharima Sansud', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face', initial: 'K', color: 'bg-purple-500', text: 'I had a great experience with Zameer Van during my one-week trip...', date: '1 day ago' },
+                                { name: 'Ketpharima Sansud', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face', initial: 'K', color: 'bg-purple-500', text: 'I had a great experience with Pick \'N\' Go Van during my one-week trip...', date: '1 day ago' },
                                 { name: 'Jithendra Gunatilake', image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&h=150&fit=crop&crop=face', initial: 'J', color: 'bg-orange-500', text: 'Had a very comfortable trip with Isanka Wijesinha. It is a...', date: '2 days ago' },
                                 { name: 'Jmss Silva', image: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face', initial: 'J', color: 'bg-green-500', text: 'My mother ordered a cab to pick me up at 7.30 am to take me to university...', date: '2 days ago' },
                                 { name: 'mubashir Rahman', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=face', initial: 'm', color: 'bg-gray-500', text: 'CAB 6280 Service rendered was top notch', date: '3 days ago' },
@@ -198,7 +198,7 @@ const Home = () => {
             <section className="py-24 bg-[#1e2a3b]">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
                     <h2 className="text-[42px] font-bold text-white mb-2 tracking-tight">FAQs</h2>
-                    <p className="text-gray-300 mb-12 text-[15px]">Discover more information about Zameer Cabs for Your Travel</p>
+                    <p className="text-gray-300 mb-12 text-[15px]">Discover more information about Pick 'N' Go 360 Pvt Ltd. for Your Travel</p>
 
                     <div className="w-full space-y-4">
                         {faqs.map((faq, index) => (
@@ -264,7 +264,7 @@ const Home = () => {
                                 <div>
                                     <h4 className="text-gray-500 font-medium text-sm mb-2">Address</h4>
                                     <p className="text-[#1e2a3b] font-semibold text-[15px] leading-relaxed">
-                                        Zameer Cabs - Headquarters<br/>
+                                        Pick 'N' Go 360 Pvt Ltd. - Headquarters<br/>
                                         No 485 7/A, Gunawardena Mawatha, Wijerama, Nugegoda,<br/>
                                         Sri Lanka
                                     </p>
@@ -312,7 +312,7 @@ const Home = () => {
 
                                 <label className="flex items-center gap-3 mt-2 cursor-pointer group w-fit">
                                     <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-[#1e2a3b] focus:ring-[#1e2a3b] cursor-pointer" />
-                                    <span className="text-gray-500 text-[13px] group-hover:text-gray-700 transition-colors">I would like to receive more information about Zameer Cabs.</span>
+                                    <span className="text-gray-500 text-[13px] group-hover:text-gray-700 transition-colors">I would like to receive more information about Pick 'N' Go 360 Pvt Ltd.</span>
                                 </label>
 
                                 <div className="mt-4 flex justify-end">

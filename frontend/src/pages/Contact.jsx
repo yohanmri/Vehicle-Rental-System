@@ -56,7 +56,7 @@ const Contact = () => {
                                     <h4 className="text-gray-500 font-medium text-sm">Address</h4>
                                 </div>
                                 <p className="text-[#1e2a3b] font-semibold text-[15px] leading-relaxed pl-10">
-                                    Zameer Cabs - Headquarters<br/>
+                                    Pick 'N' Go 360 Pvt Ltd. - Headquarters<br/>
                                     No 485 7/A, Gunawardena Mawatha, Wijerama, Nugegoda,<br/>
                                     Sri Lanka
                                 </p>
@@ -104,7 +104,7 @@ const Contact = () => {
 
                             <label className="flex items-center gap-3 mt-2 cursor-pointer group w-fit">
                                 <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-[#1e2a3b] focus:ring-[#1e2a3b] cursor-pointer" />
-                                <span className="text-gray-500 text-[13px] group-hover:text-gray-700 transition-colors">I would like to receive more information about Zameer Cabs.</span>
+                                <span className="text-gray-500 text-[13px] group-hover:text-gray-700 transition-colors">I would like to receive more information about Pick 'N' Go 360 Pvt Ltd.</span>
                             </label>
 
                             <div className="mt-4 flex justify-end">

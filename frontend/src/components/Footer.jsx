@@ -14,10 +14,10 @@ const Footer = () => {
                             </div>
                             <div className="flex flex-col -space-y-1">
                                 <span className="text-2xl font-bold tracking-tight text-white">
-                                    Zameer
+                                    Pick 'N'
                                 </span>
                                 <span className="text-2xl font-bold tracking-tight text-white">
-                                    Cabs
+                                    Go
                                 </span>
                             </div>
                         </Link>
@@ -47,7 +47,7 @@ const Footer = () => {
                             </div>
                             <div>
                                 <div className="text-gray-400 text-sm mb-1 mt-4">For custom packages</div>
-                                <div className="font-semibold">tours@zameercabs.com</div>
+                                <div className="font-semibold">tours@pickngo360.lk</div>
                             </div>
                         </div>
 
@@ -55,19 +55,19 @@ const Footer = () => {
                             <div className="text-[#ffc107] font-bold text-lg mb-6 text-right">Hotlines</div>
                             <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
                                 <div>
-                                    <div className="text-gray-300 text-sm mb-1">Zameer Cabs</div>
+                                    <div className="text-gray-300 text-sm mb-1">Pick 'N' Go Cabs</div>
                                     <div className="font-semibold text-sm">+94 112 588 588</div>
                                 </div>
                                 <div>
-                                    <div className="text-gray-300 text-sm mb-1">Zameer City</div>
+                                    <div className="text-gray-300 text-sm mb-1">Pick 'N' Go City</div>
                                     <div className="font-semibold text-sm">+94 112 801 801</div>
                                 </div>
                                 <div>
-                                    <div className="text-gray-300 text-sm mb-1">Zameer Budget</div>
+                                    <div className="text-gray-300 text-sm mb-1">Pick 'N' Go Budget</div>
                                     <div className="font-semibold text-sm">+94 112 592 592</div>
                                 </div>
                                 <div>
-                                    <div className="text-gray-300 text-sm mb-1">Zameer Vans</div>
+                                    <div className="text-gray-300 text-sm mb-1">Pick 'N' Go Vans</div>
                                     <div className="font-semibold text-sm">+94 112 501 501</div>
                                 </div>
                                 <div>
@@ -96,7 +96,7 @@ const Footer = () => {
                     </div>
 
                     <div className="flex flex-col items-center md:items-end space-y-4">
-                        <div className="text-gray-300 text-sm">Download Zameer app</div>
+                        <div className="text-gray-300 text-sm">Download Pick 'N' Go app</div>
                         <div className="flex space-x-4">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play" className="h-10 cursor-pointer" />
                             <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Download on the App Store" className="h-10 cursor-pointer" />
@@ -110,7 +110,7 @@ const Footer = () => {
 
                 {/* Copyright */}
                 <div className="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-400">
-                    <p>© Copyright 2026, All Rights Reserved by Zameer Cabs</p>
+                    <p>© Copyright 2026, All Rights Reserved by Pick 'N' Go 360 Pvt Ltd.</p>
                     <div className="flex space-x-6 mt-4 md:mt-0">
                         <Link to="#" className="hover:text-white transition-colors">Terms & Conditions</Link>
                         <Link to="#" className="hover:text-white transition-colors">Privacy Policy</Link>

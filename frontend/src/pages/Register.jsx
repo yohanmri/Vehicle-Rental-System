@@ -39,7 +39,7 @@ const Register = () => {
             >
                 <div className="glass-card">
                     <div className="text-center mb-10">
-                        <h1 className="text-3xl font-bold mb-2">Join Zameer Cabs</h1>
+                        <h1 className="text-3xl font-bold mb-2">Join Pick 'N' Go 360 Pvt Ltd.</h1>
                         <p className="text-gray-400">Create an account to start booking</p>
                     </div>
 

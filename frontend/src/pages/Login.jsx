@@ -39,7 +39,7 @@ const Login = () => {
                 <div className="glass-card">
                     <div className="text-center mb-10">
                         <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
-                        <p className="text-gray-400">Log in to your Zameer Cabs account</p>
+                        <p className="text-gray-400">Log in to your Pick 'N' Go 360 Pvt Ltd. account</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">

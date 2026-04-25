@@ -38,7 +38,7 @@ const About = () => {
                         animate={{ opacity: 1, y: 0 }}
                         className="text-[42px] font-bold text-[#1e2a3b] mb-4 tracking-tight"
                     >
-                        About Zameer Cabs
+                        About Pick 'N' Go 360 Pvt Ltd.
                     </motion.h1>
                     <motion.p 
                         initial={{ opacity: 0, y: 20 }}
@@ -72,7 +72,7 @@ const About = () => {
                     >
                         <h2 className="text-3xl font-bold text-[#1e2a3b]">Our Mission</h2>
                         <p className="text-gray-600 leading-relaxed">
-                            Founded over 15 years ago, Zameer Cabs began with a single vision: to redefine the transport landscape in Sri Lanka. Today, we are proud to be the trusted partner for thousands of travelers, businesses, and tourists.
+                            Founded over 15 years ago, Pick 'N' Go 360 Pvt Ltd. began with a single vision: to redefine the transport landscape in Sri Lanka. Today, we are proud to be the trusted partner for thousands of travelers, businesses, and tourists.
                         </p>
                         <p className="text-gray-600 leading-relaxed">
                             Our mission is to provide seamless, high-quality, and reliable transportation solutions through innovation, a modern fleet, and a dedicated team of professionals who go above and beyond.

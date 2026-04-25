@@ -48,7 +48,7 @@ const Tours = () => {
                             <Palmtree className="w-8 h-8 text-[#ffc107]" />
                         </div>
                     </motion.div>
-                    <h1 className="text-4xl md:text-5xl font-bold text-[#1e2a3b] mb-4 tracking-tight">Explore Sri Lanka with Zameer</h1>
+                    <h1 className="text-4xl md:text-5xl font-bold text-[#1e2a3b] mb-4 tracking-tight">Explore Sri Lanka with Pick 'N' Go 360 Pvt Ltd.</h1>
                     <p className="text-gray-500 max-w-2xl mx-auto text-lg">
                         Customizable tour packages designed for comfort, adventure, and local discovery.
                     </p>
