@@ -30,16 +30,16 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
+        <div className="min-h-screen flex flex-col items-center justify-center px-4 pt-28 pb-12">
             <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="w-full max-w-md"
             >
                 <div className="glass-card">
-                    <div className="text-center mb-10">
-                        <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
-                        <p className="text-gray-400">Log in to your Pick 'N' Go 360 Pvt Ltd. account</p>
+                    <div className="text-center mb-8">
+                        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Welcome Back</h1>
+                        <p className="text-gray-400 text-sm sm:text-base">Log in to your Pick 'N' Go 360 Pvt Ltd. account</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">

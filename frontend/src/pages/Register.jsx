@@ -31,16 +31,16 @@ const Register = () => {
     };
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
+        <div className="min-h-screen flex flex-col items-center justify-center px-4 pt-28 pb-12">
             <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="w-full max-w-md"
             >
                 <div className="glass-card">
-                    <div className="text-center mb-10">
-                        <h1 className="text-3xl font-bold mb-2">Join Pick 'N' Go 360 Pvt Ltd.</h1>
-                        <p className="text-gray-400">Create an account to start booking</p>
+                    <div className="text-center mb-8">
+                        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Join Pick 'N' Go 360 Pvt Ltd.</h1>
+                        <p className="text-gray-400 text-sm sm:text-base">Create an account to start booking</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
@@ -51,7 +51,7 @@ const Register = () => {
                                 <input 
                                     type="text" 
                                     required
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg py-3 pl-11 pr-4 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 outline-none transition-all"
+                                    className="w-full bg-white/5 border border-white/10 rounded-[4px] py-3 pl-11 pr-4 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 outline-none transition-all"
                                     placeholder="John Doe"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
@@ -66,7 +66,7 @@ const Register = () => {
                                 <input 
                                     type="email" 
                                     required
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg py-3 pl-11 pr-4 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 outline-none transition-all"
+                                    className="w-full bg-white/5 border border-white/10 rounded-[4px] py-3 pl-11 pr-4 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 outline-none transition-all"
                                     placeholder="name@example.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -81,7 +81,7 @@ const Register = () => {
                                 <input 
                                     type="password" 
                                     required
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg py-3 pl-11 pr-4 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 outline-none transition-all"
+                                    className="w-full bg-white/5 border border-white/10 rounded-[4px] py-3 pl-11 pr-4 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 outline-none transition-all"
                                     placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
