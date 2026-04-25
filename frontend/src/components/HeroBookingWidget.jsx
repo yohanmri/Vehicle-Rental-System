@@ -1,42 +1,71 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Plane, Calendar, Info, ArrowRight, Car, CarFront, Bus, Truck } from 'lucide-react';
+import { MapPin, Plane, Calendar, Info, ArrowRight, Car, CarFront, Bus, Truck, Bike, Compass, Tent } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const tabs = ['AIRPORT PICK UP', 'AIRPORT DROP', 'RIDE NOW', 'TOURS', 'RENTALS'];
+const tabs = ['BIKE RENTAL', 'AIRPORT PICK UP', 'RIDE NOW', 'TOURS', 'RENTALS'];
 
 const vehicles = [
-    { id: 'budget', name: 'Budget', Icon: Car, model: 'Suzuki Alto', price: '0.00', passengers: 3, baggage: 'Limited baggage' },
-    { id: 'city', name: 'City', Icon: CarFront, model: 'Honda Fit', price: '0.00', passengers: 4, baggage: '2 bags' },
-    { id: 'semi', name: 'Semi', Icon: Car, model: 'Toyota Prius', price: '0.00', passengers: 4, baggage: '3 bags' },
-    { id: 'car', name: 'Car', Icon: CarFront, model: 'Toyota Axio', price: '0.00', passengers: 4, baggage: '3 bags' },
-    { id: '9seater', name: '9 Seater', Icon: Bus, model: 'Toyota KDH', price: '0.00', passengers: 9, baggage: '6 bags' },
-    { id: '14seater', name: '14 Seater', Icon: Truck, model: 'Nissan Caravan', price: '0.00', passengers: 14, baggage: '8 bags' },
+    { id: 'bike-normal', name: 'Normal', Icon: Bike, model: 'Yamaha FZ', price: '2,500', passengers: 2, baggage: 'Small backpack', type: 'bike' },
+    { id: 'bike-trip', name: 'Trip', Icon: Bike, model: 'Honda Hornet', price: '3,500', passengers: 2, baggage: 'Medium backpack', type: 'bike' },
+    { id: 'bike-camping', name: 'Camping', Icon: Bike, model: 'TVS Apache RTR', price: '4,500', passengers: 2, baggage: 'Camping Gear', type: 'bike' },
+    { id: 'budget', name: 'Budget', Icon: Car, model: 'Suzuki Alto', price: '0.00', passengers: 3, baggage: 'Limited baggage', type: 'car' },
+    { id: 'city', name: 'City', Icon: CarFront, model: 'Honda Fit', price: '0.00', passengers: 4, baggage: '2 bags', type: 'car' },
+    { id: 'semi', name: 'Semi', Icon: Car, model: 'Toyota Prius', price: '0.00', passengers: 4, baggage: '3 bags', type: 'car' },
+    { id: 'car', name: 'Car', Icon: CarFront, model: 'Toyota Axio', price: '0.00', passengers: 4, baggage: '3 bags', type: 'car' },
+    { id: '9seater', name: '9 Seater', Icon: Bus, model: 'Toyota KDH', price: '0.00', passengers: 9, baggage: '6 bags', type: 'van' },
+    { id: '14seater', name: '14 Seater', Icon: Truck, model: 'Nissan Caravan', price: '0.00', passengers: 14, baggage: '8 bags', type: 'van' },
 ];
 
 const HeroBookingWidget = () => {
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState('AIRPORT PICK UP');
-    const [selectedVehicle, setSelectedVehicle] = useState(vehicles[0]);
+    const [activeTab, setActiveTab] = useState('BIKE RENTAL');
+    
+    // Filter vehicles based on tab
+    const filteredVehiclesList = vehicles.filter(v => {
+        if (activeTab === 'BIKE RENTAL') return v.type === 'bike';
+        if (activeTab === 'AIRPORT PICK UP') return v.type !== 'bike';
+        return true;
+    });
+
+    const [selectedVehicle, setSelectedVehicle] = useState(filteredVehiclesList[0]);
+
+    // Handle tab change and reset selected vehicle
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+        const newList = vehicles.filter(v => {
+            if (tab === 'BIKE RENTAL') return v.type === 'bike';
+            if (tab === 'AIRPORT PICK UP') return v.type !== 'bike';
+            return true;
+        });
+        setSelectedVehicle(newList[0]);
+    };
 
     return (
         <div className="w-full max-w-[950px] mx-auto mt-8">
             {/* Tabs */}
             <div className="flex flex-wrap justify-center sm:justify-start gap-2 mb-3 px-2">
-                {tabs.map((tab) => (
-                    <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={`px-5 py-2.5 text-[13px] font-bold rounded-md transition-colors ${
-                            activeTab === tab
-                                ? 'bg-white text-gray-900 shadow-sm'
-                                : 'bg-[#2a3b50]/80 text-white hover:bg-[#2a3b50] backdrop-blur-sm'
-                        }`}
-                        style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
-                    >
-                        {tab}
-                    </button>
-                ))}
+                {tabs.map((tab) => {
+                    const Icon = tab === 'BIKE RENTAL' ? Bike : 
+                                 tab === 'AIRPORT PICK UP' ? Plane : 
+                                 tab === 'RIDE NOW' ? Car : 
+                                 tab === 'TOURS' ? MapPin : CarFront;
+                    return (
+                        <button
+                            key={tab}
+                            onClick={() => handleTabChange(tab)}
+                            className={`px-5 py-2.5 text-[13px] font-bold rounded-md transition-all flex items-center gap-2 ${
+                                activeTab === tab
+                                    ? 'bg-white text-gray-900 shadow-sm'
+                                    : 'bg-[#2a3b50]/80 text-white hover:bg-[#2a3b50] backdrop-blur-sm'
+                            }`}
+                            style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
+                        >
+                            <Icon className={`w-4 h-4 ${activeTab === tab ? 'text-black' : 'text-white/70'}`} />
+                            {tab}
+                        </button>
+                    );
+                })}
             </div>
 
             {/* Widget Body */}
@@ -48,18 +77,18 @@ const HeroBookingWidget = () => {
                     <div className="flex-1">
                         <label className="block text-gray-900 text-sm font-bold mb-3">Select a vehicle</label>
                         <div className="grid grid-cols-3 sm:flex sm:flex-wrap gap-2">
-                            {vehicles.map((v) => (
+                            {filteredVehiclesList.map((v) => (
                                 <button
                                     key={v.id}
-                                    onClick={() => navigate('/vehicles')}
+                                    onClick={() => setSelectedVehicle(v)}
                                     className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all aspect-square sm:w-[72px] sm:h-[72px] ${
-                                        selectedVehicle.id === v.id
+                                        selectedVehicle?.id === v.id
                                             ? 'bg-[#ffc107] text-gray-900 shadow-md border border-[#ffc107]'
                                             : 'bg-gray-50/80 text-gray-600 border border-gray-200 hover:bg-gray-100 hover:border-gray-300'
                                     }`}
                                 >
                                     <span className="text-[12px] font-bold mb-1 leading-none">{v.name}</span>
-                                    <div className={`${selectedVehicle.id === v.id ? 'text-gray-900' : 'text-gray-500'}`}>
+                                    <div className={`${selectedVehicle?.id === v.id ? 'text-gray-900' : 'text-gray-500'}`}>
                                        <v.Icon className="w-6 h-6" />
                                     </div>
                                 </button>
@@ -91,7 +120,7 @@ const HeroBookingWidget = () => {
                             </div>
                             <div className="flex items-center space-x-2">
                                 <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><line x1="2" x2="22" y1="12" y2="12"></line><line x1="12" x2="12" y1="2" y2="22"></line><path d="m20 16-4-4 4-4"></path><path d="m4 8 4 4-4 4"></path><path d="m16 4-4 4-4-4"></path><path d="m8 20 4-4 4 4"></path></svg>
-                                <span>Air Conditioned</span>
+                                <span>{selectedVehicle?.type === 'bike' ? 'Helmet Included' : 'Air Conditioned'}</span>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M17 6h-2V3c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v3H7c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2 0 .55.45 1 1 1s1-.45 1-1h6c0 .55.45 1 1 1s1-.45 1-1c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM9.5 18H8V9h1.5v9zm3.25 0h-1.5V9h1.5v9zm.75-12h-3V3.5h3V6zM16 18h-1.5V9H16v9z"></path></svg>
@@ -110,12 +139,12 @@ const HeroBookingWidget = () => {
                             <input
                                 type="text"
                                 className="w-full text-sm font-semibold text-gray-900 bg-transparent focus:outline-none"
-                                placeholder={activeTab === 'AIRPORT DROP' ? 'Pick Location' : 'BIA Arrival Terminal, Katunayake, Sri Lanka'}
-                                defaultValue={activeTab === 'AIRPORT DROP' ? '' : 'BIA Arrival Terminal, Katunayake, Sri Lanka'}
+                                placeholder={activeTab === 'BIKE RENTAL' ? 'Pick-up Location' : (activeTab === 'AIRPORT PICK UP' ? 'BIA Arrival Terminal, Katunayake' : 'Pick Location')}
+                                defaultValue={activeTab === 'AIRPORT PICK UP' ? 'BIA Arrival Terminal, Katunayake, Sri Lanka' : ''}
                                 disabled={activeTab === 'AIRPORT PICK UP'}
                             />
                         </div>
-                        {activeTab === 'AIRPORT DROP' ? <MapPin className="h-5 w-5 text-gray-500 shrink-0 ml-2" /> : <Plane className="h-5 w-5 text-gray-500 shrink-0 ml-2" />}
+                        {activeTab === 'AIRPORT PICK UP' ? <Plane className="h-5 w-5 text-gray-500 shrink-0 ml-2" /> : <MapPin className="h-5 w-5 text-gray-500 shrink-0 ml-2" />}
                     </div>
 
                     <ArrowRight className="hidden lg:block w-5 h-5 text-gray-400 shrink-0 mx-[-4px] z-10" />
@@ -126,12 +155,10 @@ const HeroBookingWidget = () => {
                             <input
                                 type="text"
                                 className="w-full text-sm font-semibold text-gray-900 bg-transparent focus:outline-none"
-                                placeholder={activeTab === 'AIRPORT DROP' ? 'BIA Departure Terminal, Katunayake, Sri Lanka' : 'Drop Location'}
-                                defaultValue={activeTab === 'AIRPORT DROP' ? 'BIA Departure Terminal, Katunayake, Sri Lanka' : ''}
-                                disabled={activeTab === 'AIRPORT DROP'}
+                                placeholder={activeTab === 'BIKE RENTAL' ? 'Drop-off Location' : 'Drop Location'}
                             />
                         </div>
-                        {activeTab === 'AIRPORT DROP' ? <Plane className="h-5 w-5 text-gray-500 shrink-0 ml-2" /> : <MapPin className="h-5 w-5 text-gray-500 shrink-0 ml-2" />}
+                        <MapPin className="h-5 w-5 text-gray-500 shrink-0 ml-2" />
                     </div>
 
                     {/* Date Time */}

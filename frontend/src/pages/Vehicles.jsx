@@ -12,6 +12,9 @@ import car3 from '../assets/images/vehicle/Car (3).png';
 import car4 from '../assets/images/vehicle/Car (4).png';
 import car5 from '../assets/images/vehicle/Car (5).png';
 import carDefault from '../assets/images/vehicle/Car.png';
+import bike1 from '../assets/images/vehicle/bike1.png';
+import bike2 from '../assets/images/vehicle/bike2.png';
+import bike3 from '../assets/images/vehicle/bike3.png';
 
 const carImages = [car1, car2, car3, car4, car5];
 
@@ -20,12 +23,13 @@ const Vehicles = () => {
     const [loading, setLoading] = useState(true);
     
     // Filters
-    const [selectedTypes, setSelectedTypes] = useState(['Sport', 'SUV']);
-    const [selectedCapacities, setSelectedCapacities] = useState(['2 Person', '8 or More']);
-    const [maxPrice, setMaxPrice] = useState(100);
+    const [selectedTypes, setSelectedTypes] = useState(['Bike', 'Sport', 'SUV']);
+    const [selectedCapacities, setSelectedCapacities] = useState(['2 Person', '4 Person', '8 or More']);
+    const [maxPrice, setMaxPrice] = useState(150);
     const [showFilters, setShowFilters] = useState(false);
 
     const vehicleTypes = [
+        { name: 'Bike', count: 3 },
         { name: 'Sport', count: 10 },
         { name: 'SUV', count: 12 },
         { name: 'MPV', count: 16 },
@@ -44,6 +48,9 @@ const Vehicles = () => {
     useEffect(() => {
         // Bypassing backend and using hardcoded data based on the images provided
         const mockVehicles = [
+            { _id: 'b1', name: 'Yamaha FZ', type: 'Bike', capacity: 2, price: '2500.00', image: bike1 },
+            { _id: 'b2', name: 'Honda Hornet', type: 'Bike', capacity: 2, price: '2800.00', image: bike2 },
+            { _id: 'b3', name: 'TVS Apache', type: 'Bike', capacity: 2, price: '2200.00', image: bike3 },
             { _id: '1', name: 'Koenigsegg', type: 'Sport', capacity: 2, price: '150000.00', image: car1 },
             { _id: '2', name: 'Nissan GT - R', type: 'Sport', capacity: 2, price: '80000.00', image: car2 },
             { _id: '3', name: 'Rolls-Royce', type: 'Sport', capacity: 4, price: '120000.00', image: car3 },

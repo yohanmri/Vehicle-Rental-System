@@ -46,9 +46,12 @@ const Navbar = () => {
                                 <span className="text-lg sm:text-xl font-bold tracking-tight text-[#ffc107] italic">
                                     Pick 'N'
                                 </span>
-                                <span className="text-lg sm:text-xl font-bold tracking-tight text-white bg-[#1e2a3b] px-1 italic border border-white rounded-sm mt-0.5">
-                                    Go
-                                </span>
+                                <div className="flex items-center space-x-1">
+                                    <span className="text-lg sm:text-xl font-bold tracking-tight text-white bg-[#1e2a3b] px-1 italic border border-white rounded-sm mt-0.5">
+                                        Go
+                                    </span>
+                                    <span className="text-lg sm:text-xl font-bold tracking-tight text-[#ffc107] italic mt-0.5">360</span>
+                                </div>
                             </div>
                         </Link>
 

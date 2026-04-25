@@ -7,7 +7,7 @@ const Home = () => {
     const [openFaq, setOpenFaq] = useState(0);
 
     const faqs = [
-        { category: 'Pick \'N\' Go 360 Pvt Ltd. booking a ride from airport', question: 'How do I book a Pick \'N\' Go Cab from the airport?', answer: 'You can easily book a ride through our mobile app or website before your arrival. Alternatively, you can visit our dedicated airport counters located in the arrival lounge.' },
+        { category: 'Pick \'N\' Go 360 Pvt Ltd. booking a ride from airport', question: 'How do I book a Pick \'N\' Go 360 Cab from the airport?', answer: 'You can easily book a ride through our mobile app or website before your arrival. Alternatively, you can visit our dedicated airport counters located in the arrival lounge.' },
         { category: 'Pick \'N\' Go 360 Pvt Ltd. payment methods', question: 'Can I pay by card or do I need cash?', answer: 'We offer flexible payment options. You can pay using major credit/debit cards directly in the cab, via our app, or choose to pay with cash.' },
         { category: 'Pick \'N\' Go 360 Pvt Ltd. drivers', question: 'Are your drivers licensed and reliable?', answer: 'Absolutely. All our drivers hold professional licenses, undergo strict background checks, and receive regular training to ensure your safety and comfort.' },
         { category: 'Pick \'N\' Go 360 Pvt Ltd. English-speaking drivers', question: 'Will I get an English-speaking driver?', answer: 'Yes, we prioritize assigning drivers who are fluent in English for all our airport transfers to ensure clear and easy communication.' }
@@ -123,7 +123,7 @@ const Home = () => {
                             <div className="text-center sm:text-left">
                                 <div className="text-xl font-bold text-white flex items-center justify-center sm:justify-start space-x-2">
                                     <span className="text-blue-400 font-extrabold text-2xl">G</span>
-                                    <span>Google Pick 'N' Go Reviews</span>
+                                    <span>Google Pick 'N' Go 360 Reviews</span>
                                 </div>
                                 <div className="flex items-center justify-center sm:justify-start space-x-2 mt-1">
                                     <span className="text-yellow-400 font-bold text-lg">4.5</span>
@@ -142,7 +142,7 @@ const Home = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {[
-                                { name: 'Ketpharima Sansud', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face', initial: 'K', color: 'bg-purple-500', text: 'I had a great experience with Pick \'N\' Go Van during my one-week trip...', date: '1 day ago' },
+                                { name: 'Ketpharima Sansud', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face', initial: 'K', color: 'bg-purple-500', text: 'I had a great experience with Pick \'N\' Go 360 Van during my one-week trip...', date: '1 day ago' },
                                 { name: 'Jithendra Gunatilake', image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&h=150&fit=crop&crop=face', initial: 'J', color: 'bg-orange-500', text: 'Had a very comfortable trip with Isanka Wijesinha. It is a...', date: '2 days ago' },
                                 { name: 'Jmss Silva', image: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face', initial: 'J', color: 'bg-green-500', text: 'My mother ordered a cab to pick me up at 7.30 am to take me to university...', date: '2 days ago' },
                                 { name: 'mubashir Rahman', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=face', initial: 'm', color: 'bg-gray-500', text: 'CAB 6280 Service rendered was top notch', date: '3 days ago' },

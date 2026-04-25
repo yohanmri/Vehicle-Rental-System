@@ -8,17 +8,17 @@ const Footer = () => {
                 <div className="flex flex-col lg:flex-row justify-between mb-16">
                     {/* Brand and Follow Us */}
                     <div className="mb-10 lg:mb-0">
-                        <Link to="/" className="flex items-center space-x-2 mb-8 group">
-                            <div className="bg-[#ffc107] p-2 rounded-lg group-hover:rotate-12 transition-transform duration-300">
-                                <Car className="h-8 w-8 text-[#1e2a3b]" />
-                            </div>
+                        <Link to="/" className="flex items-center mb-8 group">
                             <div className="flex flex-col -space-y-1">
-                                <span className="text-2xl font-bold tracking-tight text-white">
+                                <span className="text-2xl font-bold tracking-tight text-[#ffc107] italic">
                                     Pick 'N'
                                 </span>
-                                <span className="text-2xl font-bold tracking-tight text-white">
-                                    Go
-                                </span>
+                                <div className="flex items-center space-x-2">
+                                    <span className="text-2xl font-bold tracking-tight text-white bg-[#1e2a3b] px-1.5 italic border-2 border-white rounded-sm mt-1">
+                                        Go
+                                    </span>
+                                    <span className="text-2xl font-bold tracking-tight text-[#ffc107] italic mt-1">360</span>
+                                </div>
                             </div>
                         </Link>
                         
@@ -55,19 +55,19 @@ const Footer = () => {
                             <div className="text-[#ffc107] font-bold text-lg mb-6 text-left md:text-right">Hotlines</div>
                             <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
                                 <div>
-                                    <div className="text-gray-300 text-sm mb-1">Pick 'N' Go Cabs</div>
+                                    <div className="text-gray-300 text-sm mb-1">Pick 'N' Go 360 Cabs</div>
                                     <div className="font-semibold text-sm">+94 112 588 588</div>
                                 </div>
                                 <div>
-                                    <div className="text-gray-300 text-sm mb-1">Pick 'N' Go City</div>
+                                    <div className="text-gray-300 text-sm mb-1">Pick 'N' Go 360 City</div>
                                     <div className="font-semibold text-sm">+94 112 801 801</div>
                                 </div>
                                 <div>
-                                    <div className="text-gray-300 text-sm mb-1">Pick 'N' Go Budget</div>
+                                    <div className="text-gray-300 text-sm mb-1">Pick 'N' Go 360 Budget</div>
                                     <div className="font-semibold text-sm">+94 112 592 592</div>
                                 </div>
                                 <div>
-                                    <div className="text-gray-300 text-sm mb-1">Pick 'N' Go Vans</div>
+                                    <div className="text-gray-300 text-sm mb-1">Pick 'N' Go 360 Vans</div>
                                     <div className="font-semibold text-sm">+94 112 501 501</div>
                                 </div>
                                 <div>
