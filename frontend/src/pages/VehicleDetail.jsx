@@ -99,9 +99,15 @@ const VehicleDetail = () => {
 
     // Use imported image logic
     let imageUrl = vehicle.image || carDefault;
-    if (vehicle.image && vehicle.image.includes('http')) {
+    if (vehicle.image && (
+        vehicle.image.includes('http') || 
+        vehicle.image.startsWith('data:') || 
+        vehicle.image.startsWith('blob:') ||
+        vehicle.image.includes('/assets/') || 
+        vehicle.image.startsWith('/src/assets/')
+    )) {
         imageUrl = vehicle.image;
-    } else if (vehicle.image && typeof vehicle.image === 'string' && !vehicle.image.includes('/static/media/') && !vehicle.image.startsWith('data:') && !vehicle.image.startsWith('/src/assets/')) {
+    } else if (vehicle.image && typeof vehicle.image === 'string') {
         // If it looks like a relative path from backend (not a bundled asset)
         imageUrl = `${axios.defaults.baseURL.replace('/api', '')}/${vehicle.image}`;
     }

@@ -9,12 +9,18 @@ const VehicleCard = ({ vehicle }) => {
     
     if (vehicle.image) {
         imageUrl = vehicle.image;
-        // If image is just a filename like 'Car.png', point it to the assets folder requested by user
-        if (!imageUrl.includes('http') && !imageUrl.includes('/')) {
-            imageUrl = `/assets/images/vehicle/${imageUrl}`;
-        } else if (imageUrl.startsWith('/assets/')) {
-            // It's already correctly mapped
+        // If it's already a full URL or a bundled asset, don't modify it
+        if (
+            imageUrl.includes('http') || 
+            imageUrl.startsWith('data:') || 
+            imageUrl.startsWith('blob:') ||
+            imageUrl.includes('/assets/') || 
+            imageUrl.startsWith('/src/assets/')
+        ) {
             imageUrl = vehicle.image;
+        } else if (!imageUrl.includes('/')) {
+            // If it's just a filename, assume it's in the default assets folder
+            imageUrl = `/assets/images/vehicle/${imageUrl}`;
         }
     }
 
