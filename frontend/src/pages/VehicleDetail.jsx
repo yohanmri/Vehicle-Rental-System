@@ -14,6 +14,9 @@ import car3 from '../assets/images/vehicle/Car (3).png';
 import car4 from '../assets/images/vehicle/Car (4).png';
 import car5 from '../assets/images/vehicle/Car (5).png';
 import carDefault from '../assets/images/vehicle/Car.png';
+import bike1 from '../assets/images/vehicle/bike1.png';
+import bike2 from '../assets/images/vehicle/bike2.png';
+import bike3 from '../assets/images/vehicle/bike3.png';
 
 const carImages = [car1, car2, car3, car4, car5];
 
@@ -48,6 +51,12 @@ const VehicleDetail = () => {
     useEffect(() => {
         // Bypassing backend and finding the mocked vehicle based on ID
         const mockVehicles = [
+            { _id: 'b1', name: 'Yamaha FZ', type: 'Bike', capacity: 2, price: '2500.00', image: bike1, description: 'The Yamaha FZ is a perfectly balanced street fighter, offering great maneuverability and punchy performance for city riding and short trips.' },
+            { _id: 'b2', name: 'Honda Hornet', type: 'Bike', capacity: 2, price: '2800.00', image: bike2, description: 'Aggressive styling meets legendary Honda reliability. The Hornet is designed for those who want a bit more power and presence on the road.' },
+            { _id: 'b3', name: 'TVS Apache', type: 'Bike', capacity: 2, price: '2200.00', image: bike3, description: 'Race-inspired performance and sharp handling make the Apache a favorite for enthusiasts looking for a spirited ride.' },
+            { _id: 'b4', name: 'KTM Duke 390', type: 'Bike', capacity: 2, price: '3500.00', image: 'https://images.unsplash.com/photo-1558981403-c5f91ad9a08b?auto=format&fit=crop&q=80&w=800', description: 'The Master of Performance. The KTM 390 DUKE is a pure example of what draws so many to the thrill of street motorcycling.' },
+            { _id: 'b5', name: 'Royal Enfield', type: 'Bike', capacity: 2, price: '4000.00', image: 'https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?auto=format&fit=crop&q=80&w=800', description: 'The quintessential classic motorcycle. Timeless design meets modern performance for a relaxed and stylish ride.' },
+            { _id: 'b6', name: 'Kawasaki Ninja', type: 'Bike', capacity: 2, price: '5500.00', image: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&q=80&w=800', description: 'Experience the thrill of the track on the road. The Ninja series represents Kawasaki\'s peak performance and aerodynamic design.' },
             { _id: '1', name: 'Koenigsegg', type: 'Sport', capacity: 2, price: '150000.00', image: car1, description: 'Sports car with the best design and acceleration. Safety and comfort while driving a futuristic and elegant sports car.' },
             { _id: '2', name: 'Nissan GT - R', type: 'Sport', capacity: 2, price: '80000.00', image: car2, description: 'NISMO has become the embodiment of Nissan\'s outstanding performance, inspired by the most unforgiving proving ground, the "race track".' },
             { _id: '3', name: 'Rolls-Royce', type: 'Sport', capacity: 4, price: '120000.00', image: car3, description: 'Experience ultimate luxury and refinement.' },
@@ -92,13 +101,12 @@ const VehicleDetail = () => {
     if (!vehicle) return null;
 
     // Use imported image logic
-    let imageUrl = carDefault;
+    let imageUrl = vehicle.image || carDefault;
     if (vehicle.image && vehicle.image.includes('http')) {
         imageUrl = vehicle.image;
-    } else if (vehicle.image) {
-        // Simple hash to map the vehicle ID to one of our imported images consistently
-        const imgIndex = vehicle._id ? parseInt(vehicle._id.slice(-1), 16) % carImages.length : 0;
-        imageUrl = carImages[imgIndex] || carDefault;
+    } else if (vehicle.image && typeof vehicle.image === 'string' && !vehicle.image.includes('/static/media/') && !vehicle.image.startsWith('data:') && !vehicle.image.startsWith('/src/assets/')) {
+        // If it looks like a relative path from backend (not a bundled asset)
+        imageUrl = `${axios.defaults.baseURL.replace('/api', '')}/${vehicle.image}`;
     }
 
     return (
@@ -232,8 +240,8 @@ const VehicleDetail = () => {
                             {/* Main Image Card */}
                             <div className="bg-[#1e2a3b] rounded-[10px] sm:rounded-[20px] p-6 sm:p-10 relative overflow-hidden h-[300px] sm:h-[400px] lg:h-auto lg:aspect-[4/3] flex flex-col">
                                 <div className="relative z-10 max-w-[280px]">
-                                    <h2 className="text-white text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 leading-tight">The Best Platform for Car Rental</h2>
-                                    <p className="text-white/80 text-[13px] sm:text-[15px] leading-relaxed mb-6 sm:mb-8">Ease of doing car rental safely and reliably. Of course at a low price.</p>
+                                    <h2 className="text-white text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 leading-tight">The Best Platform for Vehicle Rental</h2>
+                                    <p className="text-white/80 text-[13px] sm:text-[15px] leading-relaxed mb-6 sm:mb-8">Ease of doing vehicle rental safely and reliably. Of course at a low price.</p>
                                 </div>
                                 <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center lg:justify-start lg:relative lg:bottom-auto lg:mt-auto">
                                     <img 
@@ -245,17 +253,17 @@ const VehicleDetail = () => {
                                 <div className="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] bg-[#ffc107]/10 rounded-full blur-3xl"></div>
                                 <div className="absolute bottom-[-10%] left-[-10%] w-[200px] h-[200px] bg-white/5 rounded-full blur-2xl"></div>
                             </div>
-
+ 
                             {/* Thumbnails */}
                             <div className="grid grid-cols-3 gap-3 sm:gap-5">
                                 <div className="bg-[#ffc107] rounded-[10px] aspect-[4/3] p-2 flex items-center justify-center border-2 border-[#ffc107] overflow-hidden">
                                     <img src={imageUrl} alt="Thumbnail" className="w-full h-full object-contain" />
                                 </div>
                                 <div className="bg-white rounded-[10px] aspect-[4/3] overflow-hidden cursor-pointer border border-gray-100 hover:border-[#ffc107] transition-colors">
-                                    <img src="https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&q=80&w=500" alt="Interior" className="w-full h-full object-cover" />
+                                    <img src={vehicle.type === 'Bike' ? "https://images.unsplash.com/photo-1558981403-c5f91ad9a08b?auto=format&fit=crop&q=80&w=500" : "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&q=80&w=500"} alt="Detail 1" className="w-full h-full object-cover" />
                                 </div>
                                 <div className="bg-white rounded-[10px] aspect-[4/3] overflow-hidden cursor-pointer border border-gray-100 hover:border-[#ffc107] transition-colors">
-                                    <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=500" alt="Seat" className="w-full h-full object-cover" />
+                                    <img src={vehicle.type === 'Bike' ? "https://images.unsplash.com/photo-1444491741275-3747c53c99b4?auto=format&fit=crop&q=80&w=500" : "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=500"} alt="Detail 2" className="w-full h-full object-cover" />
                                 </div>
                             </div>
                         </div>
@@ -293,7 +301,7 @@ const VehicleDetail = () => {
 
                                         <div className="grid grid-cols-2 gap-y-4 sm:gap-y-6 gap-x-6 sm:gap-x-12 mb-8 sm:mb-10">
                                             <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                                                <span className="text-gray-400 text-xs sm:text-[15px]">Type Car</span>
+                                                <span className="text-gray-400 text-xs sm:text-[15px]">Type</span>
                                                 <span className="font-semibold text-gray-700 text-xs sm:text-[15px]">{vehicle.type || 'Sport'}</span>
                                             </div>
                                             <div className="flex justify-between items-center border-b border-gray-100 pb-2">
@@ -305,8 +313,8 @@ const VehicleDetail = () => {
                                                 <span className="font-semibold text-gray-700 text-xs sm:text-[15px]">Manual</span>
                                             </div>
                                             <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                                                <span className="text-gray-400 text-xs sm:text-[15px]">Gasoline</span>
-                                                <span className="font-semibold text-gray-700 text-xs sm:text-[15px]">70L</span>
+                                                <span className="text-gray-400 text-xs sm:text-[15px]">Fuel</span>
+                                                <span className="font-semibold text-gray-700 text-xs sm:text-[15px]">{vehicle.type === 'Bike' ? '12L' : '70L'}</span>
                                             </div>
                                         </div>
                                     </div>

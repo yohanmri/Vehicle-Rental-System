@@ -29,7 +29,7 @@ const Vehicles = () => {
     const [showFilters, setShowFilters] = useState(false);
 
     const vehicleTypes = [
-        { name: 'Bike', count: 3 },
+        { name: 'Bike', count: 6 },
         { name: 'Sport', count: 10 },
         { name: 'SUV', count: 12 },
         { name: 'MPV', count: 16 },
@@ -51,6 +51,9 @@ const Vehicles = () => {
             { _id: 'b1', name: 'Yamaha FZ', type: 'Bike', capacity: 2, price: '2500.00', image: bike1 },
             { _id: 'b2', name: 'Honda Hornet', type: 'Bike', capacity: 2, price: '2800.00', image: bike2 },
             { _id: 'b3', name: 'TVS Apache', type: 'Bike', capacity: 2, price: '2200.00', image: bike3 },
+            { _id: 'b4', name: 'KTM Duke 390', type: 'Bike', capacity: 2, price: '3500.00', image: 'https://images.unsplash.com/photo-1558981403-c5f91ad9a08b?auto=format&fit=crop&q=80&w=800' },
+            { _id: 'b5', name: 'Royal Enfield', type: 'Bike', capacity: 2, price: '4000.00', image: 'https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?auto=format&fit=crop&q=80&w=800' },
+            { _id: 'b6', name: 'Kawasaki Ninja', type: 'Bike', capacity: 2, price: '5500.00', image: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&q=80&w=800' },
             { _id: '1', name: 'Koenigsegg', type: 'Sport', capacity: 2, price: '150000.00', image: car1 },
             { _id: '2', name: 'Nissan GT - R', type: 'Sport', capacity: 2, price: '80000.00', image: car2 },
             { _id: '3', name: 'Rolls-Royce', type: 'Sport', capacity: 4, price: '120000.00', image: car3 },
