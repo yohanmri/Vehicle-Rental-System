@@ -3,13 +3,19 @@ import { motion } from 'framer-motion';
 import { Calendar, Clock, Tag, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
+import car1 from '../assets/images/vehicle/Car (1).png';
+import car2 from '../assets/images/vehicle/Car (2).png';
+import car3 from '../assets/images/vehicle/Car (3).png';
+import car4 from '../assets/images/vehicle/Car (4).png';
+import car5 from '../assets/images/vehicle/Car (5).png';
+
 const MyBookings = () => {
     const [bookings, setBookings] = useState([
         {
             _id: 'b1',
             vehicle: {
                 name: 'Koenigsegg',
-                image: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&q=80&w=1469',
+                image: car1,
                 type: 'Sport'
             },
             status: 'confirmed',
@@ -21,7 +27,7 @@ const MyBookings = () => {
             _id: 'b2',
             vehicle: {
                 name: 'Audi R8',
-                image: 'https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?auto=format&fit=crop&q=80&w=1374',
+                image: car2,
                 type: 'Sport'
             },
             status: 'pending',
@@ -33,7 +39,7 @@ const MyBookings = () => {
             _id: 'b3',
             vehicle: {
                 name: 'All New Rush',
-                image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=1470',
+                image: car4,
                 type: 'SUV'
             },
             status: 'confirmed',
@@ -45,7 +51,7 @@ const MyBookings = () => {
             _id: 'b4',
             vehicle: {
                 name: 'MG ZX Exclusive',
-                image: 'https://images.unsplash.com/photo-1550503615-5c123611ac54?auto=format&fit=crop&q=80&w=1470',
+                image: car3,
                 type: 'Hatchback'
             },
             status: 'cancelled',
@@ -56,12 +62,12 @@ const MyBookings = () => {
         {
             _id: 'b5',
             vehicle: {
-                name: 'Rolls-Royce Ghost',
-                image: 'https://images.unsplash.com/photo-1631269584346-60195e7b2fa7?auto=format&fit=crop&q=80&w=1470',
-                type: 'Luxury'
+                name: 'CR - V',
+                image: car5,
+                type: 'SUV'
             },
             status: 'confirmed',
-            totalPrice: '450,000',
+            totalPrice: '18,000',
             startDate: '2026-08-20',
             endDate: '2026-08-25'
         }
@@ -107,8 +113,8 @@ const MyBookings = () => {
                                 transition={{ delay: i * 0.1 }}
                                 className="bg-white rounded-[4px] p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-6 items-center"
                             >
-                                <div className="w-full md:w-48 h-32 rounded-[4px] overflow-hidden shrink-0 bg-gray-100">
-                                    <img src={booking.vehicle.image} alt={booking.vehicle.name} className="w-full h-full object-cover" />
+                                <div className="w-full md:w-40 h-24 rounded-[4px] overflow-hidden shrink-0 bg-gray-100">
+                                    <img src={booking.vehicle.image} alt={booking.vehicle.name} className="w-full h-full object-contain" />
                                 </div>
 
                                 <div className="flex-grow w-full space-y-4">

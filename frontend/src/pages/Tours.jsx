@@ -2,25 +2,29 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Palmtree, Map, Camera, Umbrella, Coffee, Compass } from 'lucide-react';
 
+import sigiriyaImg from '../assets/images/tours/sigiriya.jpg';
+import kandyImg from '../assets/images/tours/kandy.jpg';
+import southImg from '../assets/images/tours/south.jpg';
+
 const Tours = () => {
     const packages = [
         {
             title: 'Cultural Triangle',
-            image: 'https://images.unsplash.com/photo-1588127333419-b9d7de223dcf?auto=format&fit=crop&q=80&w=1469',
+            image: sigiriyaImg,
             price: '35,000',
             duration: '3 Days / 2 Nights',
             destinations: ['Sigiriya', 'Anuradhapura', 'Polonnaruwa']
         },
         {
             title: 'Hill Country Escape',
-            image: 'https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&q=80&w=1334',
+            image: kandyImg,
             price: '42,000',
             duration: '4 Days / 3 Nights',
             destinations: ['Kandy', 'Ella', 'Nuwara Eliya']
         },
         {
             title: 'Southern Coast Glow',
-            image: 'https://images.unsplash.com/photo-1563297017-f6559779df5e?auto=format&fit=crop&q=80&w=1470',
+            image: southImg,
             price: '28,000',
             duration: '3 Days / 2 Nights',
             destinations: ['Galle', 'Mirissa', 'Unawatuna']
@@ -123,8 +127,8 @@ const Tours = () => {
                          </button>
                     </div>
                     <div className="lg:w-1/2 grid grid-cols-2 gap-4">
-                        <img src="https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&q=80&w=1334" className="rounded-[4px] h-48 w-full object-cover" />
-                        <img src="https://images.unsplash.com/photo-1588127333419-b9d7de223dcf?auto=format&fit=crop&q=80&w=1469" className="rounded-[4px] h-48 w-full object-cover mt-8" />
+                        <img src={kandyImg} className="rounded-[4px] h-48 w-full object-cover" />
+                        <img src={sigiriyaImg} className="rounded-[4px] h-48 w-full object-cover mt-8" />
                     </div>
                 </div>
             </div>

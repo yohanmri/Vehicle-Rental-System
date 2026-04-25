@@ -109,11 +109,24 @@ const About = () => {
                 {/* Team/Testimonial Teaser */}
                 <div className="mt-24 text-center">
                     <h2 className="text-3xl font-bold text-[#1e2a3b] mb-12">Trusted by Global Partners</h2>
-                    <div className="flex flex-wrap justify-center gap-8 opacity-40 grayscale">
+                    <div className="flex flex-wrap justify-center gap-8 opacity-40 grayscale mb-16">
                         {/* Placeholder logos */}
                         {[1,2,3,4,5].map(i => (
                             <div key={i} className="h-12 w-32 bg-gray-400 rounded-[4px]"></div>
                         ))}
+                    </div>
+
+                    {/* Google Map */}
+                    <div className="w-full h-[450px] rounded-[4px] overflow-hidden shadow-lg border-2 border-white">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126743.58585987134!2d79.82118593857317!3d6.921838643115456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae253d10f7a7003%3A0x320b2e4d32d3838d!2sColombo!5e0!3m2!1sen!2slk!4v1713531600000!5m2!1sen!2slk" 
+                            width="100%" 
+                            height="100%" 
+                            style={{ border: 0 }} 
+                            allowFullScreen="" 
+                            loading="lazy" 
+                            referrerPolicy="no-referrer-when-downgrade"
+                        ></iframe>
                     </div>
                 </div>
             </div>

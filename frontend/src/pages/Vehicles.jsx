@@ -174,30 +174,30 @@ const Vehicles = () => {
                     <div className="flex flex-col xl:flex-row items-center gap-4 mb-8">
                         
                         {/* Pick-Up Box */}
-                        <div className="flex-1 bg-[#f1f5f9] p-4 sm:p-5 rounded-xl shadow-sm border border-[#1e2a3b]/10 w-full relative">
+                        <div className="flex-1 bg-[#f1f5f9] p-3 sm:p-3.5 rounded-xl shadow-sm border border-[#1e2a3b]/10 w-full relative">
                             <div className="flex items-center space-x-2 mb-3">
                                 <div className="w-3.5 h-3.5 rounded-full border-4 border-[#ffc107]/30 flex items-center justify-center">
                                     <div className="w-1.5 h-1.5 rounded-full bg-[#ffc107]"></div>
                                 </div>
-                                <span className="font-bold text-[#1e2a3b] text-sm sm:text-base">Pick - Up</span>
+                                <span className="font-bold text-[#1e2a3b] text-base sm:text-lg">Pick - Up</span>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
                                 <div className="border-r border-gray-200 pr-2 sm:pr-4">
-                                    <h4 className="font-bold text-[#1e2a3b] text-[11px] sm:text-[13px] mb-0.5 whitespace-nowrap">Locations</h4>
-                                    <select className="bg-transparent text-gray-500 text-[10px] sm:text-[11px] outline-none w-full cursor-pointer truncate">
+                                    <h4 className="font-bold text-[#1e2a3b] text-[13px] sm:text-[15px] mb-0.5 whitespace-nowrap">Locations</h4>
+                                    <select className="bg-transparent text-gray-500 text-[12px] sm:text-[13px] outline-none w-full cursor-pointer truncate">
                                         <option>Select city</option>
                                     </select>
                                 </div>
                                 <div className="border-r border-gray-200 pr-2 sm:pr-4">
-                                    <h4 className="font-bold text-[#1e2a3b] text-[11px] sm:text-[13px] mb-0.5 whitespace-nowrap">Date</h4>
-                                    <select className="bg-transparent text-gray-500 text-[10px] sm:text-[11px] outline-none w-full cursor-pointer truncate">
+                                    <h4 className="font-bold text-[#1e2a3b] text-[13px] sm:text-[15px] mb-0.5 whitespace-nowrap">Date</h4>
+                                    <select className="bg-transparent text-gray-500 text-[12px] sm:text-[13px] outline-none w-full cursor-pointer truncate">
                                         <option>Select date</option>
                                     </select>
                                 </div>
                                 <div className="pl-1 sm:pl-0">
-                                    <h4 className="font-bold text-[#1e2a3b] text-[11px] sm:text-[13px] mb-0.5 whitespace-nowrap">Time</h4>
-                                    <select className="bg-transparent text-gray-500 text-[10px] sm:text-[11px] outline-none w-full cursor-pointer truncate">
+                                    <h4 className="font-bold text-[#1e2a3b] text-[13px] sm:text-[15px] mb-0.5 whitespace-nowrap">Time</h4>
+                                    <select className="bg-transparent text-gray-500 text-[12px] sm:text-[13px] outline-none w-full cursor-pointer truncate">
                                         <option>Select time</option>
                                     </select>
                                 </div>
@@ -205,35 +205,35 @@ const Vehicles = () => {
                         </div>
 
                         {/* Swap Button */}
-                        <button className="bg-[#1e2a3b] hover:bg-[#ffc107] text-white hover:text-[#1e2a3b] w-14 h-14 rounded-xl flex items-center justify-center shadow-lg shadow-[#1e2a3b]/20 z-10 xl:-mx-8 my-2 xl:my-0 transition-colors shrink-0 mx-auto">
-                            <ArrowDownUp className="w-6 h-6" />
+                        <button className="bg-[#1e2a3b] hover:bg-[#ffc107] text-white hover:text-[#1e2a3b] w-10 h-10 rounded-[4px] flex items-center justify-center shadow-lg shadow-[#1e2a3b]/20 z-10 xl:-mx-5 my-2 xl:my-0 transition-colors shrink-0 mx-auto">
+                            <ArrowDownUp className="w-4 h-4" />
                         </button>
 
                         {/* Drop-Off Box */}
-                        <div className="flex-1 bg-[#f1f5f9] p-4 sm:p-5 rounded-xl shadow-sm border border-[#1e2a3b]/10 w-full relative">
+                        <div className="flex-1 bg-[#f1f5f9] p-3 sm:p-3.5 rounded-xl shadow-sm border border-[#1e2a3b]/10 w-full relative">
                             <div className="flex items-center space-x-2 mb-3">
                                 <div className="w-3.5 h-3.5 rounded-full border-4 border-blue-500/30 flex items-center justify-center">
                                     <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
                                 </div>
-                                <span className="font-bold text-[#1e2a3b] text-sm sm:text-base">Drop - Off</span>
+                                <span className="font-bold text-[#1e2a3b] text-base sm:text-lg">Drop - Off</span>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
                                 <div className="border-r border-gray-200 pr-2 sm:pr-4">
-                                    <h4 className="font-bold text-[#1e2a3b] text-[11px] sm:text-[13px] mb-0.5 whitespace-nowrap">Locations</h4>
-                                    <select className="bg-transparent text-gray-500 text-[10px] sm:text-[11px] outline-none w-full cursor-pointer truncate">
+                                    <h4 className="font-bold text-[#1e2a3b] text-[13px] sm:text-[15px] mb-0.5 whitespace-nowrap">Locations</h4>
+                                    <select className="bg-transparent text-gray-500 text-[12px] sm:text-[13px] outline-none w-full cursor-pointer truncate">
                                         <option>Select city</option>
                                     </select>
                                 </div>
                                 <div className="border-r border-gray-200 pr-2 sm:pr-4">
-                                    <h4 className="font-bold text-[#1e2a3b] text-[11px] sm:text-[13px] mb-0.5 whitespace-nowrap">Date</h4>
-                                    <select className="bg-transparent text-gray-500 text-[10px] sm:text-[11px] outline-none w-full cursor-pointer truncate">
+                                    <h4 className="font-bold text-[#1e2a3b] text-[13px] sm:text-[15px] mb-0.5 whitespace-nowrap">Date</h4>
+                                    <select className="bg-transparent text-gray-500 text-[12px] sm:text-[13px] outline-none w-full cursor-pointer truncate">
                                         <option>Select date</option>
                                     </select>
                                 </div>
                                 <div className="pl-1 sm:pl-0">
-                                    <h4 className="font-bold text-[#1e2a3b] text-[11px] sm:text-[13px] mb-0.5 whitespace-nowrap">Time</h4>
-                                    <select className="bg-transparent text-gray-500 text-[10px] sm:text-[11px] outline-none w-full cursor-pointer truncate">
+                                    <h4 className="font-bold text-[#1e2a3b] text-[13px] sm:text-[15px] mb-0.5 whitespace-nowrap">Time</h4>
+                                    <select className="bg-transparent text-gray-500 text-[12px] sm:text-[13px] outline-none w-full cursor-pointer truncate">
                                         <option>Select time</option>
                                     </select>
                                 </div>

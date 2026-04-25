@@ -1,7 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Heart, Users, Fuel, Settings2 } from 'lucide-react';
 
 const VehicleCard = ({ vehicle }) => {
+    const navigate = useNavigate();
     // Determine image source - handle both relative paths and absolute URLs
     // Using a default car image if none is provided
     let imageUrl = "https://images.unsplash.com/photo-1550355291-bbee04a92027?auto=format&fit=crop&q=80&w=1036"; // Fallback
@@ -18,7 +19,10 @@ const VehicleCard = ({ vehicle }) => {
     }
 
     return (
-        <div className="bg-[#f1f5f9] rounded-[20px] p-5 shadow-sm border border-[#1e2a3b]/10 hover:shadow-xl transition-all duration-300 flex flex-col h-full group">
+        <div 
+            onClick={() => navigate(`/vehicles/${vehicle._id}`)}
+            className="bg-[#f1f5f9] rounded-[20px] p-5 shadow-sm border border-[#1e2a3b]/10 hover:shadow-xl transition-all duration-300 flex flex-col h-full group cursor-pointer"
+        >
             {/* Header: Title and Heart */}
             <div className="flex justify-between items-start mb-2">
                 <div>
@@ -29,7 +33,12 @@ const VehicleCard = ({ vehicle }) => {
                         {vehicle.type || 'Standard'}
                     </span>
                 </div>
-                <button className="text-gray-300 hover:text-red-500 transition-colors">
+                <button 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                    }}
+                    className="text-gray-300 hover:text-red-500 transition-colors z-10"
+                >
                     <Heart className="w-5 h-5" />
                 </button>
             </div>
@@ -65,21 +74,20 @@ const VehicleCard = ({ vehicle }) => {
             </div>
 
             {/* Bottom: Pricing and Action */}
-            <div className="flex items-center justify-between mt-2 pt-4 border-t border-[#1e2a3b]/10">
-                <div>
-                    <div className="text-[20px] font-bold text-gray-900 flex items-end leading-none">
-                        LKR {parseFloat(vehicle.price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}<span className="text-[14px] text-gray-400 font-medium ml-1 mb-0.5">/ day</span>
+            <div className="flex items-center justify-between mt-2 pt-4 border-t border-[#1e2a3b]/10 gap-2">
+                <div className="flex-1 min-w-0">
+                    <div className="text-[16px] xl:text-[18px] font-bold text-gray-900 flex items-end leading-none truncate">
+                        LKR {parseFloat(vehicle.price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}<span className="text-[12px] text-gray-400 font-medium ml-1 mb-0.5">/ day</span>
                     </div>
-                    <div className="text-[13px] text-gray-400 line-through mt-1">
+                    <div className="text-[13px] text-gray-400 line-through mt-1 truncate">
                         LKR {(parseFloat(vehicle.price) + 2000).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                     </div>
                 </div>
-                <Link 
-                    to={`/vehicles/${vehicle._id}`}
-                    className="bg-[#1e2a3b] text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-[#ffc107] hover:text-[#1e2a3b] transition-colors"
+                <button 
+                    className="bg-[#1e2a3b] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#ffc107] hover:text-[#1e2a3b] transition-colors whitespace-nowrap shrink-0"
                 >
                     Rent Now
-                </Link>
+                </button>
             </div>
         </div>
     );

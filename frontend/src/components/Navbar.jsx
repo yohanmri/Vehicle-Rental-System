@@ -133,10 +133,10 @@ const Navbar = () => {
                             </div>
                         ) : (
                             <div className="pt-8 grid grid-cols-2 gap-4">
-                                <Link to="/login" onClick={() => setIsOpen(false)} className="flex items-center justify-center text-white font-bold py-4 bg-white/10 rounded-2xl hover:bg-white/20 transition-colors border border-white/10">
+                                <Link to="/login" onClick={() => setIsOpen(false)} className="flex items-center justify-center text-white font-bold py-2.5 bg-white/10 rounded-[4px] hover:bg-white/20 transition-colors border border-white/10 text-sm">
                                     Login
                                 </Link>
-                                <Link to="/register" onClick={() => setIsOpen(false)} className="flex items-center justify-center bg-[#ffc107] text-[#1e2a3b] font-bold py-4 rounded-2xl hover:bg-[#e0a800] transition-colors shadow-lg shadow-[#ffc107]/10">
+                                <Link to="/register" onClick={() => setIsOpen(false)} className="flex items-center justify-center bg-[#ffc107] text-[#1e2a3b] font-bold py-2.5 rounded-[4px] hover:bg-[#e0a800] transition-colors shadow-lg shadow-[#ffc107]/10 text-sm">
                                     Sign Up
                                 </Link>
                             </div>
