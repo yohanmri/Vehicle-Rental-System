@@ -32,7 +32,7 @@ const Business = () => {
         <div className="min-h-screen bg-[#e1e7f0] pt-28 pb-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Hero Section */}
-                <div className="bg-[#1e2a3b] rounded-[40px] overflow-hidden mb-20 shadow-2xl relative">
+                <div className="bg-[#1e2a3b] rounded-[4px] overflow-hidden mb-20 shadow-2xl relative">
                     <div className="absolute inset-0 z-0">
                         <img 
                             src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=2069" 
@@ -69,7 +69,7 @@ const Business = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.1 }}
-                            className="bg-[#f1f5f9] p-10 rounded-[30px] border border-[#1e2a3b]/5 shadow-sm hover:shadow-xl transition-all group"
+                            className="bg-[#f1f5f9] p-10 rounded-[4px] border border-[#1e2a3b]/5 shadow-sm hover:shadow-xl transition-all group"
                         >
                             <div className="mb-6 group-hover:scale-110 transition-transform duration-300">
                                 {service.icon}
@@ -102,7 +102,7 @@ const Business = () => {
                             ))}
                         </div>
                     </div>
-                    <div className="lg:w-1/2 w-full aspect-video rounded-[30px] overflow-hidden shadow-2xl relative group">
+                    <div className="lg:w-1/2 w-full aspect-video rounded-[4px] overflow-hidden shadow-2xl relative group">
                          <img 
                             src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&q=80&w=1473" 
                             alt="Business Meeting" 
@@ -114,7 +114,7 @@ const Business = () => {
 
                 {/* CTA Section */}
                 <div className="mt-24 text-center">
-                    <div className="bg-[#ffc107] rounded-[40px] p-12 lg:p-20 relative overflow-hidden">
+                    <div className="bg-[#ffc107] rounded-[4px] p-12 lg:p-20 relative overflow-hidden">
                         <div className="relative z-10">
                             <h2 className="text-3xl md:text-4xl font-bold text-[#1e2a3b] mb-6">Ready to upgrade your corporate travel?</h2>
                             <p className="text-[#1e2a3b]/70 mb-10 font-medium max-w-xl mx-auto">

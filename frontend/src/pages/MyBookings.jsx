@@ -1,46 +1,83 @@
-import { useState, useEffect } from 'react';
-import axios from '../api/axios';
-import Loader from '../components/Loader';
-import { Calendar, Clock, DollarSign, Tag, XCircle, CheckCircle, AlertCircle } from 'lucide-react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Calendar, Clock, Tag, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 const MyBookings = () => {
-    const [bookings, setBookings] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    const fetchBookings = async () => {
-        try {
-            const { data } = await axios.get('/bookings/mybookings');
-            setBookings(data);
-        } catch (error) {
-            console.error('Failed to fetch bookings', error);
-        } finally {
-            setLoading(false);
+    const [bookings, setBookings] = useState([
+        {
+            _id: 'b1',
+            vehicle: {
+                name: 'Koenigsegg',
+                image: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&q=80&w=1469',
+                type: 'Sport'
+            },
+            status: 'confirmed',
+            totalPrice: '165,000',
+            startDate: '2026-05-10',
+            endDate: '2026-05-12'
+        },
+        {
+            _id: 'b2',
+            vehicle: {
+                name: 'Audi R8',
+                image: 'https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?auto=format&fit=crop&q=80&w=1374',
+                type: 'Sport'
+            },
+            status: 'pending',
+            totalPrice: '120,000',
+            startDate: '2026-06-01',
+            endDate: '2026-06-03'
+        },
+        {
+            _id: 'b3',
+            vehicle: {
+                name: 'All New Rush',
+                image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=1470',
+                type: 'SUV'
+            },
+            status: 'confirmed',
+            totalPrice: '45,000',
+            startDate: '2026-07-15',
+            endDate: '2026-07-18'
+        },
+        {
+            _id: 'b4',
+            vehicle: {
+                name: 'MG ZX Exclusive',
+                image: 'https://images.unsplash.com/photo-1550503615-5c123611ac54?auto=format&fit=crop&q=80&w=1470',
+                type: 'Hatchback'
+            },
+            status: 'cancelled',
+            totalPrice: '28,000',
+            startDate: '2026-04-10',
+            endDate: '2026-04-12'
+        },
+        {
+            _id: 'b5',
+            vehicle: {
+                name: 'Rolls-Royce Ghost',
+                image: 'https://images.unsplash.com/photo-1631269584346-60195e7b2fa7?auto=format&fit=crop&q=80&w=1470',
+                type: 'Luxury'
+            },
+            status: 'confirmed',
+            totalPrice: '450,000',
+            startDate: '2026-08-20',
+            endDate: '2026-08-25'
         }
-    };
+    ]);
 
-    useEffect(() => {
-        fetchBookings();
-    }, []);
-
-    const handleCancel = async (id) => {
+    const handleCancel = (id) => {
         if (!window.confirm('Are you sure you want to cancel this booking?')) return;
-        
-        try {
-            await axios.put(`/bookings/${id}`);
-            toast.success('Booking cancelled');
-            fetchBookings();
-        } catch (error) {
-            toast.error('Failed to cancel booking');
-        }
+        setBookings(bookings.map(b => b._id === id ? { ...b, status: 'cancelled' } : b));
+        toast.success('Booking cancelled');
     };
 
     const getStatusStyles = (status) => {
         switch (status) {
-            case 'confirmed': return 'bg-green-500/10 text-green-500 border-green-500/20';
-            case 'cancelled': return 'bg-red-500/10 text-red-500 border-red-500/20';
-            default: return 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20';
+            case 'confirmed': return 'bg-green-100 text-green-700 border-green-200';
+            case 'cancelled': return 'bg-red-100 text-red-700 border-red-200';
+            default: return 'bg-yellow-100 text-yellow-700 border-yellow-200';
         }
     };
 
@@ -52,72 +89,75 @@ const MyBookings = () => {
         }
     };
 
-    if (loading) return <Loader />;
-
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <h1 className="text-4xl font-bold mb-8">My <span className="text-primary">Bookings</span></h1>
+        <div className="min-h-screen bg-[#e1e7f0] pt-28 pb-24">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center mb-12">
+                    <h1 className="text-4xl font-bold text-[#1e2a3b] tracking-tight">My Bookings</h1>
+                    <p className="text-gray-500 mt-2">Manage your vehicle rentals and upcoming trips.</p>
+                </div>
 
-            {bookings.length > 0 ? (
-                <div className="space-y-6">
-                    {bookings.map((booking, i) => (
-                        <motion.div
-                            key={booking._id}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.1 }}
-                            className="glass-card flex flex-col md:flex-row items-center gap-8"
-                        >
-                            <div className="w-full md:w-64 h-40 rounded-xl overflow-hidden shrink-0">
-                                <img src={booking.vehicle.image} alt={booking.vehicle.name} className="w-full h-full object-cover" />
-                            </div>
+                {bookings.length > 0 ? (
+                    <div className="space-y-6">
+                        {bookings.map((booking, i) => (
+                            <motion.div
+                                key={booking._id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: i * 0.1 }}
+                                className="bg-white rounded-[4px] p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-6 items-center"
+                            >
+                                <div className="w-full md:w-48 h-32 rounded-[4px] overflow-hidden shrink-0 bg-gray-100">
+                                    <img src={booking.vehicle.image} alt={booking.vehicle.name} className="w-full h-full object-cover" />
+                                </div>
 
-                            <div className="flex-grow w-full space-y-4">
-                                <div className="flex justify-between items-start">
-                                    <div>
-                                        <h3 className="text-2xl font-bold">{booking.vehicle.name}</h3>
-                                        <div className={`mt-2 inline-flex items-center space-x-2 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${getStatusStyles(booking.status)}`}>
-                                            {getStatusIcon(booking.status)}
-                                            <span>{booking.status}</span>
+                                <div className="flex-grow w-full space-y-4">
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <h3 className="text-xl font-bold text-[#1e2a3b]">{booking.vehicle.name}</h3>
+                                            <div className={`mt-2 inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-[4px] border text-[11px] font-bold uppercase tracking-wider ${getStatusStyles(booking.status)}`}>
+                                                {getStatusIcon(booking.status)}
+                                                <span>{booking.status}</span>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <span className="text-gray-400 text-xs uppercase font-bold tracking-wider block mb-1">Total Price</span>
+                                            <span className="text-xl font-bold text-[#1e2a3b]">LKR {booking.totalPrice}</span>
                                         </div>
                                     </div>
-                                    <div className="text-right">
-                                        <span className="text-gray-500 text-sm block">Total Price</span>
-                                        <span className="text-2xl font-bold text-primary">${booking.totalPrice}</span>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-gray-100">
+                                        <div className="flex items-center space-x-2 text-gray-500 text-sm">
+                                            <Calendar className="w-4 h-4 text-[#ffc107]" />
+                                            <span className="font-medium">{new Date(booking.startDate).toLocaleDateString()} - {new Date(booking.endDate).toLocaleDateString()}</span>
+                                        </div>
+                                        <div className="flex items-center space-x-2 text-gray-500 text-sm">
+                                            <Tag className="w-4 h-4 text-[#ffc107]" />
+                                            <span className="font-medium">{booking.vehicle.type}</span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-white/5">
-                                    <div className="flex items-center space-x-3 text-gray-400">
-                                        <Calendar className="w-4 h-4 text-primary" />
-                                        <span>{new Date(booking.startDate).toLocaleDateString()} - {new Date(booking.endDate).toLocaleDateString()}</span>
-                                    </div>
-                                    <div className="flex items-center space-x-3 text-gray-400">
-                                        <Tag className="w-4 h-4 text-primary" />
-                                        <span>{booking.vehicle.type}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {booking.status === 'pending' && (
-                                <button
-                                    onClick={() => handleCancel(booking._id)}
-                                    className="px-6 py-3 rounded-lg border-2 border-red-500/50 text-red-500 hover:bg-red-500 hover:text-white transition-all font-bold w-full md:w-auto"
-                                >
-                                    Cancel
-                                </button>
-                            )}
-                        </motion.div>
-                    ))}
-                </div>
-            ) : (
-                <div className="text-center py-24 glass-card">
-                    <Calendar className="w-16 h-16 text-gray-600 mx-auto mb-6" />
-                    <h3 className="text-2xl font-bold mb-2">No bookings yet</h3>
-                    <p className="text-gray-400 mb-8">Ready to hit the road? Explore our fleet and book your first ride.</p>
-                    <a href="/vehicles" className="btn-primary">Browse Vehicles</a>
-                </div>
-            )}
+                                {booking.status === 'pending' && (
+                                    <button
+                                        onClick={() => handleCancel(booking._id)}
+                                        className="px-6 py-2.5 rounded-[4px] border-2 border-red-50 text-red-500 hover:bg-red-50 hover:border-red-100 transition-all font-bold w-full md:w-auto text-sm"
+                                    >
+                                        Cancel
+                                    </button>
+                                )}
+                            </motion.div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-24 bg-white rounded-[4px] shadow-sm">
+                        <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-6" />
+                        <h3 className="text-2xl font-bold text-[#1e2a3b] mb-2">No bookings yet</h3>
+                        <p className="text-gray-500 mb-8">Ready to hit the road? Explore our fleet and book your first ride.</p>
+                        <a href="/vehicles" className="bg-[#ffc107] text-[#1e2a3b] px-8 py-3 rounded-[4px] font-bold hover:bg-[#e0a800] transition-colors inline-block">Browse Vehicles</a>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

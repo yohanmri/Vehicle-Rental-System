@@ -50,7 +50,7 @@ const Login = () => {
                                 <input 
                                     type="email" 
                                     required
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg py-3 pl-11 pr-4 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 outline-none transition-all"
+                                    className="w-full bg-white/5 border border-white/10 rounded-[4px] py-3 pl-11 pr-4 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 outline-none transition-all"
                                     placeholder="name@example.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -65,7 +65,7 @@ const Login = () => {
                                 <input 
                                     type="password" 
                                     required
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg py-3 pl-11 pr-4 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 outline-none transition-all"
+                                    className="w-full bg-white/5 border border-white/10 rounded-[4px] py-3 pl-11 pr-4 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 outline-none transition-all"
                                     placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}

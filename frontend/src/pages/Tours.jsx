@@ -44,7 +44,7 @@ const Tours = () => {
                         animate={{ opacity: 1, y: 0 }}
                         className="flex justify-center mb-6"
                     >
-                        <div className="bg-[#1e2a3b] p-3 rounded-2xl shadow-xl">
+                        <div className="bg-[#1e2a3b] p-3 rounded-[4px] shadow-xl">
                             <Palmtree className="w-8 h-8 text-[#ffc107]" />
                         </div>
                     </motion.div>
@@ -63,7 +63,7 @@ const Tours = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.1 }}
-                            className="bg-[#f1f5f9] rounded-[32px] overflow-hidden shadow-sm hover:shadow-2xl transition-all border border-[#1e2a3b]/5 group"
+                            className="bg-[#f1f5f9] rounded-[4px] overflow-hidden shadow-sm hover:shadow-2xl transition-all border border-[#1e2a3b]/5 group"
                         >
                             <div className="h-64 relative overflow-hidden">
                                 <img 
@@ -85,7 +85,7 @@ const Tours = () => {
                                         </span>
                                     ))}
                                 </div>
-                                <button className="w-full bg-[#1e2a3b] text-white py-4 rounded-2xl font-bold hover:bg-[#2a3b50] transition-colors flex items-center justify-center gap-2 group">
+                                <button className="w-full bg-[#1e2a3b] text-white py-4 rounded-[4px] font-bold hover:bg-[#2a3b50] transition-colors flex items-center justify-center gap-2 group">
                                     View Itinerary
                                     <Camera className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </button>
@@ -95,11 +95,11 @@ const Tours = () => {
                 </div>
 
                 {/* Features Section */}
-                <div className="bg-[#1e2a3b] rounded-[40px] p-10 lg:p-20 text-white relative overflow-hidden">
+                <div className="bg-[#1e2a3b] rounded-[4px] p-10 lg:p-20 text-white relative overflow-hidden">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 relative z-10">
                         {whyTours.map((item, i) => (
                             <div key={i} className="text-center md:text-left">
-                                <div className="w-12 h-12 bg-[#ffc107]/20 rounded-2xl flex items-center justify-center mb-6 text-[#ffc107] mx-auto md:mx-0">
+                                <div className="w-12 h-12 bg-[#ffc107]/20 rounded-[4px] flex items-center justify-center mb-6 text-[#ffc107] mx-auto md:mx-0">
                                     {item.icon}
                                 </div>
                                 <h4 className="font-bold text-lg mb-2">{item.title}</h4>
@@ -123,8 +123,8 @@ const Tours = () => {
                          </button>
                     </div>
                     <div className="lg:w-1/2 grid grid-cols-2 gap-4">
-                        <img src="https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&q=80&w=1334" className="rounded-2xl h-48 w-full object-cover" />
-                        <img src="https://images.unsplash.com/photo-1588127333419-b9d7de223dcf?auto=format&fit=crop&q=80&w=1469" className="rounded-2xl h-48 w-full object-cover mt-8" />
+                        <img src="https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&q=80&w=1334" className="rounded-[4px] h-48 w-full object-cover" />
+                        <img src="https://images.unsplash.com/photo-1588127333419-b9d7de223dcf?auto=format&fit=crop&q=80&w=1469" className="rounded-[4px] h-48 w-full object-cover mt-8" />
                     </div>
                 </div>
             </div>

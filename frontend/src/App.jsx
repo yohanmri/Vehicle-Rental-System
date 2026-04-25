@@ -13,6 +13,7 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Business from './pages/Business';
 import Tours from './pages/Tours';
+import ScrollToTop from './components/ScrollToTop';
 
 // Admin Pages
 import Dashboard from './pages/admin/Dashboard';
@@ -22,6 +23,7 @@ import ManageBookings from './pages/admin/ManageBookings';
 function App() {
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full">
+      <ScrollToTop />
       <Navbar />
       <main className="flex-grow w-full overflow-x-hidden">
         <Routes>
@@ -35,9 +37,10 @@ function App() {
           <Route path="/business" element={<Business />} />
           <Route path="/tours" element={<Tours />} />
           
+          <Route path="/my-bookings" element={<MyBookings />} />
+          
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/my-bookings" element={<MyBookings />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
 

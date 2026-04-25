@@ -361,16 +361,16 @@ const VehicleDetail = () => {
 
                                         <div className="space-y-3 sm:space-y-4">
                                             <label className="text-[10px] sm:text-[12px] font-bold text-[#1e2a3b]/60 uppercase tracking-wider">Payment Method</label>
-                                            <div className="flex gap-3 sm:gap-4">
+                                            <div className="grid grid-cols-2 gap-4 sm:gap-6">
                                                 <button 
                                                     onClick={() => setPaymentMethod('cash')}
-                                                    className={`flex-1 py-3 sm:py-4 rounded-xl border-2 font-bold text-xs sm:text-sm transition-all ${paymentMethod === 'cash' ? 'border-[#ffc107] bg-[#ffc107]/5 text-[#1e2a3b]' : 'border-gray-100 text-gray-400 bg-gray-50/50 hover:border-gray-200'}`}
+                                                    className={`w-full py-2.5 sm:py-3 rounded-xl border-2 font-bold text-xs sm:text-sm transition-all ${paymentMethod === 'cash' ? 'border-[#ffc107] bg-[#ffc107]/5 text-[#1e2a3b]' : 'border-gray-100 text-gray-400 bg-gray-50/50 hover:border-gray-200'}`}
                                                 >
                                                     Cash
                                                 </button>
                                                 <button 
                                                     onClick={() => setPaymentMethod('card')}
-                                                    className={`flex-1 py-3 sm:py-4 rounded-xl border-2 font-bold text-xs sm:text-sm transition-all ${paymentMethod === 'card' ? 'border-[#ffc107] bg-[#ffc107]/5 text-[#1e2a3b]' : 'border-gray-100 text-gray-400 bg-gray-50/50 hover:border-gray-200'}`}
+                                                    className={`w-full py-2.5 sm:py-3 rounded-xl border-2 font-bold text-xs sm:text-sm transition-all ${paymentMethod === 'card' ? 'border-[#ffc107] bg-[#ffc107]/5 text-[#1e2a3b]' : 'border-gray-100 text-gray-400 bg-gray-50/50 hover:border-gray-200'}`}
                                                 >
                                                     Card
                                                 </button>

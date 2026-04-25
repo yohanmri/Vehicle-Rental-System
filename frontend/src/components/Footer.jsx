@@ -51,8 +51,8 @@ const Footer = () => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col">
-                            <div className="text-[#ffc107] font-bold text-lg mb-6 text-right">Hotlines</div>
+                        <div className="flex flex-col mt-8 md:mt-0">
+                            <div className="text-[#ffc107] font-bold text-lg mb-6 text-left md:text-right">Hotlines</div>
                             <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
                                 <div>
                                     <div className="text-gray-300 text-sm mb-1">Pick 'N' Go Cabs</div>

@@ -27,7 +27,7 @@ const Contact = () => {
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Left Info Column */}
                     <div className="w-full lg:w-5/12 flex flex-col gap-4">
-                        <div className="bg-[#f1f5f9] rounded-2xl p-8 flex-1 border border-[#1e2a3b]/5 shadow-sm">
+                        <div className="bg-[#f1f5f9] rounded-[4px] p-8 flex-1 border border-[#1e2a3b]/5 shadow-sm">
                             <div className="mb-8 group">
                                 <div className="flex items-center gap-3 mb-2">
                                     <div className="bg-white p-2 rounded-lg shadow-sm">
@@ -65,13 +65,13 @@ const Contact = () => {
                         
                         {/* Map & WhatsApp Row */}
                         <div className="flex gap-4 h-24">
-                            <div className="flex-1 rounded-2xl overflow-hidden relative border border-[#1e2a3b]/5 group cursor-pointer shadow-sm">
+                            <div className="flex-1 rounded-[4px] overflow-hidden relative border border-[#1e2a3b]/5 group cursor-pointer shadow-sm">
                                 <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=800" alt="Map" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                                 <div className="absolute bottom-2 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-md text-xs font-bold text-[#1e2a3b]">
                                     Nugegoda, Sri Lanka
                                 </div>
                             </div>
-                            <div className="flex-1 bg-[#f1f5f9] rounded-2xl border border-[#1e2a3b]/5 flex items-center justify-center cursor-pointer hover:bg-green-50 transition-colors group shadow-sm">
+                            <div className="flex-1 bg-[#f1f5f9] rounded-[4px] border border-[#1e2a3b]/5 flex items-center justify-center cursor-pointer hover:bg-green-50 transition-colors group shadow-sm">
                                 <div className="flex items-center gap-3">
                                     <div className="bg-green-500 text-white p-2 rounded-full group-hover:scale-110 transition-transform shadow-lg shadow-green-500/20">
                                         <MessageCircle className="w-6 h-6" />
@@ -86,7 +86,7 @@ const Contact = () => {
                     </div>
 
                     {/* Right Form Column */}
-                    <div className="w-full lg:w-7/12 bg-[#f1f5f9] rounded-2xl p-8 border border-[#1e2a3b]/5 shadow-sm">
+                    <div className="w-full lg:w-7/12 bg-[#f1f5f9] rounded-[4px] p-8 border border-[#1e2a3b]/5 shadow-sm">
                         <form className="flex flex-col gap-4">
                             <div className="flex border border-gray-200 rounded-lg bg-white overflow-hidden focus-within:border-[#1e2a3b] focus-within:ring-1 focus-within:ring-[#1e2a3b] transition-all">
                                 <div className="flex items-center gap-2 px-4 bg-gray-50 border-r border-gray-200 text-gray-500 text-sm font-medium">

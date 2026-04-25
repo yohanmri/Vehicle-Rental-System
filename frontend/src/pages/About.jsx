@@ -56,7 +56,7 @@ const About = () => {
                         initial={{ opacity: 0, x: -30 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        className="rounded-2xl overflow-hidden shadow-2xl"
+                        className="rounded-[4px] overflow-hidden shadow-2xl"
                     >
                         <img 
                             src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&q=80&w=1470" 
@@ -79,7 +79,7 @@ const About = () => {
                         </p>
                         <div className="grid grid-cols-2 gap-6 pt-4">
                             {stats.map((stat, i) => (
-                                <div key={i} className="bg-[#f1f5f9] p-4 rounded-xl border border-[#1e2a3b]/5 shadow-sm">
+                                <div key={i} className="bg-[#f1f5f9] p-4 rounded-[4px] border border-[#1e2a3b]/5 shadow-sm">
                                     <div className="text-2xl font-bold text-[#1e2a3b]">{stat.value}</div>
                                     <div className="text-sm text-gray-500 font-medium">{stat.label}</div>
                                 </div>
@@ -89,7 +89,7 @@ const About = () => {
                 </div>
 
                 {/* Values Section */}
-                <div className="bg-[#1e2a3b] rounded-3xl p-12 lg:p-20 text-white relative overflow-hidden">
+                <div className="bg-[#1e2a3b] rounded-[4px] p-12 lg:p-20 text-white relative overflow-hidden">
                     <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
                         {values.map((value, i) => (
                             <div key={i} className="space-y-4">
@@ -112,7 +112,7 @@ const About = () => {
                     <div className="flex flex-wrap justify-center gap-8 opacity-40 grayscale">
                         {/* Placeholder logos */}
                         {[1,2,3,4,5].map(i => (
-                            <div key={i} className="h-12 w-32 bg-gray-400 rounded-lg"></div>
+                            <div key={i} className="h-12 w-32 bg-gray-400 rounded-[4px]"></div>
                         ))}
                     </div>
                 </div>
