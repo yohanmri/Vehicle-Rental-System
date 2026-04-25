@@ -54,9 +54,6 @@ const VehicleDetail = () => {
             { _id: 'b1', name: 'Yamaha FZ', type: 'Bike', capacity: 2, price: '2500.00', image: bike1, description: 'The Yamaha FZ is a perfectly balanced street fighter, offering great maneuverability and punchy performance for city riding and short trips.' },
             { _id: 'b2', name: 'Honda Hornet', type: 'Bike', capacity: 2, price: '2800.00', image: bike2, description: 'Aggressive styling meets legendary Honda reliability. The Hornet is designed for those who want a bit more power and presence on the road.' },
             { _id: 'b3', name: 'TVS Apache', type: 'Bike', capacity: 2, price: '2200.00', image: bike3, description: 'Race-inspired performance and sharp handling make the Apache a favorite for enthusiasts looking for a spirited ride.' },
-            { _id: 'b4', name: 'KTM Duke 390', type: 'Bike', capacity: 2, price: '3500.00', image: 'https://images.unsplash.com/photo-1558981403-c5f91ad9a08b?auto=format&fit=crop&q=80&w=800', description: 'The Master of Performance. The KTM 390 DUKE is a pure example of what draws so many to the thrill of street motorcycling.' },
-            { _id: 'b5', name: 'Royal Enfield', type: 'Bike', capacity: 2, price: '4000.00', image: 'https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?auto=format&fit=crop&q=80&w=800', description: 'The quintessential classic motorcycle. Timeless design meets modern performance for a relaxed and stylish ride.' },
-            { _id: 'b6', name: 'Kawasaki Ninja', type: 'Bike', capacity: 2, price: '5500.00', image: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&q=80&w=800', description: 'Experience the thrill of the track on the road. The Ninja series represents Kawasaki\'s peak performance and aerodynamic design.' },
             { _id: '1', name: 'Koenigsegg', type: 'Sport', capacity: 2, price: '150000.00', image: car1, description: 'Sports car with the best design and acceleration. Safety and comfort while driving a futuristic and elegant sports car.' },
             { _id: '2', name: 'Nissan GT - R', type: 'Sport', capacity: 2, price: '80000.00', image: car2, description: 'NISMO has become the embodiment of Nissan\'s outstanding performance, inspired by the most unforgiving proving ground, the "race track".' },
             { _id: '3', name: 'Rolls-Royce', type: 'Sport', capacity: 4, price: '120000.00', image: car3, description: 'Experience ultimate luxury and refinement.' },
@@ -247,7 +244,15 @@ const VehicleDetail = () => {
                                     <img 
                                         src={imageUrl} 
                                         alt={vehicle.name} 
-                                        className="w-[85%] sm:w-full max-w-[400px] object-contain drop-shadow-2xl transform hover:scale-105 transition-transform duration-500 lg:translate-y-4" 
+                                        className={`drop-shadow-2xl transform hover:scale-105 transition-transform duration-500 ${
+                                            vehicle._id === 'b1' 
+                                            ? 'w-[75%] sm:w-[85%] max-w-[320px] sm:max-w-[380px] object-contain translate-y-4 lg:-translate-y-12' 
+                                            : vehicle._id === 'b2'
+                                            ? 'w-[70%] sm:w-[80%] max-w-[300px] sm:max-w-[340px] object-contain translate-y-4 lg:-translate-y-14'
+                                            : vehicle._id === 'b3'
+                                            ? 'w-[55%] sm:w-[65%] max-w-[240px] sm:max-w-[300px] object-contain translate-y-4 lg:-translate-y-4'
+                                            : 'w-[85%] sm:w-full max-w-[400px] object-contain lg:translate-y-4'
+                                        }`} 
                                     />
                                 </div>
                                 <div className="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] bg-[#ffc107]/10 rounded-full blur-3xl"></div>
@@ -260,10 +265,10 @@ const VehicleDetail = () => {
                                     <img src={imageUrl} alt="Thumbnail" className="w-full h-full object-contain" />
                                 </div>
                                 <div className="bg-white rounded-[10px] aspect-[4/3] overflow-hidden cursor-pointer border border-gray-100 hover:border-[#ffc107] transition-colors">
-                                    <img src={vehicle.type === 'Bike' ? "https://images.unsplash.com/photo-1558981403-c5f91ad9a08b?auto=format&fit=crop&q=80&w=500" : "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&q=80&w=500"} alt="Detail 1" className="w-full h-full object-cover" />
+                                    <img src={vehicle.type === 'Bike' ? "https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&q=80&w=500" : "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&q=80&w=500"} alt="Detail 1" className="w-full h-full object-cover" />
                                 </div>
                                 <div className="bg-white rounded-[10px] aspect-[4/3] overflow-hidden cursor-pointer border border-gray-100 hover:border-[#ffc107] transition-colors">
-                                    <img src={vehicle.type === 'Bike' ? "https://images.unsplash.com/photo-1444491741275-3747c53c99b4?auto=format&fit=crop&q=80&w=500" : "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=500"} alt="Detail 2" className="w-full h-full object-cover" />
+                                    <img src={vehicle.type === 'Bike' ? "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&q=80&w=500" : "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=500"} alt="Detail 2" className="w-full h-full object-cover" />
                                 </div>
                             </div>
                         </div>
