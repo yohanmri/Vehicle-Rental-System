@@ -24,6 +24,7 @@ app.use('/api/vehicles', require('./routes/user/vehicleRoutes'));
 app.use('/api/bookings', require('./routes/user/bookingRoutes'));
 app.use('/api/users',    require('./routes/user/userRoutes'));
 app.use('/api/tours',    require('./routes/user/tourRoutes'));
+app.use('/api/contact',  require('./routes/user/contactRoutes'));
 
 // ─── Admin Routes ───────────────────────────────────────────────────────────
 app.use('/api/admin/auth',      require('./routes/admin/adminAuthRoutes'));
@@ -33,6 +34,7 @@ app.use('/api/admin/vehicles',  require('./routes/admin/adminVehicleRoutes'));
 app.use('/api/admin/customers', require('./routes/admin/customerRoutes'));
 app.use('/api/admin/payments',  require('./routes/admin/paymentRoutes'));
 app.use('/api/admin/tours',     require('./routes/admin/tourRoutes'));
+app.use('/api/admin/contact',   require('./routes/admin/adminContactRoutes'));
 
 // ─── Static Uploads ─────────────────────────────────────────────────────────
 app.use('/uploads', express.static('uploads'));

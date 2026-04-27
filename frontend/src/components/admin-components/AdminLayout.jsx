@@ -16,7 +16,8 @@ import {
     List,
     ClipboardList,
     ExternalLink,
-    BarChart3
+    BarChart3,
+    MessageCircle
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -25,6 +26,7 @@ const NAV_ITEMS = [
         items: [
             { label: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard size={20} /> },
             { label: 'Analytics', path: '/admin/analytics', icon: <BarChart3 size={20} /> },
+            { label: 'Messages', path: '/admin/messages', icon: <MessageCircle size={20} /> },
         ],
     },
     {

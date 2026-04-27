@@ -1,8 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MessageCircle, Mail, Phone, MapPin } from 'lucide-react';
+import { MessageCircle, Mail, Phone, MapPin, Loader2 } from 'lucide-react';
+import axios from '../../api/axios';
+import { toast } from 'react-hot-toast';
 
 const Contact = () => {
+    const [formData, setFormData] = useState({
+        phone: '',
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+        wantsInfo: false
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        if (!formData.phone || !formData.name || !formData.email || !formData.subject || !formData.message) {
+            toast.error('Please fill in all required fields.');
+            return;
+        }
+
+        setIsSubmitting(true);
+        try {
+            await axios.post('/contact', formData);
+            toast.success('Your message has been sent successfully!');
+            setFormData({
+                phone: '',
+                name: '',
+                email: '',
+                subject: '',
+                message: '',
+                wantsInfo: false
+            });
+        } catch (error) {
+            console.error('Failed to send message:', error);
+            toast.error(error.response?.data?.message || 'Failed to send message. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
     return (
         <div className="min-h-screen bg-[#e1e7f0] pt-28 pb-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -87,29 +134,29 @@ const Contact = () => {
 
                     {/* Right Form Column */}
                     <div className="w-full lg:w-7/12 bg-[#f1f5f9] rounded-[4px] p-8 border border-[#1e2a3b]/5 shadow-sm">
-                        <form className="flex flex-col gap-4">
+                        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                             <div className="flex border border-gray-200 rounded-lg bg-white overflow-hidden focus-within:border-[#1e2a3b] focus-within:ring-1 focus-within:ring-[#1e2a3b] transition-all">
                                 <div className="flex items-center gap-2 px-4 bg-gray-50 border-r border-gray-200 text-gray-500 text-sm font-medium">
                                     <img src="https://flagcdn.com/w20/lk.png" alt="Sri Lanka" className="w-5 h-3.5 object-cover rounded-sm shadow-sm" />
                                     <span>+94</span>
                                 </div>
-                                <input type="tel" placeholder="Enter Mobile Number" className="flex-1 px-4 py-3 outline-none text-[15px]" />
+                                <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="Enter Mobile Number" className="flex-1 px-4 py-3 outline-none text-[15px]" required />
                             </div>
 
-                            <input type="text" placeholder="Name" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] bg-white" />
-                            <input type="email" placeholder="Email" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] bg-white" />
-                            <input type="text" placeholder="Subject" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] bg-white" />
+                            <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] bg-white" required />
+                            <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] bg-white" required />
+                            <input type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="Subject" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] bg-white" required />
                             
-                            <textarea rows="4" placeholder="Leave us a message" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] resize-none bg-white"></textarea>
+                            <textarea name="message" value={formData.message} onChange={handleChange} rows="4" placeholder="Leave us a message" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] resize-none bg-white" required></textarea>
 
                             <label className="flex items-center gap-3 mt-2 cursor-pointer group w-fit">
-                                <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-[#1e2a3b] focus:ring-[#1e2a3b] cursor-pointer" />
+                                <input type="checkbox" name="wantsInfo" checked={formData.wantsInfo} onChange={handleChange} className="w-4 h-4 rounded border-gray-300 text-[#1e2a3b] focus:ring-[#1e2a3b] cursor-pointer" />
                                 <span className="text-gray-500 text-[13px] group-hover:text-gray-700 transition-colors">I would like to receive more information about Pick 'N' Go 360 Pvt Ltd.</span>
                             </label>
 
                             <div className="mt-4 flex justify-end">
-                                <button type="button" className="bg-[#1e2a3b] text-white px-8 py-3.5 rounded-lg font-bold hover:bg-[#2a3b50] transition-colors shadow-lg shadow-[#1e2a3b]/10 text-[15px]">
-                                    Send Message
+                                <button type="submit" disabled={isSubmitting} className="bg-[#1e2a3b] text-white px-8 py-3.5 rounded-lg font-bold hover:bg-[#2a3b50] transition-colors shadow-lg shadow-[#1e2a3b]/10 text-[15px] disabled:opacity-70 flex items-center gap-2">
+                                    {isSubmitting ? <><Loader2 className="w-5 h-5 animate-spin" /> Sending...</> : 'Send Message'}
                                 </button>
                             </div>
                         </form>

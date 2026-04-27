@@ -28,6 +28,7 @@ import AdminLayout from './components/admin-components/AdminLayout';
 import AdminLogin from './pages/admin-pages/AdminLogin';
 import AdminDashboard from './pages/admin-pages/AdminDashboard';
 import AdminAnalytics from './pages/admin-pages/AdminAnalytics';
+import AdminContactMessages from './pages/admin-pages/AdminContactMessages';
 import AdminBookings from './pages/admin-pages/AdminBookings';
 import AdminVehicles from './pages/admin-pages/AdminVehicles';
 import AdminVehicleForm from './pages/admin-pages/AdminVehicleForm';
@@ -57,6 +58,7 @@ function App() {
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard"  element={<AdminDashboard />} />
           <Route path="analytics"  element={<AdminAnalytics />} />
+          <Route path="messages"   element={<AdminContactMessages />} />
           <Route path="bookings"   element={<AdminBookings />} />
           <Route path="vehicles"       element={<AdminVehicles />} />
           <Route path="vehicles/add"   element={<AdminVehicleForm />} />
