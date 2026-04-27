@@ -33,7 +33,7 @@ const Contact = () => {
 
         setIsSubmitting(true);
         try {
-            await axios.post('/contact', formData);
+            await axios.post('/api/contact', formData);
             toast.success('Your message has been sent successfully!');
             setFormData({
                 phone: '',
@@ -140,14 +140,14 @@ const Contact = () => {
                                     <img src="https://flagcdn.com/w20/lk.png" alt="Sri Lanka" className="w-5 h-3.5 object-cover rounded-sm shadow-sm" />
                                     <span>+94</span>
                                 </div>
-                                <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="Enter Mobile Number" className="flex-1 px-4 py-3 outline-none text-[15px]" required />
+                                <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="Enter Mobile Number" className="flex-1 px-4 py-3 outline-none text-[15px] text-[#1e2a3b] bg-white" required />
                             </div>
 
-                            <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] bg-white" required />
-                            <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] bg-white" required />
-                            <input type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="Subject" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] bg-white" required />
+                            <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] text-[#1e2a3b] bg-white" required />
+                            <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] text-[#1e2a3b] bg-white" required />
+                            <input type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="Subject" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] text-[#1e2a3b] bg-white" required />
                             
-                            <textarea name="message" value={formData.message} onChange={handleChange} rows="4" placeholder="Leave us a message" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] resize-none bg-white" required></textarea>
+                            <textarea name="message" value={formData.message} onChange={handleChange} rows="4" placeholder="Leave us a message" className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-[#1e2a3b] focus:ring-1 focus:ring-[#1e2a3b] transition-all text-[15px] text-[#1e2a3b] resize-none bg-white" required></textarea>
 
                             <label className="flex items-center gap-3 mt-2 cursor-pointer group w-fit">
                                 <input type="checkbox" name="wantsInfo" checked={formData.wantsInfo} onChange={handleChange} className="w-4 h-4 rounded border-gray-300 text-[#1e2a3b] focus:ring-[#1e2a3b] cursor-pointer" />

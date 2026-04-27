@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
 import { useAdminAuth } from '../../context/admin-context/AdminAuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Map, Plus, Edit2, Trash2 } from 'lucide-react';
+import { Map, Plus, Edit2, Trash2, Search } from 'lucide-react';
 
 const AdminTours = () => {
     const { admin } = useAdminAuth();
     const navigate = useNavigate();
     const [tours, setTours] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
     const [total, setTotal] = useState(0);
 
     const fetchTours = async () => {
@@ -35,23 +36,46 @@ const AdminTours = () => {
 
     useEffect(() => { fetchTours(); }, []);
 
+    const filteredTours = tours.filter(t => 
+        (t.title && t.title.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
     return (
         <div>
-            <div style={{ marginBottom: '28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+            <div style={{ marginBottom: '28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
                 <div>
                     <h1 style={{ color: '#1e2a3b', fontSize: '28px', fontWeight: '800', margin: 0 }}>Tours</h1>
                     <p style={{ color: '#64748B', fontSize: '15px', marginTop: '6px', fontWeight: '500' }}>{total} tours available</p>
                 </div>
-                <button onClick={() => navigate('/admin/tours/add')} style={{
-                    background: '#1e2a3b', color: '#ffffff', fontWeight: '600',
-                    padding: '12px 24px', borderRadius: '12px', border: 'none', cursor: 'pointer', fontSize: '15px',
-                    display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#ffc107'; e.currentTarget.style.color = '#1e2a3b'; }}
-                onMouseLeave={e => { e.currentTarget.style.background = '#1e2a3b'; e.currentTarget.style.color = '#ffffff'; }}
-                >
-                    <Plus size={18} /> Add Tour
-                </button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                    <div style={{ position: 'relative', width: '280px' }}>
+                        <Search style={{ width: '20px', height: '20px', position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                        <input 
+                            type="text" 
+                            placeholder="Search tours..." 
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            style={{
+                                width: '100%', padding: '10px 16px 10px 40px', background: '#ffffff',
+                                border: '1px solid rgba(30,42,59,0.08)', borderRadius: '12px', fontSize: '14px',
+                                color: '#1e2a3b', outline: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+                                transition: 'all 0.2s'
+                            }}
+                            onFocus={e => e.currentTarget.style.border = '1px solid #ffc107'}
+                            onBlur={e => e.currentTarget.style.border = '1px solid rgba(30,42,59,0.08)'}
+                        />
+                    </div>
+                    <button onClick={() => navigate('/admin/tours/add')} style={{
+                        background: '#1e2a3b', color: '#ffffff', fontWeight: '600',
+                        padding: '10px 24px', borderRadius: '12px', border: 'none', cursor: 'pointer', fontSize: '15px',
+                        display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', height: '42px'
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = '#ffc107'; e.currentTarget.style.color = '#1e2a3b'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = '#1e2a3b'; e.currentTarget.style.color = '#ffffff'; }}
+                    >
+                        <Plus size={18} /> Add Tour
+                    </button>
+                </div>
             </div>
 
             {loading ? (
@@ -60,16 +84,16 @@ const AdminTours = () => {
                         <div key={i} style={{ background: '#f1f5f9', borderRadius: '16px', height: '300px', animation: 'pulse 1.5s infinite', border: '1px solid #e2e8f0' }} />
                     ))}
                 </div>
-            ) : tours.length === 0 ? (
+            ) : filteredTours.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '64px', color: '#64748B', background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
                         <Map size={64} color="#cbd5e1" />
                     </div>
-                    <p style={{ fontSize: '16px', fontWeight: '500' }}>No tours found. <span style={{ color: '#1e2a3b', cursor: 'pointer', fontWeight: '700', textDecoration: 'underline' }} onClick={() => navigate('/admin/tours/add')}>Add one here</span></p>
+                    <p style={{ fontSize: '16px', fontWeight: '500' }}>No tours found matching search.</p>
                 </div>
             ) : (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
-                    {tours.map(t => (
+                    {filteredTours.map(t => (
                         <div key={t._id} style={{ 
                             background: '#ffffff', border: '1px solid rgba(30,42,59,0.08)', borderRadius: '16px', overflow: 'hidden',
                             transition: 'all 0.2s', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)'

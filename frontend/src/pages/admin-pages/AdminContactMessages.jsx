@@ -10,7 +10,7 @@ const AdminContactMessages = () => {
 
     const fetchMessages = async () => {
         try {
-            const response = await axios.get('/admin/contact');
+            const response = await axios.get('/api/admin/contact');
             setMessages(response.data);
         } catch (error) {
             console.error('Failed to fetch messages:', error);
@@ -26,7 +26,7 @@ const AdminContactMessages = () => {
 
     const handleMarkAsRead = async (id) => {
         try {
-            await axios.patch(`/admin/contact/${id}`, { status: 'read' });
+            await axios.patch(`/api/admin/contact/${id}`, { status: 'read' });
             setMessages(prev => prev.map(m => m._id === id ? { ...m, status: 'read' } : m));
             toast.success('Message marked as read');
         } catch (error) {
@@ -38,7 +38,7 @@ const AdminContactMessages = () => {
         if (!window.confirm('Are you sure you want to delete this message?')) return;
         
         try {
-            await axios.delete(`/admin/contact/${id}`);
+            await axios.delete(`/api/admin/contact/${id}`);
             setMessages(prev => prev.filter(m => m._id !== id));
             toast.success('Message deleted');
         } catch (error) {

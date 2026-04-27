@@ -32,6 +32,7 @@ const AdminBookings = () => {
     const { admin } = useAdminAuth();
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('all');
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
@@ -58,31 +59,58 @@ const AdminBookings = () => {
 
     useEffect(() => { fetchBookings(); }, [activeTab, page]);
 
+    const filteredBookings = bookings.filter(b => 
+        (b.bookingId && b.bookingId.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (b.customerId?.name && b.customerId.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (b.serviceType && b.serviceType.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (b.pickupLocation && b.pickupLocation.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
     return (
         <div>
-            <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
                 <div>
                     <h1 style={{ color: '#1e2a3b', fontSize: '28px', fontWeight: '800', margin: 0 }}>All Bookings</h1>
                     <p style={{ color: '#64748B', fontSize: '15px', marginTop: '6px', fontWeight: '500' }}>{total} total bookings</p>
                 </div>
             </div>
 
-            {/* Tabs */}
-            <div style={{ display: 'flex', gap: '4px', marginBottom: '24px', background: '#f1f5f9', padding: '6px', borderRadius: '12px', width: 'fit-content', border: '1px solid rgba(30,42,59,0.08)' }}>
-                {TABS.map(tab => (
-                    <button key={tab} onClick={() => { setActiveTab(tab); setPage(1); }} style={{
-                        padding: '8px 24px',
-                        borderRadius: '8px',
-                        border: 'none',
-                        background: activeTab === tab ? '#ffc107' : 'transparent',
-                        color: activeTab === tab ? '#1e2a3b' : '#64748B',
-                        fontWeight: activeTab === tab ? '700' : '600',
-                        fontSize: '14px',
-                        cursor: 'pointer',
-                        textTransform: 'capitalize',
-                        transition: 'all 0.2s',
-                    }}>{tab}</button>
-                ))}
+            {/* Tabs & Search */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
+                <div style={{ display: 'flex', gap: '4px', background: '#f1f5f9', padding: '6px', borderRadius: '12px', width: 'fit-content', border: '1px solid rgba(30,42,59,0.08)' }}>
+                    {TABS.map(tab => (
+                        <button key={tab} onClick={() => { setActiveTab(tab); setPage(1); }} style={{
+                            padding: '8px 24px',
+                            borderRadius: '8px',
+                            border: 'none',
+                            background: activeTab === tab ? '#ffc107' : 'transparent',
+                            color: activeTab === tab ? '#1e2a3b' : '#64748B',
+                            fontWeight: activeTab === tab ? '700' : '600',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            textTransform: 'capitalize',
+                            transition: 'all 0.2s',
+                        }}>{tab}</button>
+                    ))}
+                </div>
+
+                <div style={{ position: 'relative', width: '280px' }}>
+                    <Search style={{ width: '20px', height: '20px', position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                    <input 
+                        type="text" 
+                        placeholder="Search bookings..." 
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        style={{
+                            width: '100%', padding: '10px 16px 10px 40px', background: '#ffffff',
+                            border: '1px solid rgba(30,42,59,0.08)', borderRadius: '12px', fontSize: '14px',
+                            color: '#1e2a3b', outline: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+                            transition: 'all 0.2s'
+                        }}
+                        onFocus={e => e.currentTarget.style.border = '1px solid #ffc107'}
+                        onBlur={e => e.currentTarget.style.border = '1px solid rgba(30,42,59,0.08)'}
+                    />
+                </div>
             </div>
 
             {/* Table */}
@@ -107,7 +135,7 @@ const AdminBookings = () => {
                                         ))}
                                     </tr>
                                 ))
-                            ) : bookings.length === 0 ? (
+                            ) : filteredBookings.length === 0 ? (
                                 <tr>
                                     <td colSpan={8} style={{ padding: '64px', textAlign: 'center', color: '#64748B' }}>
                                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
@@ -117,7 +145,7 @@ const AdminBookings = () => {
                                     </td>
                                 </tr>
                             ) : (
-                                bookings.map(b => (
+                                filteredBookings.map(b => (
                                     <tr key={b._id} style={{ borderBottom: '1px solid rgba(30,42,59,0.04)', transition: 'background 0.2s' }}
                                         onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
                                         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>

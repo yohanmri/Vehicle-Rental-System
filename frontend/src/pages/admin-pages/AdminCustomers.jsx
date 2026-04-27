@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
 import { useAdminAuth } from '../../context/admin-context/AdminAuthContext';
-import { Users } from 'lucide-react';
+import { Users, Search } from 'lucide-react';
 
 const AdminCustomers = () => {
     const { admin } = useAdminAuth();
     const [customers, setCustomers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(1);
     const [total, setTotal] = useState(0);
@@ -28,11 +29,37 @@ const AdminCustomers = () => {
         fetch();
     }, [page]);
 
+    const filteredCustomers = customers.filter(c => 
+        (c.name && c.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (c.email && c.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (c.phone && c.phone.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
     return (
         <div>
-            <div style={{ marginBottom: '28px' }}>
-                <h1 style={{ color: '#1e2a3b', fontSize: '28px', fontWeight: '800', margin: 0 }}>Customers</h1>
-                <p style={{ color: '#64748B', fontSize: '15px', marginTop: '6px', fontWeight: '500' }}>{total} registered customers</p>
+            <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                <div>
+                    <h1 style={{ color: '#1e2a3b', fontSize: '28px', fontWeight: '800', margin: 0 }}>Customers</h1>
+                    <p style={{ color: '#64748B', fontSize: '15px', marginTop: '6px', fontWeight: '500' }}>{total} registered customers</p>
+                </div>
+                
+                <div style={{ position: 'relative', width: '280px' }}>
+                    <Search style={{ width: '20px', height: '20px', position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                    <input 
+                        type="text" 
+                        placeholder="Search customers..." 
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        style={{
+                            width: '100%', padding: '10px 16px 10px 40px', background: '#ffffff',
+                            border: '1px solid rgba(30,42,59,0.08)', borderRadius: '12px', fontSize: '14px',
+                            color: '#1e2a3b', outline: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+                            transition: 'all 0.2s'
+                        }}
+                        onFocus={e => e.currentTarget.style.border = '1px solid #ffc107'}
+                        onBlur={e => e.currentTarget.style.border = '1px solid rgba(30,42,59,0.08)'}
+                    />
+                </div>
             </div>
             
             <div style={{ background: '#ffffff', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(30,42,59,0.08)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
@@ -54,16 +81,16 @@ const AdminCustomers = () => {
                                         ))}
                                     </tr>
                                 ))
-                            ) : customers.length === 0 ? (
+                            ) : filteredCustomers.length === 0 ? (
                                 <tr>
                                     <td colSpan={5} style={{ padding: '64px', textAlign: 'center', color: '#64748B' }}>
                                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
                                             <Users size={40} color="#cbd5e1" />
-                                            <span style={{ fontSize: '15px', fontWeight: '500' }}>No customers found</span>
+                                            <span style={{ fontSize: '15px', fontWeight: '500' }}>No customers found matching search</span>
                                         </div>
                                     </td>
                                 </tr>
-                            ) : customers.map(c => (
+                            ) : filteredCustomers.map(c => (
                                 <tr key={c._id} style={{ borderBottom: '1px solid rgba(30,42,59,0.04)', transition: 'background 0.2s' }}
                                     onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
                                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>

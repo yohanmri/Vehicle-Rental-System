@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
 import { useAdminAuth } from '../../context/admin-context/AdminAuthContext';
-import { CreditCard } from 'lucide-react';
+import { CreditCard, Search } from 'lucide-react';
 
 const STATUS_COLORS = { 
     pending: { bg: '#fef3c7', text: '#d97706', border: '#fcd34d' }, 
@@ -13,6 +13,7 @@ const AdminPayments = () => {
     const { admin } = useAdminAuth();
     const [payments, setPayments] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('all');
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(1);
@@ -35,6 +36,12 @@ const AdminPayments = () => {
         fetch();
     }, [activeTab, page]);
 
+    const filteredPayments = payments.filter(p => 
+        (p.transactionId && p.transactionId.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (p.customerId?.name && p.customerId.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (p.bookingId?.bookingId && p.bookingId.bookingId.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
     return (
         <div>
             <div style={{ marginBottom: '28px' }}>
@@ -42,17 +49,37 @@ const AdminPayments = () => {
                 <p style={{ color: '#64748B', fontSize: '15px', marginTop: '6px', fontWeight: '500' }}>{total} transactions</p>
             </div>
 
-            <div style={{ display: 'flex', gap: '4px', marginBottom: '24px', background: '#f1f5f9', padding: '6px', borderRadius: '12px', width: 'fit-content', border: '1px solid rgba(30,42,59,0.08)' }}>
-                {['all', 'cash', 'card'].map(tab => (
-                    <button key={tab} onClick={() => { setActiveTab(tab); setPage(1); }} style={{
-                        padding: '8px 24px', borderRadius: '8px', border: 'none',
-                        background: activeTab === tab ? '#ffc107' : 'transparent',
-                        color: activeTab === tab ? '#1e2a3b' : '#64748B',
-                        fontWeight: activeTab === tab ? '700' : '600',
-                        fontSize: '14px', cursor: 'pointer', textTransform: 'capitalize',
-                        transition: 'all 0.2s'
-                    }}>{tab}</button>
-                ))}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
+                <div style={{ display: 'flex', gap: '4px', background: '#f1f5f9', padding: '6px', borderRadius: '12px', width: 'fit-content', border: '1px solid rgba(30,42,59,0.08)' }}>
+                    {['all', 'cash', 'card'].map(tab => (
+                        <button key={tab} onClick={() => { setActiveTab(tab); setPage(1); }} style={{
+                            padding: '8px 24px', borderRadius: '8px', border: 'none',
+                            background: activeTab === tab ? '#ffc107' : 'transparent',
+                            color: activeTab === tab ? '#1e2a3b' : '#64748B',
+                            fontWeight: activeTab === tab ? '700' : '600',
+                            fontSize: '14px', cursor: 'pointer', textTransform: 'capitalize',
+                            transition: 'all 0.2s'
+                        }}>{tab}</button>
+                    ))}
+                </div>
+
+                <div style={{ position: 'relative', width: '280px' }}>
+                    <Search style={{ width: '20px', height: '20px', position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                    <input 
+                        type="text" 
+                        placeholder="Search payments..." 
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        style={{
+                            width: '100%', padding: '10px 16px 10px 40px', background: '#ffffff',
+                            border: '1px solid rgba(30,42,59,0.08)', borderRadius: '12px', fontSize: '14px',
+                            color: '#1e2a3b', outline: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+                            transition: 'all 0.2s'
+                        }}
+                        onFocus={e => e.currentTarget.style.border = '1px solid #ffc107'}
+                        onBlur={e => e.currentTarget.style.border = '1px solid rgba(30,42,59,0.08)'}
+                    />
+                </div>
             </div>
 
             <div style={{ background: '#ffffff', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(30,42,59,0.08)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
@@ -74,16 +101,16 @@ const AdminPayments = () => {
                                         ))}
                                     </tr>
                                 ))
-                            ) : payments.length === 0 ? (
+                            ) : filteredPayments.length === 0 ? (
                                 <tr>
                                     <td colSpan={7} style={{ padding: '64px', textAlign: 'center', color: '#64748B' }}>
                                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
                                             <CreditCard size={40} color="#cbd5e1" />
-                                            <span style={{ fontSize: '15px', fontWeight: '500' }}>No transactions found</span>
+                                            <span style={{ fontSize: '15px', fontWeight: '500' }}>No transactions found matching search</span>
                                         </div>
                                     </td>
                                 </tr>
-                            ) : payments.map(p => (
+                            ) : filteredPayments.map(p => (
                                 <tr key={p._id} style={{ borderBottom: '1px solid rgba(30,42,59,0.04)', transition: 'background 0.2s' }}
                                     onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
                                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
