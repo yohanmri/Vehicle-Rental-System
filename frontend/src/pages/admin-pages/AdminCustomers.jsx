@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
 import { useAdminAuth } from '../../context/admin-context/AdminAuthContext';
+import { Users } from 'lucide-react';
 
 const AdminCustomers = () => {
     const { admin } = useAdminAuth();
@@ -30,47 +31,76 @@ const AdminCustomers = () => {
     return (
         <div>
             <div style={{ marginBottom: '28px' }}>
-                <h1 style={{ color: '#F8FAFC', fontSize: '24px', fontWeight: '700', margin: 0 }}>Customers</h1>
-                <p style={{ color: '#64748B', fontSize: '14px', marginTop: '4px' }}>{total} registered customers</p>
+                <h1 style={{ color: '#1e2a3b', fontSize: '28px', fontWeight: '800', margin: 0 }}>Customers</h1>
+                <p style={{ color: '#64748B', fontSize: '15px', marginTop: '6px', fontWeight: '500' }}>{total} registered customers</p>
             </div>
-            <div style={{ background: '#1E293B', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)' }}>
+            
+            <div style={{ background: '#ffffff', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(30,42,59,0.08)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
                 <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
                         <thead>
-                            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                            <tr style={{ background: '#f8fafc', borderBottom: '1px solid rgba(30,42,59,0.08)' }}>
                                 {['Name', 'Email', 'Phone', 'Bookings', 'Joined'].map(h => (
-                                    <th key={h} style={{ padding: '14px 20px', color: '#64748B', fontWeight: '600', textAlign: 'left' }}>{h}</th>
+                                    <th key={h} style={{ padding: '16px 24px', color: '#475569', fontWeight: '700', textAlign: 'left', whiteSpace: 'nowrap' }}>{h}</th>
                                 ))}
                             </tr>
                         </thead>
                         <tbody>
                             {loading ? (
                                 Array.from({ length: 5 }).map((_, i) => (
-                                    <tr key={i}>{Array.from({ length: 5 }).map((_, j) => (
-                                        <td key={j} style={{ padding: '14px 20px' }}><div style={{ height: '14px', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', width: '70%' }} /></td>
-                                    ))}</tr>
+                                    <tr key={i} style={{ borderBottom: '1px solid rgba(30,42,59,0.04)' }}>
+                                        {Array.from({ length: 5 }).map((_, j) => (
+                                            <td key={j} style={{ padding: '16px 24px' }}><div style={{ height: '16px', background: '#f1f5f9', borderRadius: '4px', width: '70%', animation: 'pulse 1.5s infinite' }} /></td>
+                                        ))}
+                                    </tr>
                                 ))
                             ) : customers.length === 0 ? (
-                                <tr><td colSpan={5} style={{ padding: '48px', textAlign: 'center', color: '#64748B' }}>No customers found</td></tr>
-                            ) : customers.map(c => (
-                                <tr key={c._id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
-                                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
-                                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                    <td style={{ padding: '14px 20px' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                            <div style={{ width: '34px', height: '34px', background: 'rgba(234,179,8,0.15)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#EAB308', fontWeight: '700', fontSize: '13px' }}>{c.name?.[0]?.toUpperCase()}</div>
-                                            <span style={{ color: '#F8FAFC', fontWeight: '500' }}>{c.name}</span>
+                                <tr>
+                                    <td colSpan={5} style={{ padding: '64px', textAlign: 'center', color: '#64748B' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                                            <Users size={40} color="#cbd5e1" />
+                                            <span style={{ fontSize: '15px', fontWeight: '500' }}>No customers found</span>
                                         </div>
                                     </td>
-                                    <td style={{ padding: '14px 20px', color: '#94A3B8' }}>{c.email}</td>
-                                    <td style={{ padding: '14px 20px', color: '#94A3B8' }}>{c.phone || '—'}</td>
-                                    <td style={{ padding: '14px 20px', color: '#EAB308', fontWeight: '600' }}>{c.totalBookings}</td>
-                                    <td style={{ padding: '14px 20px', color: '#64748B' }}>{new Date(c.createdAt).toLocaleDateString()}</td>
+                                </tr>
+                            ) : customers.map(c => (
+                                <tr key={c._id} style={{ borderBottom: '1px solid rgba(30,42,59,0.04)', transition: 'background 0.2s' }}
+                                    onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
+                                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                    <td style={{ padding: '16px 24px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                            <div style={{ width: '38px', height: '38px', background: '#1e2a3b', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffc107', fontWeight: '800', fontSize: '15px' }}>{c.name?.[0]?.toUpperCase()}</div>
+                                            <span style={{ color: '#1e2a3b', fontWeight: '600' }}>{c.name}</span>
+                                        </div>
+                                    </td>
+                                    <td style={{ padding: '16px 24px', color: '#64748B', fontWeight: '500' }}>{c.email}</td>
+                                    <td style={{ padding: '16px 24px', color: '#64748B', fontWeight: '500' }}>{c.phone || '—'}</td>
+                                    <td style={{ padding: '16px 24px', color: '#1e2a3b', fontWeight: '800' }}>
+                                        <span style={{ background: '#f1f5f9', padding: '4px 12px', borderRadius: '20px' }}>{c.totalBookings}</span>
+                                    </td>
+                                    <td style={{ padding: '16px 24px', color: '#64748B', fontWeight: '500' }}>{new Date(c.createdAt).toLocaleDateString()}</td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
+                
+                {/* Pagination */}
+                {pages > 1 && (
+                    <div style={{ padding: '20px 24px', borderTop: '1px solid rgba(30,42,59,0.08)', display: 'flex', gap: '8px', justifyContent: 'flex-end', background: '#f8fafc' }}>
+                        {Array.from({ length: pages }, (_, i) => i + 1).map(p => (
+                            <button key={p} onClick={() => setPage(p)} style={{
+                                width: '36px', height: '36px', borderRadius: '8px', border: 'none',
+                                background: page === p ? '#1e2a3b' : '#ffffff',
+                                color: page === p ? '#ffc107' : '#64748B',
+                                border: page === p ? 'none' : '1px solid #e2e8f0',
+                                fontWeight: page === p ? '700' : '600',
+                                cursor: 'pointer', fontSize: '14px',
+                                transition: 'all 0.2s'
+                            }}>{p}</button>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

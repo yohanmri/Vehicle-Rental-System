@@ -2,123 +2,88 @@ import { useState } from 'react';
 import axios from '../../api/axios';
 import { useAdminAuth } from '../../context/admin-context/AdminAuthContext';
 
-const Field = ({ label, children }) => (
-    <div style={{ marginBottom: '20px' }}>
-        <label style={{ display: 'block', color: '#94A3B8', fontSize: '13px', fontWeight: '500', marginBottom: '8px' }}>{label}</label>
-        {children}
-    </div>
-);
-
-const inputStyle = {
-    width: '100%', background: '#0F172A', border: '1px solid rgba(255,255,255,0.1)',
-    borderRadius: '10px', padding: '11px 16px', color: '#F8FAFC', fontSize: '14px',
-    outline: 'none', boxSizing: 'border-box',
-};
-
 const AdminSettings = () => {
-    const { admin, loginAdmin, logoutAdmin } = useAdminAuth();
-    const [pwForm, setPwForm] = useState({ currentPassword: '', newPassword: '', confirm: '' });
-    const [unForm, setUnForm] = useState({ newUsername: '' });
-    const [pwMsg, setPwMsg] = useState({ type: '', text: '' });
-    const [unMsg, setUnMsg] = useState({ type: '', text: '' });
-    const [pwLoading, setPwLoading] = useState(false);
-    const [unLoading, setUnLoading] = useState(false);
+    const { admin, loginAdmin } = useAdminAuth();
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [newUsername, setNewUsername] = useState('');
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const handleChangePassword = async (e) => {
+    const handleUpdate = async (e) => {
         e.preventDefault();
-        if (pwForm.newPassword !== pwForm.confirm) {
-            setPwMsg({ type: 'error', text: 'Passwords do not match' });
-            return;
+        setMessage(''); setError(''); setLoading(true);
+        try {
+            await axios.put('/api/admin/settings', {
+                currentPassword,
+                newPassword: newPassword || undefined,
+                newUsername: newUsername || undefined,
+            }, {
+                headers: { Authorization: `Bearer ${admin?.token}` }
+            });
+            setMessage('Settings updated successfully!');
+            setCurrentPassword(''); setNewPassword('');
+            
+            if (newUsername) {
+                // Re-login to get new token
+                await loginAdmin(newUsername, newPassword || currentPassword);
+                setNewUsername('');
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to update settings');
+        } finally {
+            setLoading(false);
         }
-        setPwLoading(true);
-        try {
-            await axios.post('/api/admin/auth/change-password',
-                { currentPassword: pwForm.currentPassword, newPassword: pwForm.newPassword },
-                { headers: { Authorization: `Bearer ${admin?.token}` } }
-            );
-            setPwMsg({ type: 'success', text: 'Password updated successfully' });
-            setPwForm({ currentPassword: '', newPassword: '', confirm: '' });
-        } catch (err) {
-            setPwMsg({ type: 'error', text: err.response?.data?.message || 'Failed to update password' });
-        } finally { setPwLoading(false); }
     };
-
-    const handleChangeUsername = async (e) => {
-        e.preventDefault();
-        setUnLoading(true);
-        try {
-            await axios.patch('/api/admin/auth/change-username',
-                { newUsername: unForm.newUsername },
-                { headers: { Authorization: `Bearer ${admin?.token}` } }
-            );
-            setUnMsg({ type: 'success', text: 'Username updated. Please log in again.' });
-            setTimeout(() => logoutAdmin(), 2000);
-        } catch (err) {
-            setUnMsg({ type: 'error', text: err.response?.data?.message || 'Failed to update username' });
-        } finally { setUnLoading(false); }
-    };
-
-    const msgStyle = (type) => ({
-        padding: '10px 14px', borderRadius: '8px', fontSize: '13px', marginBottom: '16px',
-        background: type === 'success' ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)',
-        color: type === 'success' ? '#4ADE80' : '#FCA5A5',
-        border: `1px solid ${type === 'success' ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.3)'}`,
-    });
-
-    const Card = ({ title, children }) => (
-        <div style={{ background: '#1E293B', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '12px', padding: '28px', maxWidth: '520px', marginBottom: '24px' }}>
-            <h2 style={{ color: '#F8FAFC', fontSize: '17px', fontWeight: '600', marginBottom: '24px' }}>{title}</h2>
-            {children}
-        </div>
-    );
 
     return (
-        <div>
-            <div style={{ marginBottom: '32px' }}>
-                <h1 style={{ color: '#F8FAFC', fontSize: '24px', fontWeight: '700', margin: 0 }}>Settings</h1>
-                <p style={{ color: '#64748B', fontSize: '14px', marginTop: '4px' }}>Manage your admin account</p>
+        <div style={{ maxWidth: '600px' }}>
+            <div style={{ marginBottom: '28px' }}>
+                <h1 style={{ color: '#1e2a3b', fontSize: '28px', fontWeight: '800', margin: 0 }}>Settings</h1>
+                <p style={{ color: '#64748B', fontSize: '15px', marginTop: '6px', fontWeight: '500' }}>Manage your admin credentials</p>
             </div>
 
-            {/* Change Password */}
-            <Card title="Change Password">
-                {pwMsg.text && <div style={msgStyle(pwMsg.type)}>{pwMsg.text}</div>}
-                <form onSubmit={handleChangePassword}>
-                    <Field label="Current Password">
-                        <input type="password" style={inputStyle} value={pwForm.currentPassword}
-                            onChange={e => setPwForm({ ...pwForm, currentPassword: e.target.value })} required />
-                    </Field>
-                    <Field label="New Password">
-                        <input type="password" style={inputStyle} value={pwForm.newPassword}
-                            onChange={e => setPwForm({ ...pwForm, newPassword: e.target.value })} required />
-                    </Field>
-                    <Field label="Confirm New Password">
-                        <input type="password" style={inputStyle} value={pwForm.confirm}
-                            onChange={e => setPwForm({ ...pwForm, confirm: e.target.value })} required />
-                    </Field>
-                    <button type="submit" disabled={pwLoading} style={{
-                        background: '#EAB308', color: '#0F172A', fontWeight: '700',
-                        padding: '11px 24px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '14px',
-                    }}>{pwLoading ? 'Updating...' : 'Update Password'}</button>
-                </form>
-            </Card>
+            <div style={{ background: '#ffffff', borderRadius: '16px', padding: '32px', border: '1px solid rgba(30,42,59,0.08)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                {message && <div style={{ background: '#dcfce7', color: '#16a34a', padding: '12px 16px', borderRadius: '8px', marginBottom: '24px', fontWeight: '500', fontSize: '14px', border: '1px solid #bbf7d0' }}>{message}</div>}
+                {error && <div style={{ background: '#fef2f2', color: '#ef4444', padding: '12px 16px', borderRadius: '8px', marginBottom: '24px', fontWeight: '500', fontSize: '14px', border: '1px solid #fecaca' }}>{error}</div>}
 
-            {/* Change Username */}
-            <Card title="Change Username">
-                <p style={{ color: '#64748B', fontSize: '13px', marginBottom: '20px' }}>
-                    Current username: <span style={{ color: '#EAB308', fontWeight: '600' }}>{admin?.username}</span>
-                </p>
-                {unMsg.text && <div style={msgStyle(unMsg.type)}>{unMsg.text}</div>}
-                <form onSubmit={handleChangeUsername}>
-                    <Field label="New Username">
-                        <input type="text" style={inputStyle} value={unForm.newUsername}
-                            onChange={e => setUnForm({ newUsername: e.target.value })} required />
-                    </Field>
-                    <button type="submit" disabled={unLoading} style={{
-                        background: '#EAB308', color: '#0F172A', fontWeight: '700',
-                        padding: '11px 24px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '14px',
-                    }}>{unLoading ? 'Updating...' : 'Update Username'}</button>
+                <form onSubmit={handleUpdate}>
+                    <div style={{ marginBottom: '20px' }}>
+                        <label style={{ display: 'block', color: '#475569', fontSize: '13px', fontWeight: '600', marginBottom: '8px' }}>Current Password (Required)</label>
+                        <input type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} required
+                            style={{ width: '100%', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '12px 16px', color: '#1e2a3b', fontSize: '15px', outline: 'none', transition: 'all 0.2s' }}
+                            onFocus={e => { e.target.style.borderColor = '#ffc107'; e.target.style.boxShadow = '0 0 0 3px rgba(255, 193, 7, 0.2)'; }}
+                            onBlur={e => { e.target.style.borderColor = '#e2e8f0'; e.target.style.boxShadow = 'none'; }} />
+                    </div>
+                    
+                    <div style={{ height: '1px', background: 'rgba(30,42,59,0.06)', margin: '24px 0' }} />
+
+                    <div style={{ marginBottom: '20px' }}>
+                        <label style={{ display: 'block', color: '#475569', fontSize: '13px', fontWeight: '600', marginBottom: '8px' }}>New Username (Optional)</label>
+                        <input type="text" value={newUsername} onChange={e => setNewUsername(e.target.value)} placeholder={`Current: ${admin?.username}`}
+                            style={{ width: '100%', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '12px 16px', color: '#1e2a3b', fontSize: '15px', outline: 'none', transition: 'all 0.2s' }}
+                            onFocus={e => { e.target.style.borderColor = '#ffc107'; e.target.style.boxShadow = '0 0 0 3px rgba(255, 193, 7, 0.2)'; }}
+                            onBlur={e => { e.target.style.borderColor = '#e2e8f0'; e.target.style.boxShadow = 'none'; }} />
+                    </div>
+
+                    <div style={{ marginBottom: '32px' }}>
+                        <label style={{ display: 'block', color: '#475569', fontSize: '13px', fontWeight: '600', marginBottom: '8px' }}>New Password (Optional)</label>
+                        <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)}
+                            style={{ width: '100%', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '12px 16px', color: '#1e2a3b', fontSize: '15px', outline: 'none', transition: 'all 0.2s' }}
+                            onFocus={e => { e.target.style.borderColor = '#ffc107'; e.target.style.boxShadow = '0 0 0 3px rgba(255, 193, 7, 0.2)'; }}
+                            onBlur={e => { e.target.style.borderColor = '#e2e8f0'; e.target.style.boxShadow = 'none'; }} />
+                    </div>
+
+                    <button type="submit" disabled={loading || !currentPassword}
+                        style={{ background: (loading || !currentPassword) ? '#94A3B8' : '#1e2a3b', color: '#ffffff', fontWeight: '600', padding: '12px 24px', borderRadius: '10px', border: 'none', cursor: (loading || !currentPassword) ? 'not-allowed' : 'pointer', transition: 'all 0.2s', fontSize: '15px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}
+                        onMouseEnter={e => { if (!loading && currentPassword) { e.currentTarget.style.background = '#ffc107'; e.currentTarget.style.color = '#1e2a3b'; } }}
+                        onMouseLeave={e => { if (!loading && currentPassword) { e.currentTarget.style.background = '#1e2a3b'; e.currentTarget.style.color = '#ffffff'; } }}
+                    >
+                        {loading ? 'Updating...' : 'Save Changes'}
+                    </button>
                 </form>
-            </Card>
+            </div>
         </div>
     );
 };

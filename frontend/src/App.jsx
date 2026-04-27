@@ -27,11 +27,14 @@ import AdminLayout from './components/admin-components/AdminLayout';
 // ─── Admin Pages ──────────────────────────────────────────────────────────────
 import AdminLogin from './pages/admin-pages/AdminLogin';
 import AdminDashboard from './pages/admin-pages/AdminDashboard';
+import AdminAnalytics from './pages/admin-pages/AdminAnalytics';
 import AdminBookings from './pages/admin-pages/AdminBookings';
 import AdminVehicles from './pages/admin-pages/AdminVehicles';
+import AdminVehicleForm from './pages/admin-pages/AdminVehicleForm';
 import AdminCustomers from './pages/admin-pages/AdminCustomers';
 import AdminPayments from './pages/admin-pages/AdminPayments';
 import AdminTours from './pages/admin-pages/AdminTours';
+import AdminTourForm from './pages/admin-pages/AdminTourForm';
 import AdminSettings from './pages/admin-pages/AdminSettings';
 
 function App() {
@@ -53,11 +56,16 @@ function App() {
         >
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard"  element={<AdminDashboard />} />
+          <Route path="analytics"  element={<AdminAnalytics />} />
           <Route path="bookings"   element={<AdminBookings />} />
-          <Route path="vehicles"   element={<AdminVehicles />} />
-          <Route path="customers"  element={<AdminCustomers />} />
-          <Route path="payments"   element={<AdminPayments />} />
-          <Route path="tours"      element={<AdminTours />} />
+          <Route path="vehicles"       element={<AdminVehicles />} />
+          <Route path="vehicles/add"   element={<AdminVehicleForm />} />
+          <Route path="vehicles/edit/:id" element={<AdminVehicleForm />} />
+          <Route path="customers"      element={<AdminCustomers />} />
+          <Route path="payments"       element={<AdminPayments />} />
+          <Route path="tours"          element={<AdminTours />} />
+          <Route path="tours/add"      element={<AdminTourForm />} />
+          <Route path="tours/edit/:id" element={<AdminTourForm />} />
           <Route path="settings"   element={<AdminSettings />} />
         </Route>
 

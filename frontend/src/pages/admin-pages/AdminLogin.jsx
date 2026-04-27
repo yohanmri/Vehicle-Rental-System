@@ -1,19 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../../context/admin-context/AdminAuthContext';
-
-const EyeIcon = ({ open }) => open ? (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-        <circle cx="12" cy="12" r="3"/>
-    </svg>
-) : (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-        <line x1="1" y1="1" x2="23" y2="23"/>
-    </svg>
-);
+import { Eye, EyeOff } from 'lucide-react';
 
 const AdminLogin = () => {
     const [username, setUsername] = useState('');
@@ -41,35 +29,24 @@ const AdminLogin = () => {
     return (
         <div style={{
             minHeight: '100vh',
-            background: '#0F172A',
+            background: '#e1e7f0', // Ash background from client
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontFamily: "'Inter', sans-serif",
+            padding: '20px'
         }}>
-            {/* Background glow */}
+            {/* Main Card */}
             <div style={{
-                position: 'absolute',
-                width: '500px',
-                height: '500px',
-                background: 'radial-gradient(circle, rgba(234,179,8,0.08) 0%, transparent 70%)',
-                borderRadius: '50%',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                pointerEvents: 'none',
-            }} />
-
-            <div style={{
-                background: '#1E293B',
-                border: '1px solid rgba(234,179,8,0.2)',
+                background: '#ffffff',
+                border: '1px solid rgba(30, 42, 59, 0.1)',
                 borderRadius: '16px',
                 padding: '48px 44px',
                 width: '100%',
                 maxWidth: '420px',
                 position: 'relative',
                 zIndex: 1,
-                boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
+                boxShadow: '0 10px 40px rgba(30, 42, 59, 0.08)',
             }}>
                 {/* Logo */}
                 <div style={{ textAlign: 'center', marginBottom: '36px' }}>
@@ -82,24 +59,24 @@ const AdminLogin = () => {
                         <div style={{
                             width: '40px',
                             height: '40px',
-                            background: '#EAB308',
+                            background: '#1e2a3b',
                             borderRadius: '10px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             fontWeight: '800',
                             fontSize: '18px',
-                            color: '#0F172A',
+                            color: '#ffc107',
                         }}>P</div>
-                        <span style={{ color: '#F8FAFC', fontWeight: '700', fontSize: '18px' }}>
-                            Pick <span style={{ color: '#EAB308' }}>'N'</span> Go 360
+                        <span style={{ color: '#1e2a3b', fontWeight: '800', fontSize: '18px' }}>
+                            Pick <span style={{ color: '#ffc107' }}>'N'</span> Go 360
                         </span>
                     </div>
-                    <p style={{ color: '#94A3B8', fontSize: '13px', margin: 0 }}>Admin Panel</p>
+                    <p style={{ color: '#64748B', fontSize: '13px', margin: 0, fontWeight: '500', letterSpacing: '0.05em' }}>ADMIN PANEL</p>
                 </div>
 
                 <h2 style={{
-                    color: '#F8FAFC',
+                    color: '#1e2a3b',
                     fontSize: '22px',
                     fontWeight: '700',
                     marginBottom: '6px',
@@ -114,13 +91,14 @@ const AdminLogin = () => {
 
                 {error && (
                     <div style={{
-                        background: 'rgba(239,68,68,0.12)',
-                        border: '1px solid rgba(239,68,68,0.3)',
+                        background: '#fef2f2',
+                        border: '1px solid #fecaca',
                         borderRadius: '8px',
                         padding: '12px 16px',
-                        color: '#FCA5A5',
+                        color: '#ef4444',
                         fontSize: '14px',
                         marginBottom: '20px',
+                        fontWeight: '500'
                     }}>{error}</div>
                 )}
 
@@ -129,9 +107,9 @@ const AdminLogin = () => {
                     <div style={{ marginBottom: '20px' }}>
                         <label style={{
                             display: 'block',
-                            color: '#94A3B8',
+                            color: '#475569',
                             fontSize: '13px',
-                            fontWeight: '500',
+                            fontWeight: '600',
                             marginBottom: '8px',
                         }}>Username</label>
                         <input
@@ -142,27 +120,27 @@ const AdminLogin = () => {
                             required
                             style={{
                                 width: '100%',
-                                background: '#0F172A',
-                                border: '1px solid rgba(255,255,255,0.1)',
+                                background: '#f8fafc',
+                                border: '1px solid #e2e8f0',
                                 borderRadius: '10px',
                                 padding: '12px 16px',
-                                color: '#F8FAFC',
+                                color: '#1e2a3b',
                                 fontSize: '15px',
                                 outline: 'none',
                                 boxSizing: 'border-box',
-                                transition: 'border-color 0.2s',
+                                transition: 'all 0.2s',
                             }}
-                            onFocus={(e) => e.target.style.borderColor = '#EAB308'}
-                            onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
+                            onFocus={(e) => { e.target.style.borderColor = '#ffc107'; e.target.style.boxShadow = '0 0 0 3px rgba(255, 193, 7, 0.2)'; }}
+                            onBlur={(e) => { e.target.style.borderColor = '#e2e8f0'; e.target.style.boxShadow = 'none'; }}
                         />
                     </div>
 
                     <div style={{ marginBottom: '28px' }}>
                         <label style={{
                             display: 'block',
-                            color: '#94A3B8',
+                            color: '#475569',
                             fontSize: '13px',
-                            fontWeight: '500',
+                            fontWeight: '600',
                             marginBottom: '8px',
                         }}>Password</label>
                         <div style={{ position: 'relative' }}>
@@ -174,18 +152,18 @@ const AdminLogin = () => {
                                 required
                                 style={{
                                     width: '100%',
-                                    background: '#0F172A',
-                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    background: '#f8fafc',
+                                    border: '1px solid #e2e8f0',
                                     borderRadius: '10px',
                                     padding: '12px 44px 12px 16px',
-                                    color: '#F8FAFC',
+                                    color: '#1e2a3b',
                                     fontSize: '15px',
                                     outline: 'none',
                                     boxSizing: 'border-box',
-                                    transition: 'border-color 0.2s',
+                                    transition: 'all 0.2s',
                                 }}
-                                onFocus={(e) => e.target.style.borderColor = '#EAB308'}
-                                onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
+                                onFocus={(e) => { e.target.style.borderColor = '#ffc107'; e.target.style.boxShadow = '0 0 0 3px rgba(255, 193, 7, 0.2)'; }}
+                                onBlur={(e) => { e.target.style.borderColor = '#e2e8f0'; e.target.style.boxShadow = 'none'; }}
                             />
                             <button
                                 type="button"
@@ -204,7 +182,7 @@ const AdminLogin = () => {
                                     padding: '4px',
                                 }}
                             >
-                                <EyeIcon open={showPassword} />
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
                         </div>
                     </div>
@@ -214,18 +192,21 @@ const AdminLogin = () => {
                         disabled={loading}
                         style={{
                             width: '100%',
-                            background: loading ? '#92400e' : '#EAB308',
-                            color: '#0F172A',
-                            fontWeight: '700',
+                            background: loading ? '#64748B' : '#1e2a3b',
+                            color: '#ffffff',
+                            fontWeight: '600',
                             fontSize: '15px',
                             padding: '13px',
                             borderRadius: '10px',
                             border: 'none',
                             cursor: loading ? 'not-allowed' : 'pointer',
-                            transition: 'background 0.2s, transform 0.1s',
+                            transition: 'all 0.2s',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
                         }}
-                        onMouseEnter={(e) => { if (!loading) e.target.style.background = '#CA8A04'; }}
-                        onMouseLeave={(e) => { if (!loading) e.target.style.background = '#EAB308'; }}
+                        onMouseEnter={(e) => { if (!loading) { e.target.style.background = '#ffc107'; e.target.style.color = '#1e2a3b'; } }}
+                        onMouseLeave={(e) => { if (!loading) { e.target.style.background = '#1e2a3b'; e.target.style.color = '#ffffff'; } }}
                     >
                         {loading ? 'Signing in...' : 'Sign In'}
                     </button>

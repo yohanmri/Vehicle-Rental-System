@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
 import { useAdminAuth } from '../../context/admin-context/AdminAuthContext';
 import { useNavigate } from 'react-router-dom';
+import { Map, Plus, Edit2, Trash2 } from 'lucide-react';
 
 const AdminTours = () => {
     const { admin } = useAdminAuth();
@@ -38,50 +39,69 @@ const AdminTours = () => {
         <div>
             <div style={{ marginBottom: '28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
                 <div>
-                    <h1 style={{ color: '#F8FAFC', fontSize: '24px', fontWeight: '700', margin: 0 }}>Tours</h1>
-                    <p style={{ color: '#64748B', fontSize: '14px', marginTop: '4px' }}>{total} tours</p>
+                    <h1 style={{ color: '#1e2a3b', fontSize: '28px', fontWeight: '800', margin: 0 }}>Tours</h1>
+                    <p style={{ color: '#64748B', fontSize: '15px', marginTop: '6px', fontWeight: '500' }}>{total} tours available</p>
                 </div>
                 <button onClick={() => navigate('/admin/tours/add')} style={{
-                    background: '#EAB308', color: '#0F172A', fontWeight: '700',
-                    padding: '10px 20px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '14px',
-                }}>＋ Add Tour</button>
+                    background: '#1e2a3b', color: '#ffffff', fontWeight: '600',
+                    padding: '12px 24px', borderRadius: '12px', border: 'none', cursor: 'pointer', fontSize: '15px',
+                    display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#ffc107'; e.currentTarget.style.color = '#1e2a3b'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = '#1e2a3b'; e.currentTarget.style.color = '#ffffff'; }}
+                >
+                    <Plus size={18} /> Add Tour
+                </button>
             </div>
 
             {loading ? (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
                     {Array.from({ length: 4 }).map((_, i) => (
-                        <div key={i} style={{ background: '#1E293B', borderRadius: '12px', height: '240px' }} />
+                        <div key={i} style={{ background: '#f1f5f9', borderRadius: '16px', height: '300px', animation: 'pulse 1.5s infinite', border: '1px solid #e2e8f0' }} />
                     ))}
                 </div>
             ) : tours.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '64px', color: '#64748B' }}>
-                    <div style={{ fontSize: '48px', marginBottom: '12px' }}>🗺️</div>
-                    <p>No tours found. <span style={{ color: '#EAB308', cursor: 'pointer' }} onClick={() => navigate('/admin/tours/add')}>Add one →</span></p>
+                <div style={{ textAlign: 'center', padding: '64px', color: '#64748B', background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+                        <Map size={64} color="#cbd5e1" />
+                    </div>
+                    <p style={{ fontSize: '16px', fontWeight: '500' }}>No tours found. <span style={{ color: '#1e2a3b', cursor: 'pointer', fontWeight: '700', textDecoration: 'underline' }} onClick={() => navigate('/admin/tours/add')}>Add one here</span></p>
                 </div>
             ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
                     {tours.map(t => (
-                        <div key={t._id} style={{ background: '#1E293B', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '12px', overflow: 'hidden' }}
-                            onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(234,179,8,0.3)'}
-                            onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'}>
-                            <div style={{ height: '160px', background: '#0F172A', overflow: 'hidden' }}>
+                        <div key={t._id} style={{ 
+                            background: '#ffffff', border: '1px solid rgba(30,42,59,0.08)', borderRadius: '16px', overflow: 'hidden',
+                            transition: 'all 0.2s', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)'
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'}
+                        onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+                            <div style={{ height: '180px', background: '#f8fafc', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 {t.imageUrl ? (
                                     <img src={t.imageUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                 ) : (
-                                    <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px' }}>🗺️</div>
+                                    <Map size={64} color="#cbd5e1" />
                                 )}
                             </div>
-                            <div style={{ padding: '16px' }}>
-                                <div style={{ color: '#F8FAFC', fontWeight: '600', fontSize: '15px', marginBottom: '4px' }}>{t.title}</div>
-                                <div style={{ color: '#64748B', fontSize: '12px', marginBottom: '8px' }}>{t.duration} • LKR {t.price?.toLocaleString()}</div>
-                                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '12px' }}>
+                            <div style={{ padding: '20px' }}>
+                                <div style={{ color: '#1e2a3b', fontWeight: '800', fontSize: '16px', marginBottom: '4px' }}>{t.title}</div>
+                                <div style={{ color: '#64748B', fontSize: '13px', marginBottom: '12px', fontWeight: '500' }}>{t.duration} • LKR {t.price?.toLocaleString()}</div>
+                                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
                                     {t.destinations?.slice(0, 3).map(d => (
-                                        <span key={d} style={{ background: 'rgba(234,179,8,0.1)', color: '#EAB308', padding: '2px 8px', borderRadius: '20px', fontSize: '11px' }}>{d}</span>
+                                        <span key={d} style={{ background: '#f1f5f9', color: '#1e2a3b', padding: '4px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '600' }}>{d}</span>
                                     ))}
                                 </div>
-                                <div style={{ display: 'flex', gap: '8px' }}>
-                                    <button onClick={() => navigate(`/admin/tours/edit/${t._id}`)} style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid rgba(234,179,8,0.3)', background: 'rgba(234,179,8,0.08)', color: '#EAB308', fontWeight: '600', fontSize: '13px', cursor: 'pointer' }}>Edit</button>
-                                    <button onClick={() => handleDelete(t._id)} style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.08)', color: '#F87171', fontWeight: '600', fontSize: '13px', cursor: 'pointer' }}>Delete</button>
+                                <div style={{ display: 'flex', gap: '12px' }}>
+                                    <button onClick={() => navigate(`/admin/tours/edit/${t._id}`)} style={{ flex: 1, padding: '10px', borderRadius: '10px', border: '1px solid #e2e8f0', background: '#f8fafc', color: '#1e2a3b', fontWeight: '600', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'all 0.2s' }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = '#1e2a3b'; e.currentTarget.style.color = '#ffc107'; e.currentTarget.style.borderColor = '#1e2a3b'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.color = '#1e2a3b'; e.currentTarget.style.borderColor = '#e2e8f0'; }}>
+                                        <Edit2 size={16} /> Edit
+                                    </button>
+                                    <button onClick={() => handleDelete(t._id)} style={{ flex: 1, padding: '10px', borderRadius: '10px', border: '1px solid #fecaca', background: '#fef2f2', color: '#ef4444', fontWeight: '600', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'all 0.2s' }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = '#ef4444'; e.currentTarget.style.color = '#ffffff'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = '#fef2f2'; e.currentTarget.style.color = '#ef4444'; }}>
+                                        <Trash2 size={16} /> Delete
+                                    </button>
                                 </div>
                             </div>
                         </div>
