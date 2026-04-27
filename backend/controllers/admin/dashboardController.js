@@ -1,0 +1,166 @@
+const asyncHandler = require('express-async-handler');
+const AdminBooking = require('../../models/admin/AdminBooking');
+const AdminVehicle = require('../../models/admin/AdminVehicle');
+const User = require('../../models/user/User');
+const Payment = require('../../models/admin/Payment');
+
+// Helper: get date range filter
+const getDateRange = (period) => {
+    const now = new Date();
+    let from;
+
+    switch (period) {
+        case 'today':
+            from = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            break;
+        case 'week':
+            from = new Date(now);
+            from.setDate(now.getDate() - 7);
+            break;
+        case 'year':
+            from = new Date(now.getFullYear(), 0, 1);
+            break;
+        case 'month':
+        default:
+            from = new Date(now.getFullYear(), now.getMonth(), 1);
+            break;
+    }
+
+    return { $gte: from, $lte: now };
+};
+
+// @desc    Get KPI stats
+// @route   GET /api/admin/dashboard/stats
+// @access  Private (Admin)
+const getDashboardStats = asyncHandler(async (req, res) => {
+    const { period = 'month' } = req.query;
+    const dateRange = getDateRange(period);
+
+    const [totalBookings, revenue, activeRides] = await Promise.all([
+        AdminBooking.countDocuments({ createdAt: dateRange }),
+        AdminBooking.aggregate([
+            { $match: { createdAt: dateRange, paymentStatus: 'paid' } },
+            { $group: { _id: null, total: { $sum: '$totalAmount' } } },
+        ]),
+        AdminBooking.countDocuments({
+            bookingStatus: 'active',
+            createdAt: dateRange,
+        }),
+    ]);
+
+    res.json({
+        totalBookings,
+        revenue: revenue[0]?.total || 0,
+        activeRides,
+    });
+});
+
+// @desc    Bookings over time (last 30 days)
+// @route   GET /api/admin/dashboard/analytics/bookings-over-time
+// @access  Private (Admin)
+const getBookingsOverTime = asyncHandler(async (req, res) => {
+    const data = await AdminBooking.aggregate([
+        {
+            $match: {
+                createdAt: {
+                    $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+                },
+            },
+        },
+        {
+            $group: {
+                _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+                count: { $sum: 1 },
+            },
+        },
+        { $sort: { _id: 1 } },
+    ]);
+
+    res.json(data.map((d) => ({ date: d._id, bookings: d.count })));
+});
+
+// @desc    Revenue over time (last 30 days)
+// @route   GET /api/admin/dashboard/analytics/revenue-over-time
+// @access  Private (Admin)
+const getRevenueOverTime = asyncHandler(async (req, res) => {
+    const data = await AdminBooking.aggregate([
+        {
+            $match: {
+                paymentStatus: 'paid',
+                createdAt: {
+                    $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+                },
+            },
+        },
+        {
+            $group: {
+                _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+                revenue: { $sum: '$totalAmount' },
+            },
+        },
+        { $sort: { _id: 1 } },
+    ]);
+
+    res.json(data.map((d) => ({ date: d._id, revenue: d.revenue })));
+});
+
+// @desc    Bookings by service type
+// @route   GET /api/admin/dashboard/analytics/by-service-type
+// @access  Private (Admin)
+const getByServiceType = asyncHandler(async (req, res) => {
+    const data = await AdminBooking.aggregate([
+        { $group: { _id: '$serviceType', value: { $sum: 1 } } },
+    ]);
+
+    res.json(data.map((d) => ({ name: d._id, value: d.value })));
+});
+
+// @desc    Top performing vehicles
+// @route   GET /api/admin/dashboard/analytics/top-vehicles
+// @access  Private (Admin)
+const getTopVehicles = asyncHandler(async (req, res) => {
+    const data = await AdminBooking.aggregate([
+        { $match: { vehicleId: { $ne: null } } },
+        { $group: { _id: '$vehicleId', bookings: { $sum: 1 } } },
+        { $sort: { bookings: -1 } },
+        { $limit: 5 },
+        {
+            $lookup: {
+                from: 'adminvehicles',
+                localField: '_id',
+                foreignField: '_id',
+                as: 'vehicle',
+            },
+        },
+        { $unwind: { path: '$vehicle', preserveNullAndEmptyArrays: true } },
+    ]);
+
+    res.json(
+        data.map((d) => ({
+            name: d.vehicle?.name || 'Unknown',
+            bookings: d.bookings,
+        }))
+    );
+});
+
+// @desc    Bookings by city
+// @route   GET /api/admin/dashboard/analytics/by-city
+// @access  Private (Admin)
+const getByCity = asyncHandler(async (req, res) => {
+    const data = await AdminBooking.aggregate([
+        { $group: { _id: '$pickupLocation', bookings: { $sum: 1 } } },
+        { $sort: { bookings: -1 } },
+        { $limit: 8 },
+    ]);
+
+    res.json(data.map((d) => ({ city: d._id, bookings: d.bookings })));
+});
+
+module.exports = {
+    getDashboardStats,
+    getBookingsOverTime,
+    getRevenueOverTime,
+    getByServiceType,
+    getTopVehicles,
+    getByCity,
+};

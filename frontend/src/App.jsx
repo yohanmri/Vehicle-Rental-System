@@ -1,24 +1,24 @@
 import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Vehicles from './pages/Vehicles';
-import VehicleDetail from './pages/VehicleDetail';
-import MyBookings from './pages/MyBookings';
-import Profile from './pages/Profile';
-import ProtectedRoute from './components/ProtectedRoute';
-import About from './pages/About';
-import Contact from './pages/Contact';
-import Business from './pages/Business';
-import Tours from './pages/Tours';
-import ScrollToTop from './components/ScrollToTop';
+import Navbar from './components/user-components/Navbar';
+import Footer from './components/user-components/Footer';
+import Home from './pages/user-pages/Home';
+import Login from './pages/user-pages/Login';
+import Register from './pages/user-pages/Register';
+import Vehicles from './pages/user-pages/Vehicles';
+import VehicleDetail from './pages/user-pages/VehicleDetail';
+import MyBookings from './pages/user-pages/MyBookings';
+import Profile from './pages/user-pages/Profile';
+import ProtectedRoute from './components/user-components/ProtectedRoute';
+import About from './pages/user-pages/About';
+import Contact from './pages/user-pages/Contact';
+import Business from './pages/user-pages/Business';
+import Tours from './pages/user-pages/Tours';
+import ScrollToTop from './components/user-components/ScrollToTop';
 
 // Admin Pages
-import Dashboard from './pages/admin/Dashboard';
-import ManageVehicles from './pages/admin/ManageVehicles';
-import ManageBookings from './pages/admin/ManageBookings';
+import Dashboard from './pages/admin-pages/Dashboard';
+import ManageVehicles from './pages/admin-pages/ManageVehicles';
+import ManageBookings from './pages/admin-pages/ManageBookings';
 
 function App() {
   return (
