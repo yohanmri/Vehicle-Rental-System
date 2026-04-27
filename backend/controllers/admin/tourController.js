@@ -17,6 +17,18 @@ const getAllTours = asyncHandler(async (req, res) => {
     res.json({ tours, total, page: Number(page), pages: Math.ceil(total / limit) });
 });
 
+// @desc    Get single tour
+// @route   GET /api/admin/tours/:id
+// @access  Private (Admin)
+const getTourById = asyncHandler(async (req, res) => {
+    const tour = await Tour.findById(req.params.id);
+    if (!tour) {
+        res.status(404);
+        throw new Error('Tour not found');
+    }
+    res.json(tour);
+});
+
 // @desc    Create tour
 // @route   POST /api/admin/tours
 // @access  Private (Admin)
@@ -108,4 +120,4 @@ const deleteTour = asyncHandler(async (req, res) => {
     res.json({ message: 'Tour removed' });
 });
 
-module.exports = { getAllTours, createTour, updateTour, deleteTour };
+module.exports = { getAllTours, getTourById, createTour, updateTour, deleteTour };

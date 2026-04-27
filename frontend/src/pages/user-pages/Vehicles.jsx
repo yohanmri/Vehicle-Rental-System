@@ -46,27 +46,53 @@ const Vehicles = () => {
     ];
 
     useEffect(() => {
-        // Bypassing backend and using hardcoded data based on the images provided
-        const mockVehicles = [
-            { _id: 'b1', name: 'Yamaha FZ', type: 'Bike', capacity: 2, price: '2500.00', image: bike1 },
-            { _id: 'b2', name: 'Honda Hornet', type: 'Bike', capacity: 2, price: '2800.00', image: bike2 },
-            { _id: 'b3', name: 'TVS Apache', type: 'Bike', capacity: 2, price: '2200.00', image: bike3 },
-            { _id: '1', name: 'Koenigsegg', type: 'Sport', capacity: 2, price: '150000.00', image: car1 },
-            { _id: '2', name: 'Nissan GT - R', type: 'Sport', capacity: 2, price: '80000.00', image: car2 },
-            { _id: '3', name: 'Rolls-Royce', type: 'Sport', capacity: 4, price: '120000.00', image: car3 },
-            { _id: '4', name: 'All New Rush', type: 'SUV', capacity: 6, price: '15000.00', image: car4 },
-            { _id: '5', name: 'CR - V', type: 'SUV', capacity: 6, price: '18000.00', image: car5 },
-            { _id: '6', name: 'All New Terios', type: 'SUV', capacity: 6, price: '12000.00', image: carDefault },
-            { _id: '7', name: 'MG ZX Exclusice', type: 'Hatchback', capacity: 4, price: '14000.00', image: car1 },
-            { _id: '8', name: 'New MG ZS', type: 'SUV', capacity: 6, price: '16000.00', image: car2 },
-            { _id: '9', name: 'MG ZX Excite', type: 'Hatchback', capacity: 4, price: '13000.00', image: car3 },
-        ];
+        const fetchAllVehicles = async () => {
+            try {
+                // Bypassing backend and using hardcoded data based on the images provided
+                const mockVehicles = [
+                    { _id: 'b1', name: 'Yamaha FZ', type: 'Bike', capacity: 2, price: '2500.00', image: bike1 },
+                    { _id: 'b2', name: 'Honda Hornet', type: 'Bike', capacity: 2, price: '2800.00', image: bike2 },
+                    { _id: 'b3', name: 'TVS Apache', type: 'Bike', capacity: 2, price: '2200.00', image: bike3 },
+                    { _id: '1', name: 'Koenigsegg', type: 'Sport', capacity: 2, price: '150000.00', image: car1 },
+                    { _id: '2', name: 'Nissan GT - R', type: 'Sport', capacity: 2, price: '80000.00', image: car2 },
+                    { _id: '3', name: 'Rolls-Royce', type: 'Sport', capacity: 4, price: '120000.00', image: car3 },
+                    { _id: '4', name: 'All New Rush', type: 'SUV', capacity: 6, price: '15000.00', image: car4 },
+                    { _id: '5', name: 'CR - V', type: 'SUV', capacity: 6, price: '18000.00', image: car5 },
+                    { _id: '6', name: 'All New Terios', type: 'SUV', capacity: 6, price: '12000.00', image: carDefault },
+                    { _id: '7', name: 'MG ZX Exclusice', type: 'Hatchback', capacity: 4, price: '14000.00', image: car1 },
+                    { _id: '8', name: 'New MG ZS', type: 'SUV', capacity: 6, price: '16000.00', image: car2 },
+                    { _id: '9', name: 'MG ZX Excite', type: 'Hatchback', capacity: 4, price: '13000.00', image: car3 },
+                ];
 
-        // Simulate a slight network delay for the loader
-        setTimeout(() => {
-            setVehicles(mockVehicles);
-            setLoading(false);
-        }, 500);
+                const { data } = await axios.get('/api/vehicles');
+                
+                // Add DB vehicles to the top, followed by mock vehicles
+                setVehicles([...data, ...mockVehicles]);
+            } catch (err) {
+                console.error("Error fetching vehicles:", err);
+                
+                // Fallback to only mock vehicles if DB fetch fails
+                const mockVehicles = [
+                    { _id: 'b1', name: 'Yamaha FZ', type: 'Bike', capacity: 2, price: '2500.00', image: bike1 },
+                    { _id: 'b2', name: 'Honda Hornet', type: 'Bike', capacity: 2, price: '2800.00', image: bike2 },
+                    { _id: 'b3', name: 'TVS Apache', type: 'Bike', capacity: 2, price: '2200.00', image: bike3 },
+                    { _id: '1', name: 'Koenigsegg', type: 'Sport', capacity: 2, price: '150000.00', image: car1 },
+                    { _id: '2', name: 'Nissan GT - R', type: 'Sport', capacity: 2, price: '80000.00', image: car2 },
+                    { _id: '3', name: 'Rolls-Royce', type: 'Sport', capacity: 4, price: '120000.00', image: car3 },
+                    { _id: '4', name: 'All New Rush', type: 'SUV', capacity: 6, price: '15000.00', image: car4 },
+                    { _id: '5', name: 'CR - V', type: 'SUV', capacity: 6, price: '18000.00', image: car5 },
+                    { _id: '6', name: 'All New Terios', type: 'SUV', capacity: 6, price: '12000.00', image: carDefault },
+                    { _id: '7', name: 'MG ZX Exclusice', type: 'Hatchback', capacity: 4, price: '14000.00', image: car1 },
+                    { _id: '8', name: 'New MG ZS', type: 'SUV', capacity: 6, price: '16000.00', image: car2 },
+                    { _id: '9', name: 'MG ZX Excite', type: 'Hatchback', capacity: 4, price: '13000.00', image: car3 },
+                ];
+                setVehicles(mockVehicles);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAllVehicles();
     }, []);
 
     const toggleType = (type) => {

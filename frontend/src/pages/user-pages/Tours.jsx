@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from '../../api/axios';
 import { motion } from 'framer-motion';
 import { Palmtree, Map, Camera, Umbrella, Coffee, Compass } from 'lucide-react';
 
@@ -7,29 +8,56 @@ import kandyImg from '../../assets/user-assets/images/tours/kandy.jpg';
 import southImg from '../../assets/user-assets/images/tours/south.jpg';
 
 const Tours = () => {
-    const packages = [
-        {
-            title: 'Cultural Triangle',
-            image: sigiriyaImg,
-            price: '35,000',
-            duration: '3 Days / 2 Nights',
-            destinations: ['Sigiriya', 'Anuradhapura', 'Polonnaruwa']
-        },
-        {
-            title: 'Hill Country Escape',
-            image: kandyImg,
-            price: '42,000',
-            duration: '4 Days / 3 Nights',
-            destinations: ['Kandy', 'Ella', 'Nuwara Eliya']
-        },
-        {
-            title: 'Southern Coast Glow',
-            image: southImg,
-            price: '28,000',
-            duration: '3 Days / 2 Nights',
-            destinations: ['Galle', 'Mirissa', 'Unawatuna']
-        }
-    ];
+    const [tours, setTours] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchTours = async () => {
+            const mockPackages = [
+                {
+                    title: 'Cultural Triangle',
+                    image: sigiriyaImg,
+                    price: '35,000',
+                    duration: '3 Days / 2 Nights',
+                    destinations: ['Sigiriya', 'Anuradhapura', 'Polonnaruwa']
+                },
+                {
+                    title: 'Hill Country Escape',
+                    image: kandyImg,
+                    price: '42,000',
+                    duration: '4 Days / 3 Nights',
+                    destinations: ['Kandy', 'Ella', 'Nuwara Eliya']
+                },
+                {
+                    title: 'Southern Coast Glow',
+                    image: southImg,
+                    price: '28,000',
+                    duration: '3 Days / 2 Nights',
+                    destinations: ['Galle', 'Mirissa', 'Unawatuna']
+                }
+            ];
+
+            try {
+                const { data } = await axios.get('/api/tours');
+                
+                // Map DB schema to match mock schema
+                const dbTours = data.map(t => ({
+                    ...t,
+                    image: t.imageUrl || sigiriyaImg, // Fallback image if none
+                    price: Number(t.price).toLocaleString()
+                }));
+
+                setTours([...dbTours, ...mockPackages]);
+            } catch (err) {
+                console.error("Error fetching tours:", err);
+                setTours(mockPackages);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTours();
+    }, []);
 
     const whyTours = [
         { icon: <Map className="w-6 h-6" />, title: 'Curated Routes', desc: 'Expertly designed itineraries to see the best of Sri Lanka.' },
@@ -59,44 +87,50 @@ const Tours = () => {
                 </div>
 
                 {/* Packages Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-24">
-                    {packages.map((pkg, i) => (
-                        <motion.div 
-                            key={i}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: i * 0.1 }}
-                            className="bg-[#f1f5f9] rounded-[4px] overflow-hidden shadow-sm hover:shadow-2xl transition-all border border-[#1e2a3b]/5 group"
-                        >
-                            <div className="h-64 relative overflow-hidden">
-                                <img 
-                                    src={pkg.image} 
-                                    alt={pkg.title} 
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                />
-                                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full font-bold text-[#1e2a3b] text-sm shadow-sm">
-                                    LKR {pkg.price}
+                {loading ? (
+                    <div className="flex justify-center py-20">
+                        <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#1e2a3b] border-t-[#ffc107]"></div>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-24">
+                        {tours.map((pkg, i) => (
+                            <motion.div 
+                                key={pkg._id || i}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                                className="bg-[#f1f5f9] rounded-[4px] overflow-hidden shadow-sm hover:shadow-2xl transition-all border border-[#1e2a3b]/5 group"
+                            >
+                                <div className="h-64 relative overflow-hidden">
+                                    <img 
+                                        src={pkg.image} 
+                                        alt={pkg.title} 
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                    />
+                                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full font-bold text-[#1e2a3b] text-sm shadow-sm">
+                                        LKR {pkg.price}
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="p-8">
-                                <div className="text-[#ffc107] font-bold text-xs uppercase tracking-widest mb-2">{pkg.duration}</div>
-                                <h3 className="text-2xl font-bold text-[#1e2a3b] mb-4">{pkg.title}</h3>
-                                <div className="flex flex-wrap gap-2 mb-6">
-                                    {pkg.destinations.map((dest, j) => (
-                                        <span key={j} className="text-[10px] font-bold bg-white px-2.5 py-1 rounded-full text-gray-500 border border-gray-100 uppercase tracking-tighter">
-                                            {dest}
-                                        </span>
-                                    ))}
+                                <div className="p-8">
+                                    <div className="text-[#ffc107] font-bold text-xs uppercase tracking-widest mb-2">{pkg.duration}</div>
+                                    <h3 className="text-2xl font-bold text-[#1e2a3b] mb-4">{pkg.title}</h3>
+                                    <div className="flex flex-wrap gap-2 mb-6">
+                                        {pkg.destinations.map((dest, j) => (
+                                            <span key={j} className="text-[10px] font-bold bg-white px-2.5 py-1 rounded-full text-gray-500 border border-gray-100 uppercase tracking-tighter">
+                                                {dest}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <button className="w-full bg-[#1e2a3b] text-white py-4 rounded-[4px] font-bold hover:bg-[#2a3b50] transition-colors flex items-center justify-center gap-2 group">
+                                        View Itinerary
+                                        <Camera className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    </button>
                                 </div>
-                                <button className="w-full bg-[#1e2a3b] text-white py-4 rounded-[4px] font-bold hover:bg-[#2a3b50] transition-colors flex items-center justify-center gap-2 group">
-                                    View Itinerary
-                                    <Camera className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </button>
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                )}
 
                 {/* Features Section */}
                 <div className="bg-[#1e2a3b] rounded-[4px] p-10 lg:p-20 text-white relative overflow-hidden">

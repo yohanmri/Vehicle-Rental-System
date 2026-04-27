@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { getAllTours, createTour, updateTour, deleteTour } = require('../../controllers/admin/tourController');
+const { getAllTours, getTourById, createTour, updateTour, deleteTour } = require('../../controllers/admin/tourController');
 const { protectAdmin } = require('../../middleware/adminMiddleware');
 const { upload } = require('../../config/cloudinary');
 
 router.get('/', protectAdmin, getAllTours);
 router.post('/', protectAdmin, upload.single('image'), createTour);
+router.get('/:id', protectAdmin, getTourById);
 router.patch('/:id', protectAdmin, upload.single('image'), updateTour);
 router.delete('/:id', protectAdmin, deleteTour);
 

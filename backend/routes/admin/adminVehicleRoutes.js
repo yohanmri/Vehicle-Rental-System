@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {
     getAllVehicles,
+    getVehicleById,
     createVehicle,
     updateVehicle,
     deleteVehicle,
@@ -11,6 +12,7 @@ const { upload } = require('../../config/cloudinary');
 
 router.get('/', protectAdmin, getAllVehicles);
 router.post('/', protectAdmin, upload.single('image'), createVehicle);
+router.get('/:id', protectAdmin, getVehicleById);
 router.patch('/:id', protectAdmin, upload.single('image'), updateVehicle);
 router.delete('/:id', protectAdmin, deleteVehicle);
 

@@ -1,12 +1,34 @@
 const asyncHandler = require('express-async-handler');
 const Vehicle = require('../../models/user/Vehicle');
+const AdminVehicle = require('../../models/admin/AdminVehicle');
 
-// @desc    Get all vehicles
+// @desc    Get all vehicles (merges old Vehicle collection + admin-managed AdminVehicle collection)
 // @route   GET /api/vehicles
 // @access  Public
 const getVehicles = asyncHandler(async (req, res) => {
-    const vehicles = await Vehicle.find({});
-    res.json(vehicles);
+    // Fetch from both collections in parallel
+    const [legacyVehicles, adminVehicles] = await Promise.all([
+        Vehicle.find({}),
+        AdminVehicle.find({}).sort({ createdAt: -1 }),
+    ]);
+
+    // Map AdminVehicle fields → VehicleCard-compatible shape
+    const mappedAdminVehicles = adminVehicles.map(v => ({
+        _id: v._id,
+        name: v.name,
+        type: v.type,
+        capacity: v.capacity,
+        price: v.pricePerDay,           // VehicleCard reads 'price'
+        originalPrice: v.originalPrice, // VehicleCard reads 'originalPrice' for strikethrough
+        image: v.imageUrl,              // VehicleCard reads 'image'
+        description: v.description,
+        available: v.available,
+        steering: v.steering,
+        fuel: v.fuel,
+    }));
+
+    // Admin-added vehicles come first, then legacy ones
+    res.json([...mappedAdminVehicles, ...legacyVehicles]);
 });
 
 // @desc    Get single vehicle

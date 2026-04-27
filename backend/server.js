@@ -23,6 +23,7 @@ app.use('/api/auth',     require('./routes/user/authRoutes'));
 app.use('/api/vehicles', require('./routes/user/vehicleRoutes'));
 app.use('/api/bookings', require('./routes/user/bookingRoutes'));
 app.use('/api/users',    require('./routes/user/userRoutes'));
+app.use('/api/tours',    require('./routes/user/tourRoutes'));
 
 // ─── Admin Routes ───────────────────────────────────────────────────────────
 app.use('/api/admin/auth',      require('./routes/admin/adminAuthRoutes'));

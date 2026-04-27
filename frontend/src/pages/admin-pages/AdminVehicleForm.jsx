@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from '../../api/axios';
 import { useAdminAuth } from '../../context/admin-context/AdminAuthContext';
-import { ArrowLeft, Image as ImageIcon, Save, Edit2 } from 'lucide-react';
+import { ArrowLeft, Image as ImageIcon, Save } from 'lucide-react';
 import VehicleCard from '../../components/user-components/VehicleCard';
 import ImageCropperModal from '../../components/admin-components/ImageCropperModal';
 
@@ -13,8 +13,11 @@ const AdminVehicleForm = () => {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
-        name: '', type: 'Bike', capacity: 2, pricePerDay: '', description: ''
+        name: '', type: 'Bike', capacity: 2, pricePerDay: '', description: '',
+        fuel: 70, steering: 'Manual'
     });
+    const [showOriginalPrice, setShowOriginalPrice] = useState(false);
+    const [originalPrice, setOriginalPrice] = useState('');
     const [imageFile, setImageFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
     const [loading, setLoading] = useState(false);
@@ -32,8 +35,13 @@ const AdminVehicleForm = () => {
                     });
                     setFormData({
                         name: data.name, type: data.type, capacity: data.capacity,
-                        pricePerDay: data.pricePerDay, description: data.description || ''
+                        pricePerDay: data.pricePerDay, description: data.description || '',
+                        fuel: data.fuel || 70, steering: data.steering || 'Manual'
                     });
+                    if (data.originalPrice && data.originalPrice !== data.pricePerDay) {
+                        setShowOriginalPrice(true);
+                        setOriginalPrice(data.originalPrice);
+                    }
                     if (data.imageUrl) setPreviewUrl(data.imageUrl);
                 } catch (err) { alert('Failed to load vehicle'); navigate('/admin/vehicles'); }
             };
@@ -51,7 +59,6 @@ const AdminVehicleForm = () => {
             });
             reader.readAsDataURL(file);
         }
-        // Reset the input value so the same file can be selected again
         e.target.value = '';
     };
 
@@ -72,11 +79,14 @@ const AdminVehicleForm = () => {
         setLoading(true);
         const data = new FormData();
         Object.keys(formData).forEach(key => data.append(key, formData[key]));
+        // Add originalPrice: if checkbox is on use the value, otherwise set same as pricePerDay (no discount)
+        data.append('originalPrice', showOriginalPrice && originalPrice ? originalPrice : formData.pricePerDay);
         if (imageFile) data.append('image', imageFile);
 
         try {
             if (isEdit) {
-                await axios.put(`/api/admin/vehicles/${id}`, data, {
+                // Backend uses PATCH
+                await axios.patch(`/api/admin/vehicles/${id}`, data, {
                     headers: { Authorization: `Bearer ${admin?.token}` }
                 });
             } else {
@@ -101,7 +111,10 @@ const AdminVehicleForm = () => {
         type: formData.type,
         capacity: formData.capacity,
         price: formData.pricePerDay || '0.00',
-        image: previewUrl || null // Use previewUrl for local preview, fallback to null
+        originalPrice: showOriginalPrice && originalPrice ? originalPrice : null,
+        fuel: formData.fuel,
+        steering: formData.steering,
+        image: previewUrl || null
     };
 
     return (
@@ -122,11 +135,12 @@ const AdminVehicleForm = () => {
                     {/* Image Upload */}
                     <div style={{ marginBottom: '24px' }}>
                         <label style={labelStyle}>Vehicle Image</label>
-                        <div style={{ border: '2px dashed #e2e8f0', borderRadius: '12px', padding: '32px', textAlign: 'center', background: '#f8fafc', position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ border: '2px dashed #e2e8f0', borderRadius: '12px', padding: previewUrl ? '0' : '32px', textAlign: 'center', background: '#f8fafc', position: 'relative', overflow: 'hidden', minHeight: '120px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             {previewUrl ? (
-                                <div style={{ position: 'relative', height: '200px' }}>
-                                    <img src={previewUrl} alt="Preview" style={{ height: '100%', objectFit: 'contain' }} />
+                                <div style={{ position: 'relative', width: '100%', height: '200px' }}>
+                                    <img src={previewUrl} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#f8fafc' }} />
                                     <input type="file" accept="image/*" onChange={handleImageChange} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
+                                    <div style={{ position: 'absolute', bottom: '8px', right: '8px', background: '#1e2a3b', color: '#fff', fontSize: '12px', fontWeight: '600', padding: '4px 12px', borderRadius: '6px', pointerEvents: 'none' }}>Click to change</div>
                                 </div>
                             ) : (
                                 <div style={{ position: 'relative' }}>
@@ -149,6 +163,43 @@ const AdminVehicleForm = () => {
                         </div>
                     </div>
 
+                    {/* Original Price (Cutting Price) */}
+                    <div style={{ marginBottom: '20px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', userSelect: 'none' }}>
+                            <div
+                                onClick={() => setShowOriginalPrice(!showOriginalPrice)}
+                                style={{
+                                    width: '42px', height: '24px', borderRadius: '12px',
+                                    background: showOriginalPrice ? '#ffc107' : '#e2e8f0',
+                                    position: 'relative', transition: 'background 0.2s', cursor: 'pointer', flexShrink: 0
+                                }}
+                            >
+                                <div style={{
+                                    position: 'absolute', top: '3px', left: showOriginalPrice ? '21px' : '3px',
+                                    width: '18px', height: '18px', borderRadius: '50%', background: '#fff',
+                                    transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
+                                }} />
+                            </div>
+                            <span style={{ color: '#1e2a3b', fontSize: '14px', fontWeight: '600' }}>
+                                Show Cutting Price (Original / Strikethrough Price)
+                            </span>
+                        </label>
+                        {showOriginalPrice && (
+                            <div style={{ marginTop: '14px' }}>
+                                <label style={labelStyle}>Original Price — LKR (will appear crossed out)</label>
+                                <input
+                                    type="number"
+                                    value={originalPrice}
+                                    onChange={e => setOriginalPrice(e.target.value)}
+                                    placeholder="e.g. 15000"
+                                    style={inputStyle}
+                                    onFocus={e => { e.target.style.borderColor = '#ffc107'; }}
+                                    onBlur={e => { e.target.style.borderColor = '#e2e8f0'; }}
+                                />
+                            </div>
+                        )}
+                    </div>
+
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
                         <div>
                             <label style={labelStyle}>Type</label>
@@ -159,6 +210,20 @@ const AdminVehicleForm = () => {
                         <div>
                             <label style={labelStyle}>Capacity (Persons)</label>
                             <input type="number" value={formData.capacity} onChange={e => setFormData({...formData, capacity: e.target.value})} required style={inputStyle} onFocus={e => { e.target.style.borderColor = '#ffc107'; }} onBlur={e => { e.target.style.borderColor = '#e2e8f0'; }} />
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                        <div>
+                            <label style={labelStyle}>Fuel Tank (Litres)</label>
+                            <input type="number" value={formData.fuel} onChange={e => setFormData({...formData, fuel: e.target.value})} style={inputStyle} onFocus={e => { e.target.style.borderColor = '#ffc107'; }} onBlur={e => { e.target.style.borderColor = '#e2e8f0'; }} />
+                        </div>
+                        <div>
+                            <label style={labelStyle}>Steering</label>
+                            <select value={formData.steering} onChange={e => setFormData({...formData, steering: e.target.value})} style={inputStyle} onFocus={e => { e.target.style.borderColor = '#ffc107'; }} onBlur={e => { e.target.style.borderColor = '#e2e8f0'; }}>
+                                <option value="Manual">Manual</option>
+                                <option value="Automatic">Automatic</option>
+                            </select>
                         </div>
                     </div>
 
@@ -187,7 +252,7 @@ const AdminVehicleForm = () => {
             {isCropping && cropImgSrc && (
                 <ImageCropperModal
                     imgSrc={cropImgSrc}
-                    aspect={16 / 9} // 16:9 aspect ratio for vehicles
+                    aspect={16 / 9}
                     onCropComplete={handleCropComplete}
                     onCancel={handleCropCancel}
                 />

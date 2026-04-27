@@ -83,7 +83,7 @@ const AdminTourForm = () => {
 
         try {
             if (isEdit) {
-                await axios.put(`/api/admin/tours/${id}`, data, {
+                await axios.patch(`/api/admin/tours/${id}`, data, {
                     headers: { Authorization: `Bearer ${admin?.token}` }
                 });
             } else {

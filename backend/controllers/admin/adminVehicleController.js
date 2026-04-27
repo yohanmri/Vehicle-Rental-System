@@ -19,6 +19,18 @@ const getAllVehicles = asyncHandler(async (req, res) => {
     res.json({ vehicles, total, page: Number(page), pages: Math.ceil(total / limit) });
 });
 
+// @desc    Get single vehicle
+// @route   GET /api/admin/vehicles/:id
+// @access  Private (Admin)
+const getVehicleById = asyncHandler(async (req, res) => {
+    const vehicle = await AdminVehicle.findById(req.params.id);
+    if (!vehicle) {
+        res.status(404);
+        throw new Error('Vehicle not found');
+    }
+    res.json(vehicle);
+});
+
 // @desc    Create vehicle (with Cloudinary image)
 // @route   POST /api/admin/vehicles
 // @access  Private (Admin)
@@ -97,4 +109,4 @@ const deleteVehicle = asyncHandler(async (req, res) => {
     res.json({ message: 'Vehicle removed' });
 });
 
-module.exports = { getAllVehicles, createVehicle, updateVehicle, deleteVehicle };
+module.exports = { getAllVehicles, getVehicleById, createVehicle, updateVehicle, deleteVehicle };

@@ -67,11 +67,11 @@ const VehicleCard = ({ vehicle }) => {
             <div className="flex items-center justify-between mt-auto pt-4 pb-6">
                 <div className="flex items-center space-x-1.5 text-gray-400">
                     <Fuel className="w-4 h-4 text-gray-400" />
-                    <span className="text-[13px] font-medium">70L</span>
+                    <span className="text-[13px] font-medium">{vehicle.fuel ? `${vehicle.fuel}L` : '70L'}</span>
                 </div>
                 <div className="flex items-center space-x-1.5 text-gray-400">
                     <Settings2 className="w-4 h-4 text-gray-400" />
-                    <span className="text-[13px] font-medium">Manual</span>
+                    <span className="text-[13px] font-medium">{vehicle.steering || 'Manual'}</span>
                 </div>
                 <div className="flex items-center space-x-1.5 text-gray-400">
                     <Users className="w-4 h-4 text-gray-400" />
@@ -85,9 +85,15 @@ const VehicleCard = ({ vehicle }) => {
                     <div className="text-[16px] xl:text-[18px] font-bold text-gray-900 flex items-end leading-none truncate">
                         LKR {parseFloat(vehicle.price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}<span className="text-[12px] text-gray-400 font-medium ml-1 mb-0.5">/ day</span>
                     </div>
-                    <div className="text-[13px] text-gray-400 line-through mt-1 truncate">
-                        LKR {(parseFloat(vehicle.price) + 2000).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                    </div>
+                    {vehicle.originalPrice && parseFloat(vehicle.originalPrice) > parseFloat(vehicle.price) ? (
+                        <div className="text-[13px] text-gray-400 line-through mt-1 truncate">
+                            LKR {parseFloat(vehicle.originalPrice).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                        </div>
+                    ) : (
+                        <div className="text-[13px] text-gray-400 line-through mt-1 truncate">
+                            LKR {(parseFloat(vehicle.price) + 2000).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                        </div>
+                    )}
                 </div>
                 <button 
                     className="bg-[#1e2a3b] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#ffc107] hover:text-[#1e2a3b] transition-colors whitespace-nowrap shrink-0"
