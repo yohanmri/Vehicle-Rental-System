@@ -4,7 +4,7 @@ import axios from '../../api/axios';
 import { useAuth } from '../../context/user-context/AuthContext';
 import Loader from '../../components/user-components/Loader';
 import { toast } from 'react-hot-toast';
-import { Heart, Star, ArrowDownUp } from 'lucide-react';
+import { Heart, Star, ArrowDownUp, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 // Import images from src/assets
@@ -48,13 +48,13 @@ const VehicleDetail = () => {
     // Sidebar state (mocked to match design)
     const selectedTypes = ['Sport', 'SUV'];
     const selectedCapacities = ['2 Person'];
-    
+
     useEffect(() => {
         const fetchVehicle = async () => {
             try {
                 const { data } = await axios.get(`/api/vehicles/${id}`);
                 setVehicle(data);
-                
+
                 // Initialize active image
                 let imageUrl = data.image || carDefault;
                 if (data.image && (data.image.includes('http') || data.image.startsWith('data:') || data.image.startsWith('blob:') || data.image.includes('/assets/') || data.image.startsWith('/src/assets/'))) {
@@ -115,7 +115,7 @@ const VehicleDetail = () => {
     return (
         <div className="min-h-screen bg-[#e1e7f0] pt-16 pb-12 sm:pt-20 sm:pb-24">
             <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-8 flex flex-col lg:flex-row gap-6 sm:gap-8">
-                
+
                 {/* Left Sidebar - Shared from Rentals */}
                 <aside className="w-full lg:w-64 flex-shrink-0 bg-white rounded-xl shadow-sm p-6 self-start hidden lg:block border border-gray-100">
                     {/* TYPE */}
@@ -161,7 +161,7 @@ const VehicleDetail = () => {
 
                 {/* Main Content */}
                 <div className="flex-1">
-                    
+
                     {/* Top Pick-Up / Drop-Off Widget Area */}
                     <div className="flex flex-col xl:flex-row items-center gap-4 mb-8">
                         {/* Pick-Up Box */}
@@ -237,30 +237,27 @@ const VehicleDetail = () => {
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    
+
                         {/* Left Side: Images */}
                         <div className="flex flex-col gap-4 sm:gap-6">
                             {/* Main Image Card */}
-                            <div className="bg-[#1e2a3b] rounded-[10px] sm:rounded-[20px] relative overflow-hidden h-[300px] sm:h-[400px] lg:h-auto lg:aspect-[4/3] flex items-center justify-center">
-                                <div className="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] bg-[#ffc107]/10 rounded-full blur-3xl z-0"></div>
-                                <div className="absolute bottom-[-10%] left-[-10%] w-[200px] h-[200px] bg-white/5 rounded-full blur-2xl z-0"></div>
-                                <img 
-                                    src={activeImage || mainImageUrl} 
-                                    alt={vehicle.name} 
-                                    className="relative z-10 w-full h-full object-cover drop-shadow-2xl transform hover:scale-105 transition-transform duration-500" 
+                            <div className="bg-white rounded-[10px] sm:rounded-[20px] p-1 sm:p-1.5 border border-gray-100 relative overflow-hidden w-full flex items-center justify-center">
+                                <img
+                                    src={activeImage || mainImageUrl}
+                                    alt={vehicle.name}
+                                    className="relative z-10 w-full h-auto object-cover drop-shadow-xl transform hover:scale-105 transition-transform duration-500 rounded-[8px] sm:rounded-[16px]"
                                 />
                             </div>
- 
+
                             {/* Thumbnails */}
                             {galleryImages.length > 1 && (
                                 <div className="grid grid-cols-4 gap-3 sm:gap-5">
                                     {galleryImages.map((img, index) => (
-                                        <div 
-                                            key={index} 
+                                        <div
+                                            key={index}
                                             onClick={() => setActiveImage(img)}
-                                            className={`rounded-[10px] aspect-[4/3] p-1 flex items-center justify-center border overflow-hidden cursor-pointer transition-all ${
-                                                activeImage === img ? 'bg-[#ffc107]/10 border-[#ffc107]' : 'bg-white border-gray-200 hover:border-[#ffc107]'
-                                            }`}
+                                            className={`rounded-[10px] aspect-[4/3] p-1 flex items-center justify-center border overflow-hidden cursor-pointer transition-all ${activeImage === img ? 'bg-[#ffc107]/10 border-[#ffc107]' : 'bg-white border-gray-200 hover:border-[#ffc107]'
+                                                }`}
                                         >
                                             <img src={img} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover rounded-[6px]" />
                                         </div>
@@ -270,9 +267,9 @@ const VehicleDetail = () => {
                         </div>
 
                         {/* Right Side: Details / Checkout */}
-                        <div className="bg-white rounded-[10px] p-5 sm:p-8 shadow-sm border border-gray-100 flex flex-col min-h-[450px] sm:min-h-[500px]">
+                        <div className="bg-white rounded-[10px] p-4 sm:p-5 shadow-sm border border-gray-100 flex flex-col h-full">
                             {!showCheckout ? (
-                                <motion.div 
+                                <motion.div
                                     initial={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                     className="flex flex-col h-full justify-between"
@@ -285,7 +282,7 @@ const VehicleDetail = () => {
                                             </button>
                                         </div>
 
-                                        <div className="flex items-center space-x-2 mb-6 sm:mb-8">
+                                        <div className="flex items-center space-x-2 mb-4 sm:mb-6">
                                             <div className="flex text-[#ffc107]">
                                                 <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
                                                 <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
@@ -296,11 +293,11 @@ const VehicleDetail = () => {
                                             <span className="text-gray-500 text-xs sm:text-sm font-medium">440+ Reviewer</span>
                                         </div>
 
-                                        <p className="text-gray-500 text-sm sm:text-[16px] leading-relaxed sm:leading-loose mb-8 sm:mb-10">
+                                        <p className="text-gray-500 text-sm sm:text-[16px] leading-relaxed sm:leading-loose mb-6 sm:mb-8">
                                             {vehicle.description || "No description provided for this vehicle."}
                                         </p>
 
-                                        <div className="grid grid-cols-2 gap-y-4 sm:gap-y-6 gap-x-6 sm:gap-x-12 mb-8 sm:mb-10">
+                                        <div className="grid grid-cols-2 gap-y-3 sm:gap-y-4 gap-x-6 sm:gap-x-12 mb-6 sm:mb-8">
                                             <div className="flex justify-between items-center border-b border-gray-100 pb-2">
                                                 <span className="text-gray-400 text-xs sm:text-[15px]">Type</span>
                                                 <span className="font-semibold text-gray-700 text-xs sm:text-[15px]">{vehicle.type || 'Sport'}</span>
@@ -323,49 +320,50 @@ const VehicleDetail = () => {
                                     <div className="flex flex-col xs:flex-row items-center justify-between mt-auto gap-4">
                                         <div className="w-full xs:w-auto">
                                             <div className="text-[24px] sm:text-[28px] font-bold text-gray-900 flex items-end leading-none">
-                                                LKR {parseFloat(vehicle.price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}<span className="text-[12px] sm:text-[14px] text-gray-400 font-medium ml-2 mb-1">/ day</span>
+                                                LKR {parseFloat(vehicle.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<span className="text-[12px] sm:text-[14px] text-gray-400 font-medium ml-2 mb-1">/ day</span>
                                             </div>
                                             {vehicle.originalPrice && vehicle.originalPrice !== vehicle.price && (
                                                 <div className="text-[13px] sm:text-[15px] text-gray-400 line-through mt-1">
-                                                    LKR {parseFloat(vehicle.originalPrice).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                                                    LKR {parseFloat(vehicle.originalPrice).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                 </div>
                                             )}
                                         </div>
                                         <button
                                             onClick={handleBooking}
-                                            className="w-full xs:w-auto bg-[#ffc107] text-[#1e2a3b] px-8 py-3.5 rounded-lg text-sm sm:text-[16px] font-bold hover:bg-[#e0a800] transition-colors disabled:opacity-50 min-w-[140px]"
+                                            className="w-full xs:w-auto bg-[#ffc107] text-[#1e2a3b] px-6 py-2.5 rounded-lg text-[13px] sm:text-sm font-bold hover:bg-[#e0a800] transition-colors disabled:opacity-50 min-w-[140px]"
                                         >
                                             Rent Now
                                         </button>
                                     </div>
                                 </motion.div>
                             ) : (
-                                <motion.div 
+                                <motion.div
                                     initial={{ opacity: 0, x: 20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     className="flex flex-col h-full"
                                 >
-                                    <div className="flex justify-between items-center mb-6 sm:mb-8">
+                                    <div className="flex justify-between items-center mb-4">
                                         <h2 className="text-xl sm:text-[28px] font-bold text-[#1e2a3b]">Checkout</h2>
-                                        <button onClick={() => setShowCheckout(false)} className="text-gray-500 hover:text-[#ffc107] text-xs sm:text-sm font-bold transition-colors">
+                                        <button onClick={() => setShowCheckout(false)} className="flex items-center gap-1.5 text-gray-500 hover:text-[#ffc107] text-xs sm:text-sm font-bold transition-colors">
+                                            <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                             Back
                                         </button>
                                     </div>
 
-                                    <div className="space-y-6 sm:space-y-8 flex-grow">
-                                        <div className="grid grid-cols-1 xs:grid-cols-2 gap-4 sm:gap-6">
+                                    <div className="space-y-4 sm:space-y-5 flex-grow">
+                                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
                                             <div className="space-y-2">
                                                 <label className="text-[10px] sm:text-[12px] font-bold text-[#1e2a3b]/60 uppercase tracking-wider">From Date</label>
-                                                <input 
-                                                    type="date" 
-                                                    className="w-full bg-[#f1f5f9] border border-gray-200 rounded-xl p-3 sm:p-4 text-[13px] sm:text-[15px] font-semibold text-[#1e2a3b] outline-none focus:border-[#ffc107] transition-colors" 
+                                                <input
+                                                    type="date"
+                                                    className="w-full bg-[#f1f5f9] border border-gray-200 rounded-lg p-2.5 sm:p-3 text-[12px] sm:text-[13px] font-semibold text-[#1e2a3b] outline-none focus:border-[#ffc107] transition-colors"
                                                 />
                                             </div>
                                             <div className="space-y-2">
                                                 <label className="text-[10px] sm:text-[12px] font-bold text-[#1e2a3b]/60 uppercase tracking-wider">To Date</label>
-                                                <input 
-                                                    type="date" 
-                                                    className="w-full bg-[#f1f5f9] border border-gray-200 rounded-xl p-3 sm:p-4 text-[13px] sm:text-[15px] font-semibold text-[#1e2a3b] outline-none focus:border-[#ffc107] transition-colors" 
+                                                <input
+                                                    type="date"
+                                                    className="w-full bg-[#f1f5f9] border border-gray-200 rounded-lg p-2.5 sm:p-3 text-[12px] sm:text-[13px] font-semibold text-[#1e2a3b] outline-none focus:border-[#ffc107] transition-colors"
                                                 />
                                             </div>
                                         </div>
@@ -373,15 +371,15 @@ const VehicleDetail = () => {
                                         <div className="space-y-3 sm:space-y-4">
                                             <label className="text-[10px] sm:text-[12px] font-bold text-[#1e2a3b]/60 uppercase tracking-wider">Payment Method</label>
                                             <div className="grid grid-cols-2 gap-4 sm:gap-6">
-                                                <button 
+                                                <button
                                                     onClick={() => setPaymentMethod('cash')}
-                                                    className={`w-full py-2.5 sm:py-3 rounded-xl border-2 font-bold text-xs sm:text-sm transition-all ${paymentMethod === 'cash' ? 'border-[#ffc107] bg-[#ffc107]/5 text-[#1e2a3b]' : 'border-gray-100 text-gray-400 bg-gray-50/50 hover:border-gray-200'}`}
+                                                    className={`w-full py-2 rounded-lg border-2 font-bold text-[11px] sm:text-xs transition-all ${paymentMethod === 'cash' ? 'border-[#ffc107] bg-[#ffc107]/5 text-[#1e2a3b]' : 'border-gray-100 text-gray-400 bg-gray-50/50 hover:border-gray-200'}`}
                                                 >
                                                     Cash
                                                 </button>
-                                                <button 
+                                                <button
                                                     onClick={() => setPaymentMethod('card')}
-                                                    className={`w-full py-2.5 sm:py-3 rounded-xl border-2 font-bold text-xs sm:text-sm transition-all ${paymentMethod === 'card' ? 'border-[#ffc107] bg-[#ffc107]/5 text-[#1e2a3b]' : 'border-gray-100 text-gray-400 bg-gray-50/50 hover:border-gray-200'}`}
+                                                    className={`w-full py-2 rounded-lg border-2 font-bold text-[11px] sm:text-xs transition-all ${paymentMethod === 'card' ? 'border-[#ffc107] bg-[#ffc107]/5 text-[#1e2a3b]' : 'border-gray-100 text-gray-400 bg-gray-50/50 hover:border-gray-200'}`}
                                                 >
                                                     Card
                                                 </button>
@@ -389,29 +387,29 @@ const VehicleDetail = () => {
                                         </div>
 
                                         {paymentMethod === 'card' && (
-                                            <motion.div 
+                                            <motion.div
                                                 initial={{ opacity: 0, y: 10 }}
                                                 animate={{ opacity: 1, y: 0 }}
-                                                className="bg-[#1e2a3b] rounded-[20px] sm:rounded-[24px] p-5 sm:p-6 text-white space-y-4 sm:space-y-6 shadow-xl"
+                                                className="bg-[#1e2a3b] rounded-[14px] sm:rounded-[16px] p-4 sm:p-5 text-white space-y-3 sm:space-y-4 shadow-xl"
                                             >
                                                 <div className="space-y-2">
                                                     <label className="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase tracking-widest">Card Number</label>
-                                                    <div className="bg-white/10 border border-white/10 p-3 sm:p-4 rounded-xl text-sm sm:text-lg font-mono tracking-[2px] sm:tracking-[4px]">{cardData.number}</div>
+                                                    <div className="bg-white/10 border border-white/10 p-2.5 sm:p-3 rounded-lg text-sm sm:text-lg font-mono tracking-[2px] sm:tracking-[4px]">{cardData.number}</div>
                                                 </div>
                                                 <div className="grid grid-cols-2 gap-4 sm:gap-6">
                                                     <div className="space-y-2">
                                                         <label className="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase tracking-widest">Expiry</label>
-                                                        <div className="bg-white/10 border border-white/10 p-3 sm:p-4 rounded-xl text-xs sm:text-base font-semibold">{cardData.expiry}</div>
+                                                        <div className="bg-white/10 border border-white/10 p-2.5 sm:p-3 rounded-lg text-xs sm:text-base font-semibold">{cardData.expiry}</div>
                                                     </div>
                                                     <div className="space-y-2">
                                                         <label className="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase tracking-widest">CVV</label>
-                                                        <div className="bg-white/10 border border-white/10 p-3 sm:p-4 rounded-xl text-xs sm:text-base font-semibold">{cardData.cvv}</div>
+                                                        <div className="bg-white/10 border border-white/10 p-2.5 sm:p-3 rounded-lg text-xs sm:text-base font-semibold">{cardData.cvv}</div>
                                                     </div>
                                                 </div>
                                             </motion.div>
                                         )}
 
-                                        <div className="pt-4 sm:pt-6 border-t border-gray-100 space-y-2 sm:space-y-3">
+                                        <div className="pt-3 sm:pt-4 border-t border-gray-100 space-y-2 sm:space-y-3">
                                             <div className="flex justify-between items-center text-xs sm:text-sm font-medium text-gray-500">
                                                 <span>Rental Amount</span>
                                                 <span>LKR {parseFloat(vehicle.price).toLocaleString()}</span>
@@ -423,10 +421,10 @@ const VehicleDetail = () => {
                                         </div>
                                     </div>
 
-                                    <button 
+                                    <button
                                         onClick={confirmBooking}
                                         disabled={isProcessing}
-                                        className="w-full bg-[#ffc107] text-[#1e2a3b] py-4 sm:py-5 rounded-2xl font-bold mt-6 sm:mt-10 hover:bg-[#e0a800] transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 shadow-lg shadow-[#ffc107]/20 text-sm sm:text-base"
+                                        className="w-full bg-[#ffc107] text-[#1e2a3b] py-3 sm:py-3.5 rounded-xl font-bold mt-4 sm:mt-6 hover:bg-[#e0a800] transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 shadow-lg shadow-[#ffc107]/20 text-[13px] sm:text-sm"
                                     >
                                         {isProcessing ? (
                                             <div className="w-5 h-5 sm:w-6 sm:h-6 border-3 border-[#1e2a3b]/30 border-t-[#1e2a3b] rounded-full animate-spin"></div>
