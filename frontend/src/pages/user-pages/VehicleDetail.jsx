@@ -171,7 +171,7 @@ const VehicleDetail = () => {
         if (isStart) return { background: '#1e2a3b', color: '#fff', borderRadius: '8px', fontWeight: '700', cursor: 'pointer', fontSize: '12px', padding: '6px 0' };
         if (isEnd) return { background: '#ffc107', color: '#1e2a3b', borderRadius: '8px', fontWeight: '700', cursor: 'pointer', fontSize: '12px', padding: '6px 0' };
         if (inRange) return { background: '#ffc10730', color: '#1e2a3b', cursor: 'pointer', fontSize: '12px', padding: '6px 0' };
-        return { cursor: 'pointer', fontSize: '12px', padding: '6px 0', borderRadius: '6px' };
+        return { color: '#1e2a3b', fontWeight: '500', cursor: 'pointer', fontSize: '12px', padding: '6px 0', borderRadius: '6px' };
     };
 
     const pricePerDay = parseFloat(vehicle.price);
@@ -183,6 +183,15 @@ const VehicleDetail = () => {
 
                 {/* ── Left Sidebar: Vehicle Specs + Reviews ── */}
                 <aside className="w-full lg:w-64 flex-shrink-0 bg-white rounded-xl shadow-sm p-6 self-start hidden lg:block border border-gray-100">
+
+                    {/* Back Button */}
+                    <button
+                        onClick={() => navigate('/vehicles')}
+                        className="flex items-center gap-2 text-gray-400 hover:text-[#1e2a3b] transition-colors mb-6 pb-4 border-b border-gray-100 w-full text-sm font-semibold"
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                        Back to Vehicles
+                    </button>
 
                     {/* Reviews */}
                     <div className="mb-8">
