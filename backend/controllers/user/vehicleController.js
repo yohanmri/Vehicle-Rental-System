@@ -21,6 +21,7 @@ const getVehicles = asyncHandler(async (req, res) => {
         price: v.pricePerDay,           // VehicleCard reads 'price'
         originalPrice: v.originalPrice, // VehicleCard reads 'originalPrice' for strikethrough
         image: v.imageUrl,              // VehicleCard reads 'image'
+        additionalImages: v.additionalImages,
         description: v.description,
         available: v.available,
         steering: v.steering,
@@ -35,7 +36,27 @@ const getVehicles = asyncHandler(async (req, res) => {
 // @route   GET /api/vehicles/:id
 // @access  Public
 const getVehicleById = asyncHandler(async (req, res) => {
-    const vehicle = await Vehicle.findById(req.params.id);
+    let vehicle = await Vehicle.findById(req.params.id);
+    if (!vehicle) {
+        const adminVehicle = await AdminVehicle.findById(req.params.id);
+        if (adminVehicle) {
+            vehicle = {
+                _id: adminVehicle._id,
+                name: adminVehicle.name,
+                type: adminVehicle.type,
+                capacity: adminVehicle.capacity,
+                price: adminVehicle.pricePerDay,
+                originalPrice: adminVehicle.originalPrice,
+                image: adminVehicle.imageUrl,
+                additionalImages: adminVehicle.additionalImages,
+                description: adminVehicle.description,
+                available: adminVehicle.available,
+                steering: adminVehicle.steering,
+                fuel: adminVehicle.fuel,
+            };
+        }
+    }
+
     if (vehicle) {
         res.json(vehicle);
     } else {

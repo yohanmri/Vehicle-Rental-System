@@ -35,6 +35,7 @@ const VehicleDetail = () => {
         start: '',
         end: ''
     });
+    const [activeImage, setActiveImage] = useState('');
 
     // Mock Card state
     const [cardData, setCardData] = useState({
@@ -49,34 +50,27 @@ const VehicleDetail = () => {
     const selectedCapacities = ['2 Person'];
     
     useEffect(() => {
-        // Bypassing backend and finding the mocked vehicle based on ID
-        const mockVehicles = [
-            { _id: 'b1', name: 'Yamaha FZ', type: 'Bike', capacity: 2, price: '2500.00', image: bike1, description: 'The Yamaha FZ is a perfectly balanced street fighter, offering great maneuverability and punchy performance for city riding and short trips.' },
-            { _id: 'b2', name: 'Honda Hornet', type: 'Bike', capacity: 2, price: '2800.00', image: bike2, description: 'Aggressive styling meets legendary Honda reliability. The Hornet is designed for those who want a bit more power and presence on the road.' },
-            { _id: 'b3', name: 'TVS Apache', type: 'Bike', capacity: 2, price: '2200.00', image: bike3, description: 'Race-inspired performance and sharp handling make the Apache a favorite for enthusiasts looking for a spirited ride.' },
-            { _id: '1', name: 'Koenigsegg', type: 'Sport', capacity: 2, price: '150000.00', image: car1, description: 'Sports car with the best design and acceleration. Safety and comfort while driving a futuristic and elegant sports car.' },
-            { _id: '2', name: 'Nissan GT - R', type: 'Sport', capacity: 2, price: '80000.00', image: car2, description: 'NISMO has become the embodiment of Nissan\'s outstanding performance, inspired by the most unforgiving proving ground, the "race track".' },
-            { _id: '3', name: 'Rolls-Royce', type: 'Sport', capacity: 4, price: '120000.00', image: car3, description: 'Experience ultimate luxury and refinement.' },
-            { _id: '4', name: 'All New Rush', type: 'SUV', capacity: 6, price: '15000.00', image: car4, description: 'Perfect for family trips and adventures.' },
-            { _id: '5', name: 'CR - V', type: 'SUV', capacity: 6, price: '18000.00', image: car5, description: 'Comfortable and spacious SUV for all your needs.' },
-            { _id: '6', name: 'All New Terios', type: 'SUV', capacity: 6, price: '12000.00', image: carDefault, description: 'Reliable and robust performance.' },
-            { _id: '7', name: 'MG ZX Exclusice', type: 'Hatchback', capacity: 4, price: '14000.00', image: car1, description: 'Modern design with excellent fuel efficiency.' },
-            { _id: '8', name: 'New MG ZS', type: 'SUV', capacity: 6, price: '16000.00', image: car2, description: 'Spacious interior with advanced safety features.' },
-            { _id: '9', name: 'MG ZX Excite', type: 'Hatchback', capacity: 4, price: '13000.00', image: car3, description: 'Compact and agile for city driving.' },
-        ];
-
-        setTimeout(() => {
-            console.log('Searching for vehicle with ID:', id);
-            const foundVehicle = mockVehicles.find(v => String(v._id) === String(id));
-            if (foundVehicle) {
-                setVehicle(foundVehicle);
-            } else {
+        const fetchVehicle = async () => {
+            try {
+                const { data } = await axios.get(`/api/vehicles/${id}`);
+                setVehicle(data);
+                
+                // Initialize active image
+                let imageUrl = data.image || carDefault;
+                if (data.image && (data.image.includes('http') || data.image.startsWith('data:') || data.image.startsWith('blob:') || data.image.includes('/assets/') || data.image.startsWith('/src/assets/'))) {
+                    imageUrl = data.image;
+                } else if (data.image && typeof data.image === 'string') {
+                    imageUrl = `${axios.defaults.baseURL.replace('/api', '')}/${data.image}`;
+                }
+                setActiveImage(imageUrl);
+            } catch (err) {
                 console.error('Vehicle not found for ID:', id);
                 toast.error('Vehicle not found');
-                // navigate('/vehicles'); // Commented out for debugging
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
-        }, 500);
+        };
+        fetchVehicle();
     }, [id, navigate]);
 
     const handleBooking = () => {
@@ -97,19 +91,25 @@ const VehicleDetail = () => {
     if (loading) return <div className="min-h-screen pt-24"><Loader /></div>;
     if (!vehicle) return null;
 
-    // Use imported image logic
-    let imageUrl = vehicle.image || carDefault;
-    if (vehicle.image && (
-        vehicle.image.includes('http') || 
-        vehicle.image.startsWith('data:') || 
-        vehicle.image.startsWith('blob:') ||
-        vehicle.image.includes('/assets/') || 
-        vehicle.image.startsWith('/src/assets/')
-    )) {
-        imageUrl = vehicle.image;
+    // Use imported image logic for base image reference
+    let mainImageUrl = vehicle.image || carDefault;
+    if (vehicle.image && (vehicle.image.includes('http') || vehicle.image.startsWith('data:') || vehicle.image.startsWith('blob:') || vehicle.image.includes('/assets/') || vehicle.image.startsWith('/src/assets/'))) {
+        mainImageUrl = vehicle.image;
     } else if (vehicle.image && typeof vehicle.image === 'string') {
-        // If it looks like a relative path from backend (not a bundled asset)
-        imageUrl = `${axios.defaults.baseURL.replace('/api', '')}/${vehicle.image}`;
+        mainImageUrl = `${axios.defaults.baseURL.replace('/api', '')}/${vehicle.image}`;
+    }
+
+    // Process additional images
+    const galleryImages = [mainImageUrl];
+    if (vehicle.additionalImages && vehicle.additionalImages.length > 0) {
+        vehicle.additionalImages.forEach(img => {
+            if (!img) return;
+            if (img.includes('http') || img.startsWith('data:') || img.startsWith('blob:') || img.includes('/assets/') || img.startsWith('/src/assets/')) {
+                galleryImages.push(img);
+            } else {
+                galleryImages.push(`${axios.defaults.baseURL.replace('/api', '')}/${img}`);
+            }
+        });
     }
 
     return (
@@ -241,42 +241,32 @@ const VehicleDetail = () => {
                         {/* Left Side: Images */}
                         <div className="flex flex-col gap-4 sm:gap-6">
                             {/* Main Image Card */}
-                            <div className="bg-[#1e2a3b] rounded-[10px] sm:rounded-[20px] p-6 sm:p-10 relative overflow-hidden h-[300px] sm:h-[400px] lg:h-auto lg:aspect-[4/3] flex flex-col">
-                                <div className="relative z-10 max-w-[280px]">
-                                    <h2 className="text-white text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 leading-tight">The Best Platform for Vehicle Rental</h2>
-                                    <p className="text-white/80 text-[13px] sm:text-[15px] leading-relaxed mb-6 sm:mb-8">Ease of doing vehicle rental safely and reliably. Of course at a low price.</p>
-                                </div>
-                                <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center lg:justify-start lg:relative lg:bottom-auto lg:mt-auto">
-                                    <img 
-                                        src={imageUrl} 
-                                        alt={vehicle.name} 
-                                        className={`drop-shadow-2xl transform hover:scale-105 transition-transform duration-500 ${
-                                            vehicle._id === 'b1' 
-                                            ? 'w-[75%] sm:w-[85%] max-w-[320px] sm:max-w-[380px] object-contain translate-y-4 lg:-translate-y-12' 
-                                            : vehicle._id === 'b2'
-                                            ? 'w-[70%] sm:w-[80%] max-w-[300px] sm:max-w-[340px] object-contain translate-y-4 lg:-translate-y-14'
-                                            : vehicle._id === 'b3'
-                                            ? 'w-[55%] sm:w-[65%] max-w-[240px] sm:max-w-[300px] object-contain translate-y-4 lg:-translate-y-4'
-                                            : 'w-[85%] sm:w-full max-w-[400px] object-contain lg:translate-y-4'
-                                        }`} 
-                                    />
-                                </div>
-                                <div className="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] bg-[#ffc107]/10 rounded-full blur-3xl"></div>
-                                <div className="absolute bottom-[-10%] left-[-10%] w-[200px] h-[200px] bg-white/5 rounded-full blur-2xl"></div>
+                            <div className="bg-[#1e2a3b] rounded-[10px] sm:rounded-[20px] p-6 sm:p-10 relative overflow-hidden h-[300px] sm:h-[400px] lg:h-auto lg:aspect-[4/3] flex items-center justify-center">
+                                <div className="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] bg-[#ffc107]/10 rounded-full blur-3xl z-0"></div>
+                                <div className="absolute bottom-[-10%] left-[-10%] w-[200px] h-[200px] bg-white/5 rounded-full blur-2xl z-0"></div>
+                                <img 
+                                    src={activeImage || mainImageUrl} 
+                                    alt={vehicle.name} 
+                                    className="relative z-10 w-[90%] max-w-[500px] object-contain drop-shadow-2xl transform hover:scale-105 transition-transform duration-500" 
+                                />
                             </div>
  
                             {/* Thumbnails */}
-                            <div className="grid grid-cols-3 gap-3 sm:gap-5">
-                                <div className="bg-[#ffc107] rounded-[10px] aspect-[4/3] p-2 flex items-center justify-center border-2 border-[#ffc107] overflow-hidden">
-                                    <img src={imageUrl} alt="Thumbnail" className="w-full h-full object-contain" />
+                            {galleryImages.length > 1 && (
+                                <div className="grid grid-cols-4 gap-3 sm:gap-5">
+                                    {galleryImages.map((img, index) => (
+                                        <div 
+                                            key={index} 
+                                            onClick={() => setActiveImage(img)}
+                                            className={`rounded-[10px] aspect-[4/3] p-2 flex items-center justify-center border-2 overflow-hidden cursor-pointer transition-all ${
+                                                activeImage === img ? 'bg-[#ffc107] border-[#ffc107]' : 'bg-white border-gray-100 hover:border-[#ffc107]'
+                                            }`}
+                                        >
+                                            <img src={img} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-contain" />
+                                        </div>
+                                    ))}
                                 </div>
-                                <div className="bg-white rounded-[10px] aspect-[4/3] overflow-hidden cursor-pointer border border-gray-100 hover:border-[#ffc107] transition-colors">
-                                    <img src={vehicle.type === 'Bike' ? "https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&q=80&w=500" : "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&q=80&w=500"} alt="Detail 1" className="w-full h-full object-cover" />
-                                </div>
-                                <div className="bg-white rounded-[10px] aspect-[4/3] overflow-hidden cursor-pointer border border-gray-100 hover:border-[#ffc107] transition-colors">
-                                    <img src={vehicle.type === 'Bike' ? "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&q=80&w=500" : "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=500"} alt="Detail 2" className="w-full h-full object-cover" />
-                                </div>
-                            </div>
+                            )}
                         </div>
 
                         {/* Right Side: Details / Checkout */}
@@ -307,7 +297,7 @@ const VehicleDetail = () => {
                                         </div>
 
                                         <p className="text-gray-500 text-sm sm:text-[16px] leading-relaxed sm:leading-loose mb-8 sm:mb-10">
-                                            {vehicle.description || "NISMO has become the embodiment of Nissan's outstanding performance, inspired by the most unforgiving proving ground, the 'race track'."}
+                                            {vehicle.description || "No description provided for this vehicle."}
                                         </p>
 
                                         <div className="grid grid-cols-2 gap-y-4 sm:gap-y-6 gap-x-6 sm:gap-x-12 mb-8 sm:mb-10">
@@ -321,11 +311,11 @@ const VehicleDetail = () => {
                                             </div>
                                             <div className="flex justify-between items-center border-b border-gray-100 pb-2">
                                                 <span className="text-gray-400 text-xs sm:text-[15px]">Steering</span>
-                                                <span className="font-semibold text-gray-700 text-xs sm:text-[15px]">Manual</span>
+                                                <span className="font-semibold text-gray-700 text-xs sm:text-[15px]">{vehicle.steering || 'Manual'}</span>
                                             </div>
                                             <div className="flex justify-between items-center border-b border-gray-100 pb-2">
                                                 <span className="text-gray-400 text-xs sm:text-[15px]">Fuel</span>
-                                                <span className="font-semibold text-gray-700 text-xs sm:text-[15px]">{vehicle.type === 'Bike' ? '12L' : '70L'}</span>
+                                                <span className="font-semibold text-gray-700 text-xs sm:text-[15px]">{vehicle.fuel ? `${vehicle.fuel}L` : (vehicle.type === 'Bike' ? '12L' : '70L')}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -333,11 +323,13 @@ const VehicleDetail = () => {
                                     <div className="flex flex-col xs:flex-row items-center justify-between mt-auto gap-4">
                                         <div className="w-full xs:w-auto">
                                             <div className="text-[24px] sm:text-[28px] font-bold text-gray-900 flex items-end leading-none">
-                                                LKR {parseFloat(vehicle.price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}<span className="text-[12px] sm:text-[14px] text-gray-400 font-medium ml-2 mb-1">/ days</span>
+                                                LKR {parseFloat(vehicle.price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}<span className="text-[12px] sm:text-[14px] text-gray-400 font-medium ml-2 mb-1">/ day</span>
                                             </div>
-                                            <div className="text-[13px] sm:text-[15px] text-gray-400 line-through mt-1">
-                                                LKR {(parseFloat(vehicle.price) + 2000).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                                            </div>
+                                            {vehicle.originalPrice && vehicle.originalPrice !== vehicle.price && (
+                                                <div className="text-[13px] sm:text-[15px] text-gray-400 line-through mt-1">
+                                                    LKR {parseFloat(vehicle.originalPrice).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                                                </div>
+                                            )}
                                         </div>
                                         <button
                                             onClick={handleBooking}

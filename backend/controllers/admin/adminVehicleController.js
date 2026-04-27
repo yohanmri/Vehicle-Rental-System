@@ -42,7 +42,11 @@ const createVehicle = asyncHandler(async (req, res) => {
         throw new Error('Please fill all required fields');
     }
 
-    const imageUrl = req.file ? req.file.path : '';
+    const imageUrl = (req.files && req.files.image) ? req.files.image[0].path : '';
+    let additionalImages = [];
+    if (req.files && req.files.additionalImages) {
+        additionalImages = req.files.additionalImages.map(f => f.path).slice(0, 3);
+    }
 
     const vehicle = await AdminVehicle.create({
         name,
@@ -54,6 +58,7 @@ const createVehicle = asyncHandler(async (req, res) => {
         originalPrice: Number(originalPrice) || Number(pricePerDay),
         description,
         imageUrl,
+        additionalImages,
         available: available !== undefined ? available : true,
     });
 
@@ -76,14 +81,33 @@ const updateVehicle = asyncHandler(async (req, res) => {
         if (req.body[f] !== undefined) vehicle[f] = req.body[f];
     });
 
-    if (req.file) {
+    if (req.files && req.files.image && req.files.image.length > 0) {
         // Delete old image from Cloudinary if exists
         if (vehicle.imageUrl) {
             const publicId = vehicle.imageUrl.split('/').pop().split('.')[0];
             await cloudinary.uploader.destroy(`pick-n-go-360/${publicId}`).catch(() => {});
         }
-        vehicle.imageUrl = req.file.path;
+        vehicle.imageUrl = req.files.image[0].path;
     }
+
+    let existingImages = req.body.existingAdditionalImages || [];
+    if (typeof existingImages === 'string') {
+        existingImages = [existingImages]; // If only one comes as string
+    }
+
+    // Find images to delete from Cloudinary
+    const toDelete = vehicle.additionalImages.filter(url => !existingImages.includes(url));
+    for (const url of toDelete) {
+        const publicId = url.split('/').pop().split('.')[0];
+        await cloudinary.uploader.destroy(`pick-n-go-360/${publicId}`).catch(() => {});
+    }
+
+    let newImages = [];
+    if (req.files && req.files.additionalImages) {
+        newImages = req.files.additionalImages.map(f => f.path);
+    }
+
+    vehicle.additionalImages = [...existingImages, ...newImages].slice(0, 3);
 
     const updated = await vehicle.save();
     res.json(updated);
@@ -103,6 +127,13 @@ const deleteVehicle = asyncHandler(async (req, res) => {
     if (vehicle.imageUrl) {
         const publicId = vehicle.imageUrl.split('/').pop().split('.')[0];
         await cloudinary.uploader.destroy(`pick-n-go-360/${publicId}`).catch(() => {});
+    }
+
+    if (vehicle.additionalImages && vehicle.additionalImages.length > 0) {
+        for (const url of vehicle.additionalImages) {
+            const publicId = url.split('/').pop().split('.')[0];
+            await cloudinary.uploader.destroy(`pick-n-go-360/${publicId}`).catch(() => {});
+        }
     }
 
     await vehicle.deleteOne();

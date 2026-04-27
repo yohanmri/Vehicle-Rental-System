@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 
+function arrayLimit(val) {
+    return val.length <= 3;
+}
+
 // Extended Vehicle model with full admin fields
 const vehicleSchema = mongoose.Schema(
     {
@@ -40,6 +44,11 @@ const vehicleSchema = mongoose.Schema(
         imageUrl: {
             type: String,
             default: '',
+        },
+        additionalImages: {
+            type: [String],
+            default: [],
+            validate: [arrayLimit, '{PATH} exceeds the limit of 3'],
         },
         available: {
             type: Boolean,

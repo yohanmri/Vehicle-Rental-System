@@ -23,6 +23,13 @@ const AdminVehicleForm = () => {
     const [originalImgSrc, setOriginalImgSrc] = useState(''); // Always the full original image
     const [loading, setLoading] = useState(false);
 
+    const [additionalImages, setAdditionalImages] = useState([
+        { file: null, previewUrl: '', originalImgSrc: '', url: '' },
+        { file: null, previewUrl: '', originalImgSrc: '', url: '' },
+        { file: null, previewUrl: '', originalImgSrc: '', url: '' }
+    ]);
+    const [croppingIndex, setCroppingIndex] = useState(-1); // -1 = main, 0,1,2 = additional
+
     // Image Cropping State
     const [cropImgSrc, setCropImgSrc] = useState('');
     const [isCropping, setIsCropping] = useState(false);
@@ -44,19 +51,37 @@ const AdminVehicleForm = () => {
                         setOriginalPrice(data.originalPrice);
                     }
                     if (data.imageUrl) setPreviewUrl(data.imageUrl);
+                    if (data.additionalImages && data.additionalImages.length > 0) {
+                        const loadedImages = [
+                            { file: null, previewUrl: '', originalImgSrc: '', url: '' },
+                            { file: null, previewUrl: '', originalImgSrc: '', url: '' },
+                            { file: null, previewUrl: '', originalImgSrc: '', url: '' }
+                        ];
+                        data.additionalImages.forEach((url, i) => {
+                            if (i < 3) loadedImages[i] = { file: null, previewUrl: url, originalImgSrc: url, url };
+                        });
+                        setAdditionalImages(loadedImages);
+                    }
                 } catch (err) { alert('Failed to load vehicle'); navigate('/admin/vehicles'); }
             };
             fetchVehicle();
         }
     }, [id]);
 
-    const handleImageChange = (e) => {
+    const handleImageChange = (e, index = -1) => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.addEventListener('load', () => {
                 const src = reader.result?.toString() || '';
-                setOriginalImgSrc(src); // Save original for re-cropping
+                if (index === -1) {
+                    setOriginalImgSrc(src);
+                } else {
+                    const newArr = [...additionalImages];
+                    newArr[index].originalImgSrc = src;
+                    setAdditionalImages(newArr);
+                }
+                setCroppingIndex(index);
                 setCropImgSrc(src);
                 setIsCropping(true);
             });
@@ -66,15 +91,25 @@ const AdminVehicleForm = () => {
     };
 
     const handleCropComplete = (croppedFile, croppedPreviewUrl) => {
-        setImageFile(croppedFile);
-        setPreviewUrl(croppedPreviewUrl);
+        if (croppingIndex === -1) {
+            setImageFile(croppedFile);
+            setPreviewUrl(croppedPreviewUrl);
+        } else {
+            const newArr = [...additionalImages];
+            newArr[croppingIndex].file = croppedFile;
+            newArr[croppingIndex].previewUrl = croppedPreviewUrl;
+            newArr[croppingIndex].url = ''; // reset URL since it is now a local file
+            setAdditionalImages(newArr);
+        }
         setIsCropping(false);
         setCropImgSrc('');
+        setCroppingIndex(-1);
     };
 
     const handleCropCancel = () => {
         setIsCropping(false);
         setCropImgSrc('');
+        setCroppingIndex(-1);
     };
 
     const handleSubmit = async (e) => {
@@ -85,6 +120,15 @@ const AdminVehicleForm = () => {
         // Add originalPrice: if checkbox is on use the value, otherwise set same as pricePerDay (no discount)
         data.append('originalPrice', showOriginalPrice && originalPrice ? originalPrice : formData.pricePerDay);
         if (imageFile) data.append('image', imageFile);
+
+        additionalImages.forEach((img) => {
+            if (img.url) {
+                data.append('existingAdditionalImages', img.url);
+            }
+            if (img.file) {
+                data.append('additionalImages', img.file);
+            }
+        });
 
         try {
             if (isEdit) {
@@ -159,16 +203,54 @@ const AdminVehicleForm = () => {
                                     {/* Click to change — opens file picker */}
                                     <div style={{ position: 'relative', position: 'absolute', bottom: '8px', right: '8px' }}>
                                         <div style={{ background: '#1e2a3b', color: '#fff', fontSize: '12px', fontWeight: '600', padding: '4px 12px', borderRadius: '6px', cursor: 'pointer' }}>Click to change</div>
-                                        <input type="file" accept="image/*" onChange={handleImageChange} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
+                                        <input type="file" accept="image/*" onChange={(e) => handleImageChange(e, -1)} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
                                     </div>
                                 </div>
                             ) : (
                                 <div style={{ position: 'relative' }}>
                                     <ImageIcon size={48} color="#cbd5e1" style={{ margin: '0 auto 12px' }} />
                                     <div style={{ color: '#64748B', fontSize: '14px', fontWeight: '500' }}>Click or drag image to upload</div>
-                                    <input type="file" accept="image/*" onChange={handleImageChange} required={!isEdit} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
+                                    <input type="file" accept="image/*" onChange={(e) => handleImageChange(e, -1)} required={!isEdit} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
                                 </div>
                             )}
+                        </div>
+                    </div>
+
+                    <div style={{ marginBottom: '24px' }}>
+                        <label style={labelStyle}>Additional Images (Up to 3)</label>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+                            {additionalImages.map((img, index) => (
+                                <div key={index} style={{ border: '2px dashed #e2e8f0', borderRadius: '12px', padding: img.previewUrl ? '0' : '16px', textAlign: 'center', background: '#f8fafc', position: 'relative', overflow: 'hidden', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    {img.previewUrl ? (
+                                        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                                            <img src={img.previewUrl} alt={`Additional ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#f8fafc' }} />
+                                            <button type="button" onClick={() => {
+                                                const newArr = [...additionalImages];
+                                                newArr[index] = { file: null, previewUrl: '', originalImgSrc: '', url: '' };
+                                                setAdditionalImages(newArr);
+                                            }} style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(239, 68, 68, 0.9)', color: '#fff', fontSize: '12px', padding: '2px 6px', borderRadius: '4px', border: 'none', cursor: 'pointer', zIndex: 10 }}>✕</button>
+                                            
+                                            {img.originalImgSrc && (
+                                                <button type="button" onClick={() => {
+                                                    setCroppingIndex(index);
+                                                    setCropImgSrc(img.originalImgSrc);
+                                                    setIsCropping(true);
+                                                }} style={{ position: 'absolute', bottom: '4px', left: '4px', background: '#ffc107', color: '#1e2a3b', fontSize: '10px', fontWeight: '700', padding: '2px 6px', borderRadius: '4px', border: 'none', cursor: 'pointer' }}>✂ Re-crop</button>
+                                            )}
+
+                                            <div style={{ position: 'absolute', inset: 0, cursor: 'pointer', zIndex: 5 }}>
+                                                <input type="file" accept="image/*" onChange={(e) => handleImageChange(e, index)} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                            <ImageIcon size={24} color="#cbd5e1" style={{ marginBottom: '4px' }} />
+                                            <div style={{ color: '#64748B', fontSize: '11px', fontWeight: '500' }}>Add</div>
+                                            <input type="file" accept="image/*" onChange={(e) => handleImageChange(e, index)} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     </div>
 

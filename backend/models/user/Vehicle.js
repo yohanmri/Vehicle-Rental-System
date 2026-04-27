@@ -23,6 +23,10 @@ const vehicleSchema = mongoose.Schema({
     },
     description: {
         type: String
+    },
+    additionalImages: {
+        type: [String],
+        default: []
     }
 }, {
     timestamps: true
