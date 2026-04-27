@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
         const fetchUser = async () => {
             if (token) {
                 try {
-                    const { data } = await axios.get('/auth/profile');
+                    const { data } = await axios.get('/api/auth/profile');
                     setUser(data);
                 } catch (error) {
                     console.error('Failed to fetch user', error);

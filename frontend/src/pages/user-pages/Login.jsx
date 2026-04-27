@@ -18,7 +18,7 @@ const Login = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const { data } = await axios.post('/auth/login', { email, password });
+            const { data } = await axios.post('/api/auth/login', { email, password });
             login(data, data.token);
             toast.success('Welcome back!');
             navigate('/');

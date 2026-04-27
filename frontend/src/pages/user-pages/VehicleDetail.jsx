@@ -240,16 +240,17 @@ const VehicleDetail = () => {
                                         <div className="w-1.5 h-1.5 rounded-full bg-[#ffc107]"></div>
                                     </div>
                                     <span className="font-bold text-gray-900 text-lg">{vehicle.name}</span>
-                                    <div className="flex items-center gap-1 ml-2">
-                                        <div className={`w-2.5 h-2.5 rounded-full ${vehicle.available !== false ? 'bg-green-400' : 'bg-red-400'}`}></div>
-                                        <span className={`text-xs font-semibold ${vehicle.available !== false ? 'text-green-600' : 'text-red-500'}`}>
-                                            {vehicle.available !== false ? 'Available' : 'Not Available'}
-                                        </span>
-                                    </div>
                                 </div>
                                 <p className="text-gray-500 text-sm leading-relaxed">
                                     {vehicle.description || 'A premium vehicle available for rental. Experience comfort, style, and reliability on every journey with Zameer Cabs.'}
                                 </p>
+                            </div>
+                            {/* Availability — right aligned */}
+                            <div className="flex items-center gap-1.5 shrink-0">
+                                <div className={`w-2.5 h-2.5 rounded-full ${vehicle.available !== false ? 'bg-green-400' : 'bg-red-400'}`}></div>
+                                <span className={`text-sm font-semibold ${vehicle.available !== false ? 'text-green-600' : 'text-red-500'}`}>
+                                    {vehicle.available !== false ? 'Available' : 'Not Available'}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -280,37 +281,10 @@ const VehicleDetail = () => {
                             {!showCheckout ? (
                                 <motion.div initial={{ opacity: 1 }} className="flex flex-col h-full justify-between gap-4">
                                     <div>
-                                        {/* Vehicle name + availability */}
-                                        <div className="flex justify-between items-start mb-3">
-                                            <h1 className="text-2xl sm:text-[30px] font-bold text-gray-900 leading-tight">{vehicle.name}</h1>
-                                            <div className="flex items-center gap-1.5 pt-1">
-                                                <div className={`w-3 h-3 rounded-full ${vehicle.available !== false ? 'bg-green-400' : 'bg-red-400'}`}></div>
-                                                <span className={`text-xs font-semibold ${vehicle.available !== false ? 'text-green-600' : 'text-red-500'}`}>
-                                                    {vehicle.available !== false ? 'Available' : 'Not Available'}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        {/* Stars */}
-                                        <div className="flex items-center gap-2 mb-4">
-                                            {[1,2,3,4].map(i => <Star key={i} className="w-4 h-4 fill-[#ffc107] text-[#ffc107]" />)}
-                                            <Star className="w-4 h-4 text-gray-300" />
-                                            <span className="text-gray-500 text-sm">440+ Reviewer</span>
-                                        </div>
-
-                                        {/* Spec grid */}
-                                        <div className="grid grid-cols-2 gap-y-2 gap-x-4 mb-5">
-                                            {[
-                                                ['Type', vehicle.type || '—'],
-                                                ['Capacity', `${vehicle.capacity || '—'} Person`],
-                                                ['Steering', vehicle.steering || 'Manual'],
-                                                ['Fuel', vehicle.fuel ? `${vehicle.fuel}L` : '—'],
-                                            ].map(([k,v]) => (
-                                                <div key={k} className="flex justify-between items-center border-b border-gray-100 pb-1.5">
-                                                    <span className="text-gray-400 text-[14px]">{k}</span>
-                                                    <span className="font-semibold text-gray-700 text-[14px]">{v}</span>
-                                                </div>
-                                            ))}
+                                            {/* Right card heading */}
+                                        <div className="mb-4">
+                                            <h2 className="text-xl sm:text-[24px] font-bold text-[#1e2a3b] leading-tight">Reserve Your Ride</h2>
+                                            <p className="text-gray-400 text-sm mt-0.5">Pick your dates from the calendar below</p>
                                         </div>
 
                                         {/* Calendar Section */}
