@@ -83,29 +83,6 @@ const updateBookingStatus = asyncHandler(async (req, res) => {
         });
     }
 
-    // When confirmed, mark vehicle as booked in both collections
-    if (bookingStatus === 'confirmed' && prevStatus !== 'confirmed') {
-        if (booking.vehicleId) {
-            await Vehicle.findByIdAndUpdate(booking.vehicleId, { availability: false });
-            await AdminVehicle.findByIdAndUpdate(booking.vehicleId, { available: false });
-        }
-    }
-
-    // When cancelled, restore availability if no other active bookings
-    if (bookingStatus === 'cancelled' && prevStatus === 'confirmed') {
-        if (booking.vehicleId) {
-            const otherActive = await AdminBooking.countDocuments({
-                vehicleId: booking.vehicleId,
-                bookingStatus: { $in: ['confirmed', 'active'] },
-                _id: { $ne: booking._id }
-            });
-            if (otherActive === 0) {
-                await Vehicle.findByIdAndUpdate(booking.vehicleId, { availability: true });
-                await AdminVehicle.findByIdAndUpdate(booking.vehicleId, { available: true });
-            }
-        }
-    }
-
     res.json(updated);
 });
 

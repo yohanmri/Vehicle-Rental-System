@@ -42,7 +42,7 @@ const VehicleCard = ({ vehicle }) => {
                 <div className="flex flex-col items-center gap-0.5 pt-1">
                     <div className={`w-3 h-3 rounded-full ${vehicle.available !== false ? 'bg-green-400' : 'bg-red-400'}`}></div>
                     <span className={`text-[10px] font-bold ${vehicle.available !== false ? 'text-green-600' : 'text-red-500'}`}>
-                        {vehicle.available !== false ? 'Open' : 'Booked'}
+                        {vehicle.available !== false ? 'Open' : 'Not Available'}
                     </span>
                 </div>
             </div>

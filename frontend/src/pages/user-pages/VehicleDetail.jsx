@@ -133,9 +133,25 @@ const VehicleDetail = () => {
         setIsProcessing(true);
         try {
             const total = parseFloat(vehicle.price) * nights;
-            await axios.post('/api/bookings', { vehicleId: id, startDate, endDate, totalPrice: total, paymentMethod },
-                { headers: { Authorization: `Bearer ${token}` } });
-            toast.success(paymentMethod === 'card' ? 'Booking Confirmed! Card payment at pickup.' : 'Booking Confirmed! Pay cash on arrival.');
+            const { data } = await axios.post(
+                '/api/bookings',
+                { vehicleId: id, startDate, endDate, totalPrice: total, paymentMethod },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            if (paymentMethod === 'card') {
+                if (data.stripeUrl) {
+                    toast.success('Redirecting to Stripe payment...');
+                    window.location.href = data.stripeUrl;
+                    return;
+                } else if (data.stripeError) {
+                    toast.error('Payment gateway error: ' + data.stripeError);
+                    navigate('/my-bookings');
+                    return;
+                }
+            }
+
+            toast.success('Booking Confirmed! Pay cash on arrival.');
             setShowCheckout(false);
             navigate('/my-bookings');
         } catch (err) {
@@ -254,13 +270,7 @@ const VehicleDetail = () => {
                                     {vehicle.description || 'A premium vehicle available for rental. Experience comfort, style, and reliability on every journey with Zameer Cabs.'}
                                 </p>
                             </div>
-                            {/* Availability — right aligned */}
-                            <div className="flex items-center gap-1.5 shrink-0">
-                                <div className={`w-2.5 h-2.5 rounded-full ${vehicle.available !== false ? 'bg-green-400' : 'bg-red-400'}`}></div>
-                                <span className={`text-sm font-semibold ${vehicle.available !== false ? 'text-green-600' : 'text-red-500'}`}>
-                                    {vehicle.available !== false ? 'Available' : 'Not Available'}
-                                </span>
-                            </div>
+                            {/* Availability — date-based only (shown in calendar) */}
                         </div>
                     </div>
 
@@ -383,13 +393,20 @@ const VehicleDetail = () => {
                                     {/* Price + Rent Now */}
                                     <div className="flex items-center justify-between gap-4 mt-2">
                                         <div>
-                                            <div className="text-[24px] sm:text-[28px] font-bold text-gray-900 flex items-end leading-none">
-                                                LKR {pricePerDay.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                                                <span className="text-[14px] text-gray-400 font-medium ml-2 mb-1">/ day</span>
-                                            </div>
-                                            {nights > 0 && (
-                                                <div className="text-sm text-gray-500 mt-0.5">
-                                                    Total: <span className="font-bold text-[#1e2a3b]">LKR {(pricePerDay * nights).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                                            {nights > 0 ? (
+                                                <>
+                                                    <div className="text-[24px] sm:text-[28px] font-bold text-gray-900 leading-none">
+                                                        LKR {(pricePerDay * nights).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                                        <span className="text-[14px] text-gray-400 font-medium ml-2 mb-1">/ {nights} night{nights > 1 ? 's' : ''}</span>
+                                                    </div>
+                                                    <div className="text-sm text-gray-500 mt-0.5">
+                                                        LKR {pricePerDay.toLocaleString('en-US', { minimumFractionDigits: 2 })} × {nights} night{nights > 1 ? 's' : ''}
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <div className="text-[24px] sm:text-[28px] font-bold text-gray-900 flex items-end leading-none">
+                                                    LKR {pricePerDay.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                                    <span className="text-[14px] text-gray-400 font-medium ml-2 mb-1">/ day</span>
                                                 </div>
                                             )}
                                         </div>

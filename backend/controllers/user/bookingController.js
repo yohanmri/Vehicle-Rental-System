@@ -4,6 +4,15 @@ const Vehicle = require('../../models/user/Vehicle');
 const AdminVehicle = require('../../models/admin/AdminVehicle');
 const AdminBooking = require('../../models/admin/AdminBooking');
 
+// Stripe is initialised lazily so the env var is always available
+function getStripe() {
+    const key = process.env.STRIPE_SECRET_KEY;
+    if (!key || key.includes('sk_test_51...')) {
+        throw new Error('STRIPE_SECRET_KEY is not set in .env');
+    }
+    return require('stripe')(key);
+}
+
 // @desc    Create new booking
 // @route   POST /api/bookings
 // @access  Private
@@ -12,21 +21,23 @@ const createBooking = asyncHandler(async (req, res) => {
 
     // Try both collections
     let vehicle = await Vehicle.findById(vehicleId);
-    let isAdminVehicle = false;
-    if (!vehicle) {
-        vehicle = await AdminVehicle.findById(vehicleId);
-        isAdminVehicle = true;
-    }
+    if (!vehicle) vehicle = await AdminVehicle.findById(vehicleId);
 
     if (!vehicle) {
         res.status(404);
         throw new Error('Vehicle not found');
     }
 
-    const available = isAdminVehicle ? vehicle.available : vehicle.availability;
-    if (!available) {
+    // Check for date overlap — only block if dates clash, not global flag
+    const overlappingBooking = await Booking.findOne({
+        vehicle: vehicleId,
+        status: { $in: ['pending', 'confirmed'] },
+        startDate: { $lte: new Date(endDate) },
+        endDate: { $gte: new Date(startDate) },
+    });
+    if (overlappingBooking) {
         res.status(400);
-        throw new Error('Vehicle is not available');
+        throw new Error('Vehicle is already booked for these dates');
     }
 
     // Create booking in Booking collection (user-facing)
@@ -54,6 +65,43 @@ const createBooking = asyncHandler(async (req, res) => {
         totalAmount: totalPrice,
         linkedBookingId: booking._id,
     });
+
+    // If card payment, create Stripe Checkout session and return URL
+    if (paymentMethod === 'card') {
+        // Stripe minimum for LKR is ~150 LKR ($0.50 equivalent)
+        if (totalPrice < 150) {
+            return res.status(201).json({
+                ...booking.toObject(),
+                stripeError: `Minimum card payment is LKR 150. Your total is LKR ${totalPrice}. Please use Cash instead.`
+            });
+        }
+        try {
+            const stripe = getStripe();
+            const session = await stripe.checkout.sessions.create({
+                payment_method_types: ['card'],
+                line_items: [{
+                    price_data: {
+                        currency: 'lkr',
+                        product_data: {
+                            name: `Vehicle Rental: ${vehicle.name}`,
+                            description: `From ${startDate} to ${endDate}`,
+                        },
+                        unit_amount: Math.round(totalPrice * 100), // LKR: 1000 LKR → 100000 (in paisa)
+                    },
+                    quantity: 1,
+                }],
+                mode: 'payment',
+                metadata: { bookingId: booking._id.toString() },
+                client_reference_id: booking._id.toString(),
+                success_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/my-bookings?payment_success=true&bookingId=${booking._id}`,
+                cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/vehicles/${vehicleId}?payment_canceled=true`,
+            });
+            return res.status(201).json({ ...booking.toObject(), stripeUrl: session.url });
+        } catch (stripeError) {
+            console.error('Stripe error:', stripeError.message);
+            return res.status(201).json({ ...booking.toObject(), stripeError: stripeError.message });
+        }
+    }
 
     res.status(201).json(booking);
 });

@@ -14,7 +14,7 @@ const AdminVehicleForm = () => {
 
     const [formData, setFormData] = useState({
         name: '', type: 'Bike', capacity: 2, pricePerDay: '', description: '',
-        fuel: 70, steering: 'Manual'
+        fuel: 70, steering: 'Manual', available: true
     });
     const [showOriginalPrice, setShowOriginalPrice] = useState(false);
     const [originalPrice, setOriginalPrice] = useState('');
@@ -44,7 +44,8 @@ const AdminVehicleForm = () => {
                     setFormData({
                         name: data.name, type: data.type, capacity: data.capacity,
                         pricePerDay: data.pricePerDay, description: data.description || '',
-                        fuel: data.fuel || 70, steering: data.steering || 'Manual'
+                        fuel: data.fuel || 70, steering: data.steering || 'Manual',
+                        available: data.available !== false, // default true
                     });
                     if (data.originalPrice && data.originalPrice !== data.pricePerDay) {
                         setShowOriginalPrice(true);
@@ -158,11 +159,11 @@ const AdminVehicleForm = () => {
         type: formData.type,
         capacity: formData.capacity,
         price: formData.pricePerDay || '0',
-        // Pass originalPrice directly — VehicleCard already checks if it's > price
         originalPrice: (showOriginalPrice && originalPrice) ? parseFloat(originalPrice) : null,
         fuel: formData.fuel,
         steering: formData.steering,
-        image: previewUrl || null
+        image: previewUrl || null,
+        available: formData.available,
     };
 
     return (
@@ -329,9 +330,32 @@ const AdminVehicleForm = () => {
                         </div>
                     </div>
 
-                    <div style={{ marginBottom: '32px' }}>
+                    <div style={{ marginBottom: '24px' }}>
                         <label style={labelStyle}>Description (Optional)</label>
                         <textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} rows={4} style={{...inputStyle, resize: 'vertical'}} onFocus={e => { e.target.style.borderColor = '#ffc107'; }} onBlur={e => { e.target.style.borderColor = '#e2e8f0'; }} />
+                    </div>
+
+                    {/* Availability Toggle */}
+                    <div style={{ marginBottom: '32px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', userSelect: 'none' }}>
+                            <div
+                                onClick={() => setFormData({...formData, available: !formData.available})}
+                                style={{
+                                    width: '42px', height: '24px', borderRadius: '12px',
+                                    background: formData.available ? '#22c55e' : '#ef4444',
+                                    position: 'relative', transition: 'background 0.2s', cursor: 'pointer', flexShrink: 0
+                                }}
+                            >
+                                <div style={{
+                                    position: 'absolute', top: '3px', left: formData.available ? '21px' : '3px',
+                                    width: '18px', height: '18px', borderRadius: '50%', background: '#fff',
+                                    transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
+                                }} />
+                            </div>
+                            <span style={{ color: '#1e2a3b', fontSize: '14px', fontWeight: '600' }}>
+                                {formData.available ? '🟢 Available — Customers can rent this vehicle' : '🔴 Not Available — Hidden from rentals (e.g. broken/maintenance)'}
+                            </span>
+                        </label>
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
