@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../../api/axios';
+import { useAdminAuth } from '../../context/admin-context/AdminAuthContext';
 import { Mail, Check, Trash2, Search, Loader2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 const AdminContactMessages = () => {
+    const { admin } = useAdminAuth();
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
 
     const fetchMessages = async () => {
+        if (!admin?.token) return;
         try {
-            const response = await axios.get('/api/admin/contact');
+            const response = await axios.get('/api/admin/contact', {
+                headers: { Authorization: `Bearer ${admin.token}` }
+            });
             setMessages(response.data);
         } catch (error) {
             console.error('Failed to fetch messages:', error);
@@ -21,12 +26,16 @@ const AdminContactMessages = () => {
     };
 
     useEffect(() => {
-        fetchMessages();
-    }, []);
+        if (admin) {
+            fetchMessages();
+        }
+    }, [admin]);
 
     const handleMarkAsRead = async (id) => {
         try {
-            await axios.patch(`/api/admin/contact/${id}`, { status: 'read' });
+            await axios.patch(`/api/admin/contact/${id}`, { status: 'read' }, {
+                headers: { Authorization: `Bearer ${admin?.token}` }
+            });
             setMessages(prev => prev.map(m => m._id === id ? { ...m, status: 'read' } : m));
             toast.success('Message marked as read');
         } catch (error) {
@@ -38,7 +47,9 @@ const AdminContactMessages = () => {
         if (!window.confirm('Are you sure you want to delete this message?')) return;
         
         try {
-            await axios.delete(`/api/admin/contact/${id}`);
+            await axios.delete(`/api/admin/contact/${id}`, {
+                headers: { Authorization: `Bearer ${admin?.token}` }
+            });
             setMessages(prev => prev.filter(m => m._id !== id));
             toast.success('Message deleted');
         } catch (error) {

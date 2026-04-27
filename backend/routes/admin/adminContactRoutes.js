@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { getContactMessages, updateMessageStatus, deleteContactMessage } = require('../../controllers/admin/adminContactController');
-const { protect, admin } = require('../../middleware/authMiddleware');
+const { protectAdmin } = require('../../middleware/adminMiddleware');
 
-router.get('/', protect, admin, getContactMessages);
-router.patch('/:id', protect, admin, updateMessageStatus);
-router.delete('/:id', protect, admin, deleteContactMessage);
+router.get('/', protectAdmin, getContactMessages);
+router.patch('/:id', protectAdmin, updateMessageStatus);
+router.delete('/:id', protectAdmin, deleteContactMessage);
 
 module.exports = router;
