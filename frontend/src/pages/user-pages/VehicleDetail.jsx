@@ -8,8 +8,8 @@ import { Star, ArrowLeft, ChevronLeft, ChevronRight, LogIn } from 'lucide-react'
 import { motion } from 'framer-motion';
 import carDefault from '../../assets/user-assets/images/vehicle/Car.png';
 
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DAYS = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
 function toDateStr(date) {
     const y = date.getFullYear();
@@ -21,8 +21,8 @@ function toDateStr(date) {
 function buildBookedSet(ranges) {
     const set = new Set();
     ranges.forEach(({ startDate, endDate }) => {
-        const s = new Date(startDate); s.setHours(0,0,0,0);
-        const e = new Date(endDate);   e.setHours(0,0,0,0);
+        const s = new Date(startDate); s.setHours(0, 0, 0, 0);
+        const e = new Date(endDate); e.setHours(0, 0, 0, 0);
         for (const d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) {
             set.add(toDateStr(new Date(d)));
         }
@@ -70,7 +70,7 @@ const VehicleDetail = () => {
             try {
                 const { data } = await axios.get(`/api/bookings/booked-dates/${id}`);
                 setBookedRanges(data);
-            } catch {}
+            } catch { }
         })();
     }, [id]);
 
@@ -197,7 +197,7 @@ const VehicleDetail = () => {
                     <div className="mb-8">
                         <span className="text-[12px] font-bold text-gray-400 uppercase tracking-wider mb-4 block">Reviews</span>
                         <div className="flex items-center gap-2 mb-2">
-                            {[1,2,3,4].map(i => <Star key={i} className="w-4 h-4 fill-[#ffc107] text-[#ffc107]" />)}
+                            {[1, 2, 3, 4].map(i => <Star key={i} className="w-4 h-4 fill-[#ffc107] text-[#ffc107]" />)}
                             <Star className="w-4 h-4 text-gray-300" />
                         </div>
                         <p className="text-[14px] font-semibold text-gray-700">440+ Reviewer</p>
@@ -209,10 +209,10 @@ const VehicleDetail = () => {
                         <span className="text-[12px] font-bold text-gray-400 uppercase tracking-wider mb-4 block">Specifications</span>
                         <div className="space-y-3">
                             {[
-                                { label: 'Type',     value: vehicle.type || '—' },
+                                { label: 'Type', value: vehicle.type || '—' },
                                 { label: 'Capacity', value: `${vehicle.capacity || '—'} Person` },
                                 { label: 'Steering', value: vehicle.steering || 'Manual' },
-                                { label: 'Fuel',     value: vehicle.fuel ? `${vehicle.fuel}L` : '—' },
+                                { label: 'Fuel', value: vehicle.fuel ? `${vehicle.fuel}L` : '—' },
                             ].map(({ label, value }) => (
                                 <div key={label} className="flex justify-between items-center border-b border-gray-100 pb-2">
                                     <span className="text-gray-400 text-[14px]">{label}</span>
@@ -278,7 +278,7 @@ const VehicleDetail = () => {
                                     {galleryImages.map((img, i) => (
                                         <div key={i} onClick={() => setActiveImage(img)}
                                             className={`rounded-[10px] aspect-[4/3] p-1 flex items-center justify-center border overflow-hidden cursor-pointer transition-all ${activeImage === img ? 'bg-[#ffc107]/10 border-[#ffc107]' : 'bg-white border-gray-200 hover:border-[#ffc107]'}`}>
-                                            <img src={img} alt={`Thumb ${i+1}`} className="w-full h-full object-cover rounded-[6px]" />
+                                            <img src={img} alt={`Thumb ${i + 1}`} className="w-full h-full object-cover rounded-[6px]" />
                                         </div>
                                     ))}
                                 </div>
@@ -290,7 +290,7 @@ const VehicleDetail = () => {
                             {!showCheckout ? (
                                 <motion.div initial={{ opacity: 1 }} className="flex flex-col h-full justify-between gap-4">
                                     <div>
-                                            {/* Right card heading */}
+                                        {/* Right card heading */}
                                         <div className="mb-4">
                                             <h2 className="text-xl sm:text-[24px] font-bold text-[#1e2a3b] leading-tight">Reserve Your Ride</h2>
                                             <p className="text-gray-400 text-sm mt-0.5">Pick your dates from the calendar below</p>
@@ -332,7 +332,7 @@ const VehicleDetail = () => {
                                             <div className="grid grid-cols-7 text-center gap-y-0.5">
                                                 {calCells.map((d, i) => {
                                                     if (!d) return <div key={`e-${i}`} />;
-                                                    const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                                                    const ds = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
                                                     const isBooked = bookedSet.has(ds);
                                                     const isPast = ds < todayStr;
                                                     const style = getDayStyle(ds);
@@ -420,7 +420,7 @@ const VehicleDetail = () => {
                                         <div className="space-y-2">
                                             <label className="text-[12px] font-bold text-[#1e2a3b]/60 uppercase tracking-wider">Payment Method</label>
                                             <div className="grid grid-cols-2 gap-3">
-                                                {['cash','card'].map(m => (
+                                                {['cash', 'card'].map(m => (
                                                     <button key={m} onClick={() => setPaymentMethod(m)}
                                                         className={`py-2 rounded-lg border-2 font-bold text-xs transition-all ${paymentMethod === m ? 'border-[#ffc107] bg-[#ffc107]/5 text-[#1e2a3b]' : 'border-gray-100 text-gray-400 bg-gray-50'}`}>
                                                         {m === 'cash' ? '💵 Cash' : '💳 Card'}
