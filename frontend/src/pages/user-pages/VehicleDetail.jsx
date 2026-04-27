@@ -241,13 +241,13 @@ const VehicleDetail = () => {
                         {/* Left Side: Images */}
                         <div className="flex flex-col gap-4 sm:gap-6">
                             {/* Main Image Card */}
-                            <div className="bg-[#1e2a3b] rounded-[10px] sm:rounded-[20px] p-6 sm:p-10 relative overflow-hidden h-[300px] sm:h-[400px] lg:h-auto lg:aspect-[4/3] flex items-center justify-center">
+                            <div className="bg-[#1e2a3b] rounded-[10px] sm:rounded-[20px] relative overflow-hidden h-[300px] sm:h-[400px] lg:h-auto lg:aspect-[4/3] flex items-center justify-center">
                                 <div className="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] bg-[#ffc107]/10 rounded-full blur-3xl z-0"></div>
                                 <div className="absolute bottom-[-10%] left-[-10%] w-[200px] h-[200px] bg-white/5 rounded-full blur-2xl z-0"></div>
                                 <img 
                                     src={activeImage || mainImageUrl} 
                                     alt={vehicle.name} 
-                                    className="relative z-10 w-[90%] max-w-[500px] object-contain drop-shadow-2xl transform hover:scale-105 transition-transform duration-500" 
+                                    className="relative z-10 w-full h-full object-cover drop-shadow-2xl transform hover:scale-105 transition-transform duration-500" 
                                 />
                             </div>
  
@@ -258,11 +258,11 @@ const VehicleDetail = () => {
                                         <div 
                                             key={index} 
                                             onClick={() => setActiveImage(img)}
-                                            className={`rounded-[10px] aspect-[4/3] p-2 flex items-center justify-center border-2 overflow-hidden cursor-pointer transition-all ${
-                                                activeImage === img ? 'bg-[#ffc107] border-[#ffc107]' : 'bg-white border-gray-100 hover:border-[#ffc107]'
+                                            className={`rounded-[10px] aspect-[4/3] p-1 flex items-center justify-center border overflow-hidden cursor-pointer transition-all ${
+                                                activeImage === img ? 'bg-[#ffc107]/10 border-[#ffc107]' : 'bg-white border-gray-200 hover:border-[#ffc107]'
                                             }`}
                                         >
-                                            <img src={img} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-contain" />
+                                            <img src={img} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover rounded-[6px]" />
                                         </div>
                                     ))}
                                 </div>
