@@ -1,5 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { Heart, Users, Fuel, Settings2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Users, Fuel, Settings2 } from 'lucide-react';
 
 const VehicleCard = ({ vehicle }) => {
     const navigate = useNavigate();
@@ -29,7 +29,6 @@ const VehicleCard = ({ vehicle }) => {
             onClick={() => navigate(`/vehicles/${vehicle._id}`)}
             className="bg-[#f1f5f9] rounded-[20px] p-5 shadow-sm border border-[#1e2a3b]/10 hover:shadow-xl transition-all duration-300 flex flex-col h-full group cursor-pointer"
         >
-            {/* Header: Title and Heart */}
             <div className="flex justify-between items-start mb-2">
                 <div>
                     <h3 className="text-[18px] font-bold text-gray-900 group-hover:text-[#ffc107] transition-colors line-clamp-1">
@@ -39,14 +38,13 @@ const VehicleCard = ({ vehicle }) => {
                         {vehicle.type || 'Standard'}
                     </span>
                 </div>
-                <button 
-                    onClick={(e) => {
-                        e.stopPropagation();
-                    }}
-                    className="text-gray-300 hover:text-red-500 transition-colors z-10"
-                >
-                    <Heart className="w-5 h-5" />
-                </button>
+                {/* Availability indicator */}
+                <div className="flex flex-col items-center gap-0.5 pt-1">
+                    <div className={`w-3 h-3 rounded-full ${vehicle.available !== false ? 'bg-green-400' : 'bg-red-400'}`}></div>
+                    <span className={`text-[10px] font-bold ${vehicle.available !== false ? 'text-green-600' : 'text-red-500'}`}>
+                        {vehicle.available !== false ? 'Open' : 'Booked'}
+                    </span>
+                </div>
             </div>
 
             {/* Main Image */}

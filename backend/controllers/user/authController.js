@@ -13,9 +13,9 @@ const generateToken = (id) => {
 // @route   POST /api/auth/register
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, phone, nic, email, password } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !phone || !nic || !email || !password) {
         res.status(400);
         throw new Error('Please add all fields');
     }
@@ -27,12 +27,14 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new Error('User already exists');
     }
 
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ name, phone, nic, email, password });
 
     if (user) {
         res.status(201).json({
             _id: user.id,
             name: user.name,
+            phone: user.phone,
+            nic: user.nic,
             email: user.email,
             role: user.role,
             token: generateToken(user._id)
@@ -55,6 +57,8 @@ const loginUser = asyncHandler(async (req, res) => {
         res.json({
             _id: user.id,
             name: user.name,
+            phone: user.phone,
+            nic: user.nic,
             email: user.email,
             role: user.role,
             token: generateToken(user._id)
@@ -82,6 +86,8 @@ const getUserProfile = asyncHandler(async (req, res) => {
         res.json({
             _id: user.id,
             name: user.name,
+            phone: user.phone,
+            nic: user.nic,
             email: user.email,
             role: user.role
         });

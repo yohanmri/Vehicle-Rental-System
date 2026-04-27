@@ -1,5 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const AdminBooking = require('../../models/admin/AdminBooking');
+const Booking = require('../../models/user/Booking');
+const Vehicle = require('../../models/user/Vehicle');
+const AdminVehicle = require('../../models/admin/AdminVehicle');
 
 // @desc    Get all bookings with filters
 // @route   GET /api/admin/bookings
@@ -20,8 +23,8 @@ const getAllBookings = asyncHandler(async (req, res) => {
 
     const [bookings, total] = await Promise.all([
         AdminBooking.find(filter)
-            .populate('customerId', 'name email phone')
-            .populate('vehicleId', 'name type')
+            .populate('customerId', 'name email phone nic')
+            .populate('vehicleId', 'name type imageUrl pricePerDay')
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(Number(limit)),
@@ -36,7 +39,7 @@ const getAllBookings = asyncHandler(async (req, res) => {
 // @access  Private (Admin)
 const getBookingById = asyncHandler(async (req, res) => {
     const booking = await AdminBooking.findById(req.params.id)
-        .populate('customerId', 'name email phone')
+        .populate('customerId', 'name email phone nic')
         .populate('vehicleId', 'name type imageUrl');
 
     if (!booking) {
@@ -47,7 +50,7 @@ const getBookingById = asyncHandler(async (req, res) => {
     res.json(booking);
 });
 
-// @desc    Update booking status
+// @desc    Update booking status (admin confirm/cancel/edit)
 // @route   PATCH /api/admin/bookings/:id/status
 // @access  Private (Admin)
 const updateBookingStatus = asyncHandler(async (req, res) => {
@@ -59,10 +62,50 @@ const updateBookingStatus = asyncHandler(async (req, res) => {
         throw new Error('Booking not found');
     }
 
+    const prevStatus = booking.bookingStatus;
+
     if (bookingStatus) booking.bookingStatus = bookingStatus;
     if (paymentStatus) booking.paymentStatus = paymentStatus;
 
     const updated = await booking.save();
+
+    // Sync status back to user-facing Booking
+    if (booking.linkedBookingId) {
+        const statusMap = {
+            confirmed: 'confirmed',
+            cancelled: 'cancelled',
+            pending: 'pending',
+            active: 'confirmed',
+            completed: 'confirmed',
+        };
+        await Booking.findByIdAndUpdate(booking.linkedBookingId, {
+            status: statusMap[bookingStatus] || bookingStatus
+        });
+    }
+
+    // When confirmed, mark vehicle as booked in both collections
+    if (bookingStatus === 'confirmed' && prevStatus !== 'confirmed') {
+        if (booking.vehicleId) {
+            await Vehicle.findByIdAndUpdate(booking.vehicleId, { availability: false });
+            await AdminVehicle.findByIdAndUpdate(booking.vehicleId, { available: false });
+        }
+    }
+
+    // When cancelled, restore availability if no other active bookings
+    if (bookingStatus === 'cancelled' && prevStatus === 'confirmed') {
+        if (booking.vehicleId) {
+            const otherActive = await AdminBooking.countDocuments({
+                vehicleId: booking.vehicleId,
+                bookingStatus: { $in: ['confirmed', 'active'] },
+                _id: { $ne: booking._id }
+            });
+            if (otherActive === 0) {
+                await Vehicle.findByIdAndUpdate(booking.vehicleId, { availability: true });
+                await AdminVehicle.findByIdAndUpdate(booking.vehicleId, { available: true });
+            }
+        }
+    }
+
     res.json(updated);
 });
 

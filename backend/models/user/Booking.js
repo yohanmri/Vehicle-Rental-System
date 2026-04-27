@@ -23,6 +23,11 @@ const bookingSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+    paymentMethod: {
+        type: String,
+        enum: ['cash', 'card'],
+        default: 'cash'
+    },
     status: {
         type: String,
         enum: ['pending', 'confirmed', 'cancelled'],

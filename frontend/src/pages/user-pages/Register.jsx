@@ -3,11 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/user-context/AuthContext';
 import axios from '../../api/axios';
 import { toast } from 'react-hot-toast';
-import { Mail, Lock, User, UserPlus, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, UserPlus, ArrowRight, Phone, CreditCard } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Register = () => {
     const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [nic, setNic] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -19,7 +21,7 @@ const Register = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const { data } = await axios.post('/auth/register', { name, email, password });
+            const { data } = await axios.post('/auth/register', { name, phone, nic, email, password });
             login(data, data.token);
             toast.success('Account created successfully!');
             navigate('/');
@@ -39,11 +41,12 @@ const Register = () => {
             >
                 <div className="glass-card">
                     <div className="text-center mb-8">
-                        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Join Pick 'N' Go 360 Pvt Ltd.</h1>
+                        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Join Zameer Cabs</h1>
                         <p className="text-gray-400 text-sm sm:text-base">Create an account to start booking</p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        {/* Full Name */}
                         <div>
                             <label className="block text-sm font-medium text-gray-400 mb-2">Full Name</label>
                             <div className="relative">
@@ -59,6 +62,39 @@ const Register = () => {
                             </div>
                         </div>
 
+                        {/* Phone Number */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-400 mb-2">Phone Number</label>
+                            <div className="relative">
+                                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                <input 
+                                    type="tel" 
+                                    required
+                                    className="w-full bg-white/5 border border-white/10 rounded-[4px] py-3 pl-11 pr-4 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 outline-none transition-all"
+                                    placeholder="+94 77 000 0000"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        {/* National ID */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-400 mb-2">National ID (NIC)</label>
+                            <div className="relative">
+                                <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                <input 
+                                    type="text" 
+                                    required
+                                    className="w-full bg-white/5 border border-white/10 rounded-[4px] py-3 pl-11 pr-4 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 outline-none transition-all"
+                                    placeholder="e.g. 199901234567"
+                                    value={nic}
+                                    onChange={(e) => setNic(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Email */}
                         <div>
                             <label className="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
                             <div className="relative">
@@ -74,6 +110,7 @@ const Register = () => {
                             </div>
                         </div>
 
+                        {/* Password */}
                         <div>
                             <label className="block text-sm font-medium text-gray-400 mb-2">Password</label>
                             <div className="relative">

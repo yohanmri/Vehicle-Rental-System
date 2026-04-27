@@ -1,82 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, Tag, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { Calendar, Tag, CheckCircle, AlertCircle, XCircle, CreditCard, Banknote } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-
-import car1 from '../../assets/user-assets/images/vehicle/Car (1).png';
-import car2 from '../../assets/user-assets/images/vehicle/Car (2).png';
-import car3 from '../../assets/user-assets/images/vehicle/Car (3).png';
-import car4 from '../../assets/user-assets/images/vehicle/Car (4).png';
-import car5 from '../../assets/user-assets/images/vehicle/Car (5).png';
+import { useAuth } from '../../context/user-context/AuthContext';
+import axios from '../../api/axios';
+import Loader from '../../components/user-components/Loader';
 
 const MyBookings = () => {
-    const [bookings, setBookings] = useState([
-        {
-            _id: 'b1',
-            vehicle: {
-                name: 'Koenigsegg',
-                image: car1,
-                type: 'Sport'
-            },
-            status: 'confirmed',
-            totalPrice: '165,000',
-            startDate: '2026-05-10',
-            endDate: '2026-05-12'
-        },
-        {
-            _id: 'b2',
-            vehicle: {
-                name: 'Audi R8',
-                image: car2,
-                type: 'Sport'
-            },
-            status: 'pending',
-            totalPrice: '120,000',
-            startDate: '2026-06-01',
-            endDate: '2026-06-03'
-        },
-        {
-            _id: 'b3',
-            vehicle: {
-                name: 'All New Rush',
-                image: car4,
-                type: 'SUV'
-            },
-            status: 'confirmed',
-            totalPrice: '45,000',
-            startDate: '2026-07-15',
-            endDate: '2026-07-18'
-        },
-        {
-            _id: 'b4',
-            vehicle: {
-                name: 'MG ZX Exclusive',
-                image: car3,
-                type: 'Hatchback'
-            },
-            status: 'cancelled',
-            totalPrice: '28,000',
-            startDate: '2026-04-10',
-            endDate: '2026-04-12'
-        },
-        {
-            _id: 'b5',
-            vehicle: {
-                name: 'CR - V',
-                image: car5,
-                type: 'SUV'
-            },
-            status: 'confirmed',
-            totalPrice: '18,000',
-            startDate: '2026-08-20',
-            endDate: '2026-08-25'
-        }
-    ]);
+    const { user, token } = useAuth();
+    const [bookings, setBookings] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const handleCancel = (id) => {
-        if (!window.confirm('Are you sure you want to cancel this booking?')) return;
-        setBookings(bookings.map(b => b._id === id ? { ...b, status: 'cancelled' } : b));
-        toast.success('Booking cancelled');
+    useEffect(() => {
+        if (!token) { setLoading(false); return; }
+        const fetch = async () => {
+            try {
+                const { data } = await axios.get('/api/bookings/mybookings', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setBookings(data);
+            } catch { toast.error('Failed to load bookings'); }
+            finally { setLoading(false); }
+        };
+        fetch();
+    }, [token]);
+
+    const handleCancel = async (id) => {
+        if (!window.confirm('Cancel this booking?')) return;
+        try {
+            await axios.put(`/api/bookings/${id}`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setBookings(bookings.map(b => b._id === id ? { ...b, status: 'cancelled' } : b));
+            toast.success('Booking cancelled');
+        } catch { toast.error('Failed to cancel booking'); }
     };
 
     const getStatusStyles = (status) => {
@@ -94,6 +51,16 @@ const MyBookings = () => {
             default: return <AlertCircle className="w-4 h-4" />;
         }
     };
+
+    const getVehicleImage = (booking) => {
+        if (!booking.vehicle) return null;
+        const img = booking.vehicle.image || booking.vehicle.imageUrl;
+        if (!img) return null;
+        if (img.includes('http') || img.startsWith('data:') || img.includes('/assets/')) return img;
+        return `${axios.defaults.baseURL.replace('/api', '')}/${img}`;
+    };
+
+    if (loading) return <div className="min-h-screen pt-24"><Loader /></div>;
 
     return (
         <div className="min-h-screen bg-[#e1e7f0] pt-28 pb-24">
@@ -113,14 +80,18 @@ const MyBookings = () => {
                                 transition={{ delay: i * 0.1 }}
                                 className="bg-white rounded-[4px] p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-6 items-center"
                             >
-                                <div className="w-full md:w-40 h-24 rounded-[4px] overflow-hidden shrink-0 bg-gray-100">
-                                    <img src={booking.vehicle.image} alt={booking.vehicle.name} className="w-full h-full object-contain" />
+                                <div className="w-full md:w-40 h-24 rounded-[4px] overflow-hidden shrink-0 bg-gray-100 flex items-center justify-center">
+                                    {getVehicleImage(booking) ? (
+                                        <img src={getVehicleImage(booking)} alt={booking.vehicle?.name} className="w-full h-full object-contain" />
+                                    ) : (
+                                        <div className="text-gray-300 text-4xl">🚗</div>
+                                    )}
                                 </div>
 
                                 <div className="flex-grow w-full space-y-4">
                                     <div className="flex justify-between items-start">
                                         <div>
-                                            <h3 className="text-xl font-bold text-[#1e2a3b]">{booking.vehicle.name}</h3>
+                                            <h3 className="text-xl font-bold text-[#1e2a3b]">{booking.vehicle?.name || 'Vehicle'}</h3>
                                             <div className={`mt-2 inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-[4px] border text-[11px] font-bold uppercase tracking-wider ${getStatusStyles(booking.status)}`}>
                                                 {getStatusIcon(booking.status)}
                                                 <span>{booking.status}</span>
@@ -128,18 +99,24 @@ const MyBookings = () => {
                                         </div>
                                         <div className="text-right">
                                             <span className="text-gray-400 text-xs uppercase font-bold tracking-wider block mb-1">Total Price</span>
-                                            <span className="text-xl font-bold text-[#1e2a3b]">LKR {booking.totalPrice}</span>
+                                            <span className="text-xl font-bold text-[#1e2a3b]">LKR {parseFloat(booking.totalPrice).toLocaleString()}</span>
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-gray-100">
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-gray-100">
                                         <div className="flex items-center space-x-2 text-gray-500 text-sm">
                                             <Calendar className="w-4 h-4 text-[#ffc107]" />
-                                            <span className="font-medium">{new Date(booking.startDate).toLocaleDateString()} - {new Date(booking.endDate).toLocaleDateString()}</span>
+                                            <span className="font-medium">
+                                                {new Date(booking.startDate).toLocaleDateString()} — {new Date(booking.endDate).toLocaleDateString()}
+                                            </span>
                                         </div>
                                         <div className="flex items-center space-x-2 text-gray-500 text-sm">
                                             <Tag className="w-4 h-4 text-[#ffc107]" />
-                                            <span className="font-medium">{booking.vehicle.type}</span>
+                                            <span className="font-medium">{booking.vehicle?.type || '—'}</span>
+                                        </div>
+                                        <div className="flex items-center space-x-2 text-gray-500 text-sm">
+                                            {booking.paymentMethod === 'card' ? <CreditCard className="w-4 h-4 text-[#ffc107]" /> : <Banknote className="w-4 h-4 text-[#ffc107]" />}
+                                            <span className="font-medium capitalize">{booking.paymentMethod || 'cash'}</span>
                                         </div>
                                     </div>
                                 </div>

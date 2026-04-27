@@ -58,6 +58,11 @@ const bookingSchema = mongoose.Schema(
             type: Number,
             required: true,
         },
+        linkedBookingId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Booking',
+            default: null,
+        },
     },
     { timestamps: true }
 );
