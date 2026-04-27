@@ -20,6 +20,7 @@ const AdminVehicleForm = () => {
     const [originalPrice, setOriginalPrice] = useState('');
     const [imageFile, setImageFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
+    const [originalImgSrc, setOriginalImgSrc] = useState(''); // Always the full original image
     const [loading, setLoading] = useState(false);
 
     // Image Cropping State
@@ -54,7 +55,9 @@ const AdminVehicleForm = () => {
         if (file) {
             const reader = new FileReader();
             reader.addEventListener('load', () => {
-                setCropImgSrc(reader.result?.toString() || '');
+                const src = reader.result?.toString() || '';
+                setOriginalImgSrc(src); // Save original for re-cropping
+                setCropImgSrc(src);
                 setIsCropping(true);
             });
             reader.readAsDataURL(file);
@@ -110,8 +113,9 @@ const AdminVehicleForm = () => {
         name: formData.name || 'Vehicle Name',
         type: formData.type,
         capacity: formData.capacity,
-        price: formData.pricePerDay || '0.00',
-        originalPrice: showOriginalPrice && originalPrice ? originalPrice : null,
+        price: formData.pricePerDay || '0',
+        // Pass originalPrice directly — VehicleCard already checks if it's > price
+        originalPrice: (showOriginalPrice && originalPrice) ? parseFloat(originalPrice) : null,
         fuel: formData.fuel,
         steering: formData.steering,
         image: previewUrl || null
@@ -139,8 +143,24 @@ const AdminVehicleForm = () => {
                             {previewUrl ? (
                                 <div style={{ position: 'relative', width: '100%', height: '200px' }}>
                                     <img src={previewUrl} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#f8fafc' }} />
-                                    <input type="file" accept="image/*" onChange={handleImageChange} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
-                                    <div style={{ position: 'absolute', bottom: '8px', right: '8px', background: '#1e2a3b', color: '#fff', fontSize: '12px', fontWeight: '600', padding: '4px 12px', borderRadius: '6px', pointerEvents: 'none' }}>Click to change</div>
+                                    {/* Re-crop button — re-opens cropper with the ORIGINAL image */}
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            if (originalImgSrc) {
+                                                setCropImgSrc(originalImgSrc);
+                                                setIsCropping(true);
+                                            }
+                                        }}
+                                        style={{ position: 'absolute', bottom: '8px', left: '8px', background: '#ffc107', color: '#1e2a3b', fontSize: '12px', fontWeight: '700', padding: '5px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', opacity: originalImgSrc ? 1 : 0.4 }}
+                                    >
+                                        ✂ Re-crop
+                                    </button>
+                                    {/* Click to change — opens file picker */}
+                                    <div style={{ position: 'relative', position: 'absolute', bottom: '8px', right: '8px' }}>
+                                        <div style={{ background: '#1e2a3b', color: '#fff', fontSize: '12px', fontWeight: '600', padding: '4px 12px', borderRadius: '6px', cursor: 'pointer' }}>Click to change</div>
+                                        <input type="file" accept="image/*" onChange={handleImageChange} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
+                                    </div>
                                 </div>
                             ) : (
                                 <div style={{ position: 'relative' }}>

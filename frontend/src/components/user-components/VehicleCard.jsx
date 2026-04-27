@@ -85,13 +85,9 @@ const VehicleCard = ({ vehicle }) => {
                     <div className="text-[16px] xl:text-[18px] font-bold text-gray-900 flex items-end leading-none truncate">
                         LKR {parseFloat(vehicle.price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}<span className="text-[12px] text-gray-400 font-medium ml-1 mb-0.5">/ day</span>
                     </div>
-                    {vehicle.originalPrice && parseFloat(vehicle.originalPrice) > parseFloat(vehicle.price) ? (
-                        <div className="text-[13px] text-gray-400 line-through mt-1 truncate">
+                    {vehicle.originalPrice != null && String(vehicle.originalPrice) !== "" && (
+                        <div className="text-[13px] text-gray-500 line-through mt-0.5 opacity-80">
                             LKR {parseFloat(vehicle.originalPrice).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                        </div>
-                    ) : (
-                        <div className="text-[13px] text-gray-400 line-through mt-1 truncate">
-                            LKR {(parseFloat(vehicle.price) + 2000).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                         </div>
                     )}
                 </div>

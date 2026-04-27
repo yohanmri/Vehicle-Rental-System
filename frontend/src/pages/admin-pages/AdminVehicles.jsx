@@ -155,9 +155,9 @@ const AdminVehicles = () => {
                                         LKR {Number(v.pricePerDay).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                         <span style={{ fontSize: '12px', color: '#9ca3af', fontWeight: '500', marginLeft: '4px' }}>/ day</span>
                                     </div>
-                                    {v.originalPrice && v.originalPrice > v.pricePerDay && (
-                                        <div style={{ fontSize: '13px', color: '#9ca3af', textDecoration: 'line-through', marginTop: '4px' }}>
-                                            LKR {Number(v.originalPrice).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                    {v.originalPrice != null && String(v.originalPrice) !== "" && (
+                                        <div style={{ fontSize: '13px', color: '#94a3b8', textDecoration: 'line-through', marginTop: '2px' }}>
+                                            LKR {Number(v.originalPrice).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </div>
                                     )}
                                 </div>
