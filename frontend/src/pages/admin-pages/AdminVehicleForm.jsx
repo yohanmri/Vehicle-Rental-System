@@ -202,7 +202,7 @@ const AdminVehicleForm = () => {
                                         ✂ Re-crop
                                     </button>
                                     {/* Click to change — opens file picker */}
-                                    <div style={{ position: 'relative', position: 'absolute', bottom: '8px', right: '8px' }}>
+                                    <div style={{ position: 'absolute', bottom: '8px', right: '8px' }}>
                                         <div style={{ background: '#1e2a3b', color: '#fff', fontSize: '12px', fontWeight: '600', padding: '4px 12px', borderRadius: '6px', cursor: 'pointer' }}>Click to change</div>
                                         <input type="file" accept="image/*" onChange={(e) => handleImageChange(e, -1)} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
                                     </div>

@@ -117,7 +117,7 @@ const AdminCustomers = () => {
                     <div style={{ padding: '20px 24px', borderTop: '1px solid rgba(30,42,59,0.08)', display: 'flex', gap: '8px', justifyContent: 'flex-end', background: '#f8fafc' }}>
                         {Array.from({ length: pages }, (_, i) => i + 1).map(p => (
                             <button key={p} onClick={() => setPage(p)} style={{
-                                width: '36px', height: '36px', borderRadius: '8px', border: 'none',
+                                width: '36px', height: '36px', borderRadius: '8px',
                                 background: page === p ? '#1e2a3b' : '#ffffff',
                                 color: page === p ? '#ffc107' : '#64748B',
                                 border: page === p ? 'none' : '1px solid #e2e8f0',
