@@ -82,4 +82,13 @@
   .admin-pie-inner {
     min-width: 350px;
   }
+  .admin-filter-tabs {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    max-width: 100% !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .admin-filter-tabs::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for tabs */
+  }
 }

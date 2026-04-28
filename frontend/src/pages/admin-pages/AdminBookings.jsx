@@ -102,7 +102,7 @@ const AdminBookings = () => {
 
             {/* Tabs & Search */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
-                <div style={{ display: 'flex', gap: '4px', background: '#f1f5f9', padding: '6px', borderRadius: '12px', width: 'fit-content', border: '1px solid rgba(30,42,59,0.08)' }}>
+                <div className="admin-filter-tabs" style={{ display: 'flex', gap: '4px', background: '#f1f5f9', padding: '6px', borderRadius: '12px', width: 'fit-content', border: '1px solid rgba(30,42,59,0.08)' }}>
                     {TABS.map(tab => (
                         <button key={tab} onClick={() => { setActiveTab(tab); setPage(1); }} style={{ padding: '8px 24px', borderRadius: '8px', border: 'none', background: activeTab === tab ? '#ffc107' : 'transparent', color: activeTab === tab ? '#1e2a3b' : '#64748B', fontWeight: activeTab === tab ? '700' : '600', fontSize: '14px', cursor: 'pointer', textTransform: 'capitalize', transition: 'all 0.2s' }}>{tab}</button>
                     ))}

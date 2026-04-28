@@ -79,7 +79,7 @@ const AdminVehicles = () => {
 
             {/* Tabs and Search */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                <div className="admin-filter-tabs" style={{ display: 'flex', gap: '8px' }}>
                     {TABS.map(tab => (
                         <button key={tab} onClick={() => { setActiveTab(tab); setPage(1); }} style={{
                             padding: '8px 20px', borderRadius: '20px',
