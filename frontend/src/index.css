@@ -48,3 +48,38 @@
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-600;
 }
+
+/* Admin Responsive Utilities */
+@media (max-width: 1024px) {
+  .admin-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .admin-tabs-container {
+    flex-wrap: wrap !important;
+  }
+  .admin-table-wrapper {
+    overflow-x: auto !important;
+    display: block !important;
+    width: 100% !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .admin-table-wrapper table {
+    min-width: 700px !important;
+  }
+  .admin-table-wrapper th,
+  .admin-table-wrapper td {
+    white-space: nowrap;
+  }
+  .admin-chart-wrapper {
+    overflow-x: auto !important;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px; /* for scrollbar */
+  }
+  .admin-chart-inner {
+    min-width: 600px;
+  }
+  .admin-pie-inner {
+    min-width: 350px;
+  }
+}

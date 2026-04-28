@@ -117,8 +117,8 @@ const AdminBookings = () => {
             </div>
 
             {/* Table */}
-            <div style={{ background: '#ffffff', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(30,42,59,0.08)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-                <div style={{ overflowX: 'auto' }}>
+            <div style={{ background: '#ffffff', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(30,42,59,0.08)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                <div className="admin-table-wrapper" style={{ overflowX: 'auto' }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
                         <thead>
                             <tr style={{ background: '#f8fafc', borderBottom: '1px solid rgba(30,42,59,0.08)' }}>

@@ -122,7 +122,7 @@ const AdminTourForm = () => {
                 </button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '32px', alignItems: 'start' }}>
+            <div className="admin-form-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '32px', alignItems: 'start' }}>
                 {/* Form Column */}
                 <form onSubmit={handleSubmit} style={{ background: '#ffffff', borderRadius: '16px', padding: '32px', border: '1px solid rgba(30,42,59,0.08)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
                     {/* Image Upload */}
@@ -151,7 +151,7 @@ const AdminTourForm = () => {
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                    <div className="admin-form-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
                         <div>
                             <label style={labelStyle}>Duration (e.g., "3 Days")</label>
                             <input type="text" value={formData.duration} onChange={e => setFormData({...formData, duration: e.target.value})} required style={inputStyle} onFocus={e => { e.target.style.borderColor = '#ffc107'; }} onBlur={e => { e.target.style.borderColor = '#e2e8f0'; }} />

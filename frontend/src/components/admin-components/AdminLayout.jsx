@@ -2,22 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { NavLink, useNavigate, Outlet } from 'react-router-dom';
 import { useAdminAuth } from '../../context/admin-context/AdminAuthContext';
 import {
-    LayoutDashboard,
-    Car,
-    Users,
-    CreditCard,
-    Map,
-    Settings,
-    LogOut,
-    ChevronDown,
-    Menu,
-    X,
-    PlusCircle,
-    List,
-    ClipboardList,
-    ExternalLink,
-    BarChart3,
-    MessageCircle
+    LayoutDashboard, Car, Users, CreditCard, Map, Settings, LogOut, ChevronDown, Menu, X, PlusCircle, ClipboardList, ExternalLink, BarChart3, MessageCircle
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -69,6 +54,18 @@ const AdminLayout = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+
+    useEffect(() => {
+        const handleResize = () => {
+            const mobile = window.innerWidth <= 1024;
+            setIsMobile(mobile);
+            if (mobile) setCollapsed(true); // Auto collapse on mobile
+        };
+        handleResize(); // Init
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const handleLogout = () => {
         logoutAdmin();
@@ -86,10 +83,22 @@ const AdminLayout = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const sidebarWidth = collapsed ? '80px' : '260px';
+    const sidebarWidth = isMobile ? '280px' : (collapsed ? '80px' : '260px');
+    const mainMargin = isMobile ? '0px' : sidebarWidth;
 
     return (
         <div style={{ display: 'flex', minHeight: '100vh', background: '#e1e7f0', fontFamily: "'Inter', sans-serif" }}>
+            
+            {/* Mobile Backdrop overlay */}
+            {isMobile && !collapsed && (
+                <div 
+                    onClick={() => setCollapsed(true)}
+                    style={{
+                        position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 90, transition: 'opacity 0.3s'
+                    }}
+                />
+            )}
+
             {/* Sidebar */}
             <aside style={{
                 width: sidebarWidth,
@@ -100,22 +109,22 @@ const AdminLayout = () => {
                 flexDirection: 'column',
                 position: 'fixed',
                 top: 0,
-                left: 0,
+                left: isMobile ? (collapsed ? '-280px' : '0') : '0',
                 bottom: 0,
                 zIndex: 100,
-                transition: 'width 0.3s ease',
+                transition: 'left 0.3s ease, width 0.3s ease',
                 overflow: 'hidden',
                 boxShadow: '2px 0 8px rgba(0,0,0,0.02)',
             }}>
                 {/* Logo Area */}
                 <div style={{
-                    padding: collapsed ? '20px 0' : '24px 24px 20px',
+                    padding: (collapsed && !isMobile) ? '20px 0' : '24px 24px 20px',
                     borderBottom: '1px solid rgba(30, 42, 59, 0.1)',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: collapsed ? 'center' : 'space-between',
+                    justifyContent: (collapsed && !isMobile) ? 'center' : 'space-between',
                 }}>
-                    {!collapsed && (
+                    {(!collapsed || isMobile) && (
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <div style={{
                                 width: '34px', height: '34px',
@@ -132,7 +141,7 @@ const AdminLayout = () => {
                             </div>
                         </div>
                     )}
-                    {collapsed && (
+                    {(collapsed && !isMobile) && (
                         <div style={{
                             width: '36px', height: '36px',
                             background: '#1e2a3b',
@@ -152,7 +161,7 @@ const AdminLayout = () => {
                             padding: '4px',
                         }}
                     >
-                        {collapsed ? <Menu size={20} /> : <X size={20} />}
+                        {isMobile ? <X size={20} /> : (collapsed ? <Menu size={20} /> : <X size={20} />)}
                     </button>
                 </div>
 
@@ -160,13 +169,14 @@ const AdminLayout = () => {
                 <nav style={{ flex: 1, overflowY: 'auto', padding: '24px 0', scrollbarWidth: 'none' }}>
                     {NAV_ITEMS.map((group) => (
                         <div key={group.section} style={{ marginBottom: '16px' }}>
-                            {!collapsed && (
+                            {(!collapsed || isMobile) && (
                                 <div style={{
                                     color: '#94A3B8',
                                     fontSize: '11px',
                                     fontWeight: '700',
                                     letterSpacing: '0.05em',
                                     padding: '0 24px 8px',
+                                    whiteSpace: 'nowrap'
                                 }}>{group.section}</div>
                             )}
                             {group.items.map((item) => (
@@ -174,12 +184,13 @@ const AdminLayout = () => {
                                     key={item.path}
                                     to={item.path}
                                     end={item.path === '/admin/dashboard' || item.path === '/admin/vehicles' || item.path === '/admin/tours'}
+                                    onClick={() => { if(isMobile) setCollapsed(true) }} // Auto close on click for mobile
                                     style={({ isActive }) => ({
                                         display: 'flex',
                                         alignItems: 'center',
                                         gap: '14px',
-                                        padding: collapsed ? '12px 0' : '10px 24px',
-                                        justifyContent: collapsed ? 'center' : 'flex-start',
+                                        padding: (collapsed && !isMobile) ? '12px 0' : '10px 24px',
+                                        justifyContent: (collapsed && !isMobile) ? 'center' : 'flex-start',
                                         color: isActive ? '#1e2a3b' : '#64748B',
                                         background: isActive ? 'rgba(255, 193, 7, 0.15)' : 'transparent',
                                         borderRight: isActive ? '3px solid #ffc107' : '3px solid transparent',
@@ -189,14 +200,14 @@ const AdminLayout = () => {
                                         transition: 'all 0.2s',
                                         whiteSpace: 'nowrap',
                                     })}
-                                    title={collapsed ? item.label : ''}
+                                    title={(collapsed && !isMobile) ? item.label : ''}
                                 >
                                     {({ isActive }) => (
                                         <>
                                             <span style={{ color: isActive ? '#1e2a3b' : 'inherit' }}>
                                                 {item.icon}
                                             </span>
-                                            {!collapsed && item.label}
+                                            {(!collapsed || isMobile) && item.label}
                                         </>
                                     )}
                                 </NavLink>
@@ -208,125 +219,141 @@ const AdminLayout = () => {
 
             {/* Main Content Area */}
             <main style={{
-                marginLeft: sidebarWidth,
+                marginLeft: mainMargin,
                 flex: 1,
                 transition: 'margin-left 0.3s ease',
                 minHeight: '100vh',
                 display: 'flex',
                 flexDirection: 'column',
+                width: isMobile ? '100%' : `calc(100% - ${mainMargin})`
             }}>
                 {/* Top Header */}
                 <header style={{
                     background: '#f1f5f9',
                     borderBottom: '1px solid rgba(30, 42, 59, 0.1)',
-                    padding: '16px 32px',
+                    padding: isMobile ? '12px 16px' : '16px 32px',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'flex-end',
+                    justifyContent: 'space-between', // Changed to space-between
                     gap: '24px',
                     position: 'sticky',
                     top: 0,
                     zIndex: 50,
                     boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
                 }}>
-                    {/* Link to Website */}
-                    <a href="/" target="_blank" rel="noopener noreferrer" style={{
-                        display: 'flex', alignItems: 'center', gap: '8px',
-                        color: '#64748B', textDecoration: 'none', fontSize: '13px', fontWeight: '600',
-                        transition: 'color 0.2s'
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.color = '#1e2a3b'}
-                    onMouseLeave={e => e.currentTarget.style.color = '#64748B'}>
-                        <ExternalLink size={16} /> View Website
-                    </a>
-
-                    {/* User Profile Dropdown */}
-                    <div style={{ position: 'relative' }} ref={dropdownRef}>
-                        <button
-                            onClick={() => setDropdownOpen(!dropdownOpen)}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '10px',
-                                background: 'transparent',
-                                border: 'none',
-                                cursor: 'pointer',
-                                padding: '4px 8px',
-                                borderRadius: '8px',
-                                transition: 'background 0.2s',
-                            }}
-                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(30,42,59,0.05)'}
-                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                        >
-                            <div style={{ textAlign: 'right' }}>
-                                <div style={{ color: '#1e2a3b', fontSize: '14px', fontWeight: '600' }}>{admin?.username}</div>
-                                <div style={{ color: '#64748B', fontSize: '11px', fontWeight: '500' }}>Administrator</div>
-                            </div>
-                            <div style={{
-                                width: '38px', height: '38px',
-                                background: '#1e2a3b',
-                                color: '#ffc107',
-                                borderRadius: '50%',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                fontWeight: '700', fontSize: '16px',
-                            }}>
-                                {admin?.username?.[0]?.toUpperCase() || 'A'}
-                            </div>
-                            <ChevronDown size={16} color="#64748B" />
+                    
+                    {/* Left: Mobile Menu Button */}
+                    {isMobile ? (
+                        <button onClick={() => setCollapsed(false)} style={{ background: 'transparent', border: 'none', color: '#1e2a3b', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                            <Menu size={24} />
                         </button>
+                    ) : <div />} {/* Empty div for spacing on desktop */}
 
-                        {/* Dropdown Menu */}
-                        {dropdownOpen && (
-                            <div style={{
-                                position: 'absolute',
-                                top: 'calc(100% + 8px)',
-                                right: 0,
-                                width: '200px',
-                                background: '#ffffff',
-                                border: '1px solid rgba(30,42,59,0.1)',
-                                borderRadius: '12px',
-                                boxShadow: '0 10px 25px rgba(0,0,0,0.08)',
-                                overflow: 'hidden',
-                                zIndex: 200,
-                            }}>
-                                <div style={{ padding: '8px' }}>
-                                    <button
-                                        onClick={() => { navigate('/admin/settings'); setDropdownOpen(false); }}
-                                        style={{
-                                            width: '100%', display: 'flex', alignItems: 'center', gap: '12px',
-                                            padding: '10px 16px', background: 'transparent', border: 'none',
-                                            borderRadius: '8px', cursor: 'pointer', color: '#475569',
-                                            fontSize: '14px', fontWeight: '500', transition: 'background 0.2s'
-                                        }}
-                                        onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
-                                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                                    >
-                                        <Settings size={18} />
-                                        Settings
-                                    </button>
-                                    <div style={{ height: '1px', background: 'rgba(30,42,59,0.06)', margin: '4px 0' }} />
-                                    <button
-                                        onClick={handleLogout}
-                                        style={{
-                                            width: '100%', display: 'flex', alignItems: 'center', gap: '12px',
-                                            padding: '10px 16px', background: 'transparent', border: 'none',
-                                            borderRadius: '8px', cursor: 'pointer', color: '#ef4444',
-                                            fontSize: '14px', fontWeight: '500', transition: 'background 0.2s'
-                                        }}
-                                        onMouseEnter={e => e.currentTarget.style.background = '#fef2f2'}
-                                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                                    >
-                                        <LogOut size={18} />
-                                        Sign Out
-                                    </button>
-                                </div>
-                            </div>
+                    {/* Right side items */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '16px' : '24px' }}>
+                        {/* Link to Website */}
+                        {!isMobile && (
+                            <a href="/" target="_blank" rel="noopener noreferrer" style={{
+                                display: 'flex', alignItems: 'center', gap: '8px',
+                                color: '#64748B', textDecoration: 'none', fontSize: '13px', fontWeight: '600',
+                                transition: 'color 0.2s'
+                            }}
+                            onMouseEnter={e => e.currentTarget.style.color = '#1e2a3b'}
+                            onMouseLeave={e => e.currentTarget.style.color = '#64748B'}>
+                                <ExternalLink size={16} /> View Website
+                            </a>
                         )}
+
+                        {/* User Profile Dropdown */}
+                        <div style={{ position: 'relative' }} ref={dropdownRef}>
+                            <button
+                                onClick={() => setDropdownOpen(!dropdownOpen)}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '10px',
+                                    background: 'transparent',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    padding: '4px',
+                                    borderRadius: '8px',
+                                    transition: 'background 0.2s',
+                                }}
+                                onMouseEnter={e => e.currentTarget.style.background = 'rgba(30,42,59,0.05)'}
+                                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                            >
+                                {!isMobile && (
+                                    <div style={{ textAlign: 'right' }}>
+                                        <div style={{ color: '#1e2a3b', fontSize: '14px', fontWeight: '600' }}>{admin?.username}</div>
+                                        <div style={{ color: '#64748B', fontSize: '11px', fontWeight: '500' }}>Administrator</div>
+                                    </div>
+                                )}
+                                <div style={{
+                                    width: '38px', height: '38px',
+                                    background: '#1e2a3b',
+                                    color: '#ffc107',
+                                    borderRadius: '50%',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    fontWeight: '700', fontSize: '16px',
+                                }}>
+                                    {admin?.username?.[0]?.toUpperCase() || 'A'}
+                                </div>
+                                {!isMobile && <ChevronDown size={16} color="#64748B" />}
+                            </button>
+
+                            {/* Dropdown Menu */}
+                            {dropdownOpen && (
+                                <div style={{
+                                    position: 'absolute',
+                                    top: 'calc(100% + 8px)',
+                                    right: 0,
+                                    width: '200px',
+                                    background: '#ffffff',
+                                    border: '1px solid rgba(30,42,59,0.1)',
+                                    borderRadius: '12px',
+                                    boxShadow: '0 10px 25px rgba(0,0,0,0.08)',
+                                    overflow: 'hidden',
+                                    zIndex: 200,
+                                }}>
+                                    <div style={{ padding: '8px' }}>
+                                        <button
+                                            onClick={() => { navigate('/admin/settings'); setDropdownOpen(false); }}
+                                            style={{
+                                                width: '100%', display: 'flex', alignItems: 'center', gap: '12px',
+                                                padding: '10px 16px', background: 'transparent', border: 'none',
+                                                borderRadius: '8px', cursor: 'pointer', color: '#475569',
+                                                fontSize: '14px', fontWeight: '500', transition: 'background 0.2s'
+                                            }}
+                                            onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
+                                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                                        >
+                                            <Settings size={18} />
+                                            Settings
+                                        </button>
+                                        <div style={{ height: '1px', background: 'rgba(30,42,59,0.06)', margin: '4px 0' }} />
+                                        <button
+                                            onClick={handleLogout}
+                                            style={{
+                                                width: '100%', display: 'flex', alignItems: 'center', gap: '12px',
+                                                padding: '10px 16px', background: 'transparent', border: 'none',
+                                                borderRadius: '8px', cursor: 'pointer', color: '#ef4444',
+                                                fontSize: '14px', fontWeight: '500', transition: 'background 0.2s'
+                                            }}
+                                            onMouseEnter={e => e.currentTarget.style.background = '#fef2f2'}
+                                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                                        >
+                                            <LogOut size={18} />
+                                            Sign Out
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </header>
 
                 {/* Page Content */}
-                <div style={{ flex: 1, padding: '16px 40px 32px' }}>
+                <div style={{ flex: 1, padding: isMobile ? '16px' : '24px 40px 32px', overflowX: 'hidden' }}>
                     <Outlet />
                 </div>
             </main>

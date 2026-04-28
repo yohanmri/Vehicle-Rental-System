@@ -146,7 +146,7 @@ const AdminAnalytics = () => {
             </div>
 
             {/* Advanced Tabs */}
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '32px', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
+            <div className="admin-tabs-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
                 <button onClick={() => setActiveTab('revenue')} style={{
                     display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', borderRadius: '10px', border: 'none', cursor: 'pointer',
                     background: activeTab === 'revenue' ? '#1e2a3b' : 'transparent', color: activeTab === 'revenue' ? '#ffffff' : '#64748b', fontWeight: '600', fontSize: '14px', transition: 'all 0.2s'
@@ -186,8 +186,9 @@ const AdminAnalytics = () => {
                                         <p style={{ margin: 0, color: '#64748b', fontSize: '13px' }}>Daily confirmed revenue across all payment methods</p>
                                     </div>
                                 </div>
-                                <div style={{ height: '350px', width: '100%' }}>
-                                    {revenueData.length > 0 ? (
+                                <div className="admin-chart-wrapper">
+                                    <div className="admin-chart-inner" style={{ height: '350px', width: '100%' }}>
+                                        {revenueData.length > 0 ? (
                                         <ResponsiveContainer width="100%" height="100%">
                                             <AreaChart data={revenueData} margin={{ top: 10, right: 10, left: 20, bottom: 0 }}>
                                                 <defs>
@@ -204,6 +205,7 @@ const AdminAnalytics = () => {
                                             </AreaChart>
                                         </ResponsiveContainer>
                                     ) : <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontWeight: '500' }}>No revenue data for this period</div>}
+                                    </div>
                                 </div>
                             </div>
 
@@ -216,7 +218,8 @@ const AdminAnalytics = () => {
                                         <p style={{ margin: 0, color: '#64748b', fontSize: '13px' }}>Vehicles ranked by total revenue generated</p>
                                     </div>
                                 </div>
-                                <div style={{ height: '350px', width: '100%' }}>
+                                <div className="admin-chart-wrapper">
+                                    <div className="admin-chart-inner" style={{ height: '350px', width: '100%' }}>
                                     {vehiclesData.length > 0 ? (
                                         <ResponsiveContainer width="100%" height="100%">
                                             <BarChart data={vehiclesData} layout="vertical" margin={{ top: 0, right: 30, left: 40, bottom: 0 }}>
@@ -228,6 +231,7 @@ const AdminAnalytics = () => {
                                             </BarChart>
                                         </ResponsiveContainer>
                                     ) : <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontWeight: '500' }}>No vehicle revenue data</div>}
+                                    </div>
                                 </div>
                             </div>
                             
@@ -240,8 +244,9 @@ const AdminAnalytics = () => {
                                         <p style={{ margin: 0, color: '#64748b', fontSize: '13px' }}>Cash vs Card revenue distribution</p>
                                     </div>
                                 </div>
-                                <div style={{ height: '350px', width: '100%' }}>
-                                    {paymentData.length > 0 ? (
+                                <div className="admin-chart-wrapper">
+                                    <div className="admin-pie-inner" style={{ height: '350px', width: '100%' }}>
+                                        {paymentData.length > 0 ? (
                                         <ResponsiveContainer width="100%" height="100%">
                                             <PieChart>
                                                 <Pie data={paymentData} cx="50%" cy="45%" innerRadius={80} outerRadius={120} paddingAngle={5} dataKey="value" stroke="none">
@@ -254,6 +259,7 @@ const AdminAnalytics = () => {
                                             </PieChart>
                                         </ResponsiveContainer>
                                     ) : <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontWeight: '500' }}>No payment data</div>}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -270,7 +276,8 @@ const AdminAnalytics = () => {
                                         <p style={{ margin: 0, color: '#64748b', fontSize: '13px' }}>Vehicles ranked by booking count</p>
                                     </div>
                                 </div>
-                                <div style={{ height: '350px', width: '100%' }}>
+                                <div className="admin-chart-wrapper">
+                                    <div className="admin-chart-inner" style={{ height: '350px', width: '100%' }}>
                                     {vehiclesData.length > 0 ? (
                                         <ResponsiveContainer width="100%" height="100%">
                                             <BarChart data={vehiclesData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -282,6 +289,7 @@ const AdminAnalytics = () => {
                                             </BarChart>
                                         </ResponsiveContainer>
                                     ) : <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontWeight: '500' }}>No vehicle data available</div>}
+                                    </div>
                                 </div>
                             </div>
 
@@ -293,7 +301,8 @@ const AdminAnalytics = () => {
                                         <p style={{ margin: 0, color: '#64748b', fontSize: '13px' }}>Rental vs Rides vs Airport vs Tours</p>
                                     </div>
                                 </div>
-                                <div style={{ height: '350px' }}>
+                                <div className="admin-chart-wrapper">
+                                    <div className="admin-pie-inner" style={{ height: '350px', width: '100%' }}>
                                     {serviceData.length > 0 ? (
                                         <ResponsiveContainer width="100%" height="100%">
                                             <PieChart>
@@ -307,6 +316,7 @@ const AdminAnalytics = () => {
                                             </PieChart>
                                         </ResponsiveContainer>
                                     ) : <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontWeight: '500' }}>No service data available</div>}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -323,8 +333,9 @@ const AdminAnalytics = () => {
                                         <p style={{ margin: 0, color: '#64748b', fontSize: '13px' }}>Daily total active bookings</p>
                                     </div>
                                 </div>
-                                <div style={{ height: '350px', width: '100%' }}>
-                                    {bookingsData.length > 0 ? (
+                                <div className="admin-chart-wrapper">
+                                    <div className="admin-chart-inner" style={{ height: '350px', width: '100%' }}>
+                                        {bookingsData.length > 0 ? (
                                         <ResponsiveContainer width="100%" height="100%">
                                             <AreaChart data={bookingsData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                                 <defs>
@@ -341,6 +352,7 @@ const AdminAnalytics = () => {
                                             </AreaChart>
                                         </ResponsiveContainer>
                                     ) : <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontWeight: '500' }}>No bookings data available</div>}
+                                    </div>
                                 </div>
                             </div>
 
@@ -352,8 +364,9 @@ const AdminAnalytics = () => {
                                         <p style={{ margin: 0, color: '#64748b', fontSize: '13px' }}>Registered vs Active Renters</p>
                                     </div>
                                 </div>
-                                <div style={{ height: '350px' }}>
-                                    {userConversionData.length > 0 ? (
+                                <div className="admin-chart-wrapper">
+                                    <div className="admin-chart-inner" style={{ height: '350px', width: '100%' }}>
+                                        {userConversionData.length > 0 ? (
                                         <ResponsiveContainer width="100%" height="100%">
                                             <BarChart data={userConversionData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -368,6 +381,7 @@ const AdminAnalytics = () => {
                                             </BarChart>
                                         </ResponsiveContainer>
                                     ) : <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontWeight: '500' }}>No conversion data available</div>}
+                                    </div>
                                 </div>
                             </div>
                         </div>
