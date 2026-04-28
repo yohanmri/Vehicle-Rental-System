@@ -60,18 +60,30 @@ const getDashboardStats = asyncHandler(async (req, res) => {
     });
 });
 
-// @desc    Bookings over time (last 30 days)
+// Helper function to parse dates for analytics
+const getAnalyticsDateRange = (req) => {
+    const { startDate, endDate } = req.query;
+    if (startDate && endDate) {
+        // Set to start of day and end of day
+        const start = new Date(startDate);
+        start.setHours(0, 0, 0, 0);
+        
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        
+        return { $gte: start, $lte: end };
+    }
+    // Default to last 30 days
+    return { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) };
+};
+
+// @desc    Bookings over time
 // @route   GET /api/admin/dashboard/analytics/bookings-over-time
 // @access  Private (Admin)
 const getBookingsOverTime = asyncHandler(async (req, res) => {
+    const dateRange = getAnalyticsDateRange(req);
     const data = await AdminBooking.aggregate([
-        {
-            $match: {
-                createdAt: {
-                    $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-                },
-            },
-        },
+        { $match: { createdAt: dateRange } },
         {
             $group: {
                 _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
@@ -84,19 +96,13 @@ const getBookingsOverTime = asyncHandler(async (req, res) => {
     res.json(data.map((d) => ({ date: d._id, bookings: d.count })));
 });
 
-// @desc    Revenue over time (last 30 days)
+// @desc    Revenue over time
 // @route   GET /api/admin/dashboard/analytics/revenue-over-time
 // @access  Private (Admin)
 const getRevenueOverTime = asyncHandler(async (req, res) => {
+    const dateRange = getAnalyticsDateRange(req);
     const data = await AdminBooking.aggregate([
-        {
-            $match: {
-                paymentStatus: 'paid',
-                createdAt: {
-                    $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-                },
-            },
-        },
+        { $match: { createdAt: dateRange } }, // Using all bookings for revenue to match stats
         {
             $group: {
                 _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
@@ -113,22 +119,25 @@ const getRevenueOverTime = asyncHandler(async (req, res) => {
 // @route   GET /api/admin/dashboard/analytics/by-service-type
 // @access  Private (Admin)
 const getByServiceType = asyncHandler(async (req, res) => {
+    const dateRange = getAnalyticsDateRange(req);
     const data = await AdminBooking.aggregate([
+        { $match: { createdAt: dateRange } },
         { $group: { _id: '$serviceType', value: { $sum: 1 } } },
     ]);
 
-    res.json(data.map((d) => ({ name: d._id, value: d.value })));
+    res.json(data.map((d) => ({ name: d._id || 'Unknown', value: d.value })));
 });
 
 // @desc    Top performing vehicles
 // @route   GET /api/admin/dashboard/analytics/top-vehicles
 // @access  Private (Admin)
 const getTopVehicles = asyncHandler(async (req, res) => {
+    const dateRange = getAnalyticsDateRange(req);
     const data = await AdminBooking.aggregate([
-        { $match: { vehicleId: { $ne: null } } },
-        { $group: { _id: '$vehicleId', bookings: { $sum: 1 } } },
-        { $sort: { bookings: -1 } },
-        { $limit: 5 },
+        { $match: { vehicleId: { $ne: null }, createdAt: dateRange } },
+        { $group: { _id: '$vehicleId', bookings: { $sum: 1 }, revenue: { $sum: '$totalAmount' } } },
+        { $sort: { revenue: -1 } },
+        { $limit: 8 },
         {
             $lookup: {
                 from: 'adminvehicles',
@@ -144,6 +153,7 @@ const getTopVehicles = asyncHandler(async (req, res) => {
         data.map((d) => ({
             name: d.vehicle?.name || 'Unknown',
             bookings: d.bookings,
+            revenue: d.revenue
         }))
     );
 });
@@ -152,13 +162,47 @@ const getTopVehicles = asyncHandler(async (req, res) => {
 // @route   GET /api/admin/dashboard/analytics/by-city
 // @access  Private (Admin)
 const getByCity = asyncHandler(async (req, res) => {
+    const dateRange = getAnalyticsDateRange(req);
     const data = await AdminBooking.aggregate([
+        { $match: { pickupLocation: { $ne: null }, createdAt: dateRange } },
         { $group: { _id: '$pickupLocation', bookings: { $sum: 1 } } },
         { $sort: { bookings: -1 } },
         { $limit: 8 },
     ]);
 
-    res.json(data.map((d) => ({ city: d._id, bookings: d.bookings })));
+    res.json(data.map((d) => ({ city: d._id || 'Unknown', bookings: d.bookings })));
+});
+
+// @desc    Payment method distribution
+// @route   GET /api/admin/dashboard/analytics/payment-methods
+// @access  Private (Admin)
+const getPaymentMethods = asyncHandler(async (req, res) => {
+    const dateRange = getAnalyticsDateRange(req);
+    const data = await AdminBooking.aggregate([
+        { $match: { paymentMethod: { $ne: null }, createdAt: dateRange } },
+        { $group: { _id: '$paymentMethod', value: { $sum: '$totalAmount' }, count: { $sum: 1 } } }
+    ]);
+
+    res.json(data.map((d) => ({ name: d._id || 'Unknown', value: d.value, count: d.count })));
+});
+
+// @desc    User conversion stats
+// @route   GET /api/admin/dashboard/analytics/user-conversion
+// @access  Private (Admin)
+const getUserConversion = asyncHandler(async (req, res) => {
+    const dateRange = getAnalyticsDateRange(req);
+    
+    // Count total users created in this period
+    const totalRegistered = await User.countDocuments({ createdAt: dateRange });
+    
+    // Count distinct users who made a booking in this period
+    const rentedUsersCount = await AdminBooking.distinct('userId', { createdAt: dateRange }).then(users => users.length);
+    
+    res.json([
+        { name: 'Registered', value: totalRegistered, fill: '#3b82f6' },
+        { name: 'Rented', value: rentedUsersCount, fill: '#10b981' },
+        { name: 'No Activity', value: Math.max(0, totalRegistered - rentedUsersCount), fill: '#94a3b8' }
+    ]);
 });
 
 module.exports = {
@@ -168,4 +212,6 @@ module.exports = {
     getByServiceType,
     getTopVehicles,
     getByCity,
+    getPaymentMethods,
+    getUserConversion,
 };

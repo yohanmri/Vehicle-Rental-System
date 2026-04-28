@@ -7,6 +7,8 @@ const {
     getByServiceType,
     getTopVehicles,
     getByCity,
+    getPaymentMethods,
+    getUserConversion,
 } = require('../../controllers/admin/dashboardController');
 const { protectAdmin } = require('../../middleware/adminMiddleware');
 
@@ -16,5 +18,7 @@ router.get('/analytics/revenue-over-time', protectAdmin, getRevenueOverTime);
 router.get('/analytics/by-service-type', protectAdmin, getByServiceType);
 router.get('/analytics/top-vehicles', protectAdmin, getTopVehicles);
 router.get('/analytics/by-city', protectAdmin, getByCity);
+router.get('/analytics/payment-methods', protectAdmin, getPaymentMethods);
+router.get('/analytics/user-conversion', protectAdmin, getUserConversion);
 
 module.exports = router;
