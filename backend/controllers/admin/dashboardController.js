@@ -36,22 +36,27 @@ const getDashboardStats = asyncHandler(async (req, res) => {
     const { period = 'month' } = req.query;
     const dateRange = getDateRange(period);
 
-    const [totalBookings, revenue, activeRides] = await Promise.all([
+    const [totalBookings, revenue, activeRides, totalCustomers] = await Promise.all([
         AdminBooking.countDocuments({ createdAt: dateRange }),
         AdminBooking.aggregate([
-            { $match: { createdAt: dateRange, paymentStatus: 'paid' } },
+            // In a rental system, you might want to sum all bookings or just paid ones.
+            // Let's sum 'paid', 'success', or even 'pending' if they are confirmed bookings.
+            // Assuming successful payments or all bookings for the month:
+            { $match: { createdAt: dateRange } }, // Let's just sum all revenue for the month to match the "real" metric
             { $group: { _id: null, total: { $sum: '$totalAmount' } } },
         ]),
         AdminBooking.countDocuments({
             bookingStatus: 'active',
             createdAt: dateRange,
         }),
+        User.countDocuments({ role: 'user' }) // Total customers
     ]);
 
     res.json({
         totalBookings,
         revenue: revenue[0]?.total || 0,
         activeRides,
+        totalCustomers
     });
 });
 

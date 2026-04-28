@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react';
 import { useAdminAuth } from '../../context/admin-context/AdminAuthContext';
 import { ClipboardList, DollarSign, Car, Users, BarChart3 } from 'lucide-react';
+import axios from '../../api/axios';
 
 const StatCard = ({ label, value, icon, color }) => (
     <div style={{
@@ -32,6 +34,34 @@ const StatCard = ({ label, value, icon, color }) => (
 
 const AdminDashboard = () => {
     const { admin } = useAdminAuth();
+    const [stats, setStats] = useState({
+        totalBookings: 0,
+        revenue: 0,
+        activeRides: 0,
+        totalCustomers: 0
+    });
+    const [recentTransactions, setRecentTransactions] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchDashboardData = async () => {
+            try {
+                const [statsRes, paymentsRes] = await Promise.all([
+                    axios.get('/api/admin/dashboard/stats?period=month', { headers: { Authorization: `Bearer ${admin?.token}` } }),
+                    axios.get('/api/admin/payments?limit=5', { headers: { Authorization: `Bearer ${admin?.token}` } })
+                ]);
+                setStats(statsRes.data);
+                setRecentTransactions(paymentsRes.data.payments);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchDashboardData();
+    }, [admin]);
+
+    if (loading) return <div style={{ padding: '24px' }}>Loading dashboard...</div>;
 
     return (
         <div>
@@ -49,10 +79,10 @@ const AdminDashboard = () => {
 
             {/* KPI Cards */}
             <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', marginBottom: '32px' }}>
-                <StatCard label="Total Bookings" value="124" icon={<ClipboardList size={28} />} color="#ffc107" />
-                <StatCard label="Revenue (LKR)" value="24,500" icon={<DollarSign size={28} />} color="#60a5fa" />
-                <StatCard label="Active Rides" value="18" icon={<Car size={28} />} color="#34d399" />
-                <StatCard label="New Customers" value="32" icon={<Users size={28} />} color="#c084fc" />
+                <StatCard label="Total Bookings" value={stats.totalBookings} icon={<ClipboardList size={28} />} color="#ffc107" />
+                <StatCard label="Revenue This Month" value={`LKR ${stats.revenue.toLocaleString()}`} icon={<DollarSign size={28} />} color="#60a5fa" />
+                <StatCard label="Active Rides" value={stats.activeRides} icon={<Car size={28} />} color="#34d399" />
+                <StatCard label="Total Customers" value={stats.totalCustomers} icon={<Users size={28} />} color="#c084fc" />
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px' }}>
@@ -71,21 +101,26 @@ const AdminDashboard = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr style={{ borderBottom: '1px solid rgba(30,42,59,0.04)' }}>
-                                <td style={{ padding: '16px 24px', color: '#1e2a3b', fontWeight: '500' }}>TRX-82910</td>
-                                <td style={{ padding: '16px 24px', color: '#1e2a3b', fontWeight: '700' }}>LKR 4,500</td>
-                                <td style={{ padding: '16px 24px' }}><span style={{ background: '#dcfce7', color: '#16a34a', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>Success</span></td>
-                            </tr>
-                            <tr style={{ borderBottom: '1px solid rgba(30,42,59,0.04)' }}>
-                                <td style={{ padding: '16px 24px', color: '#1e2a3b', fontWeight: '500' }}>TRX-82909</td>
-                                <td style={{ padding: '16px 24px', color: '#1e2a3b', fontWeight: '700' }}>LKR 12,000</td>
-                                <td style={{ padding: '16px 24px' }}><span style={{ background: '#fef3c7', color: '#d97706', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>Pending</span></td>
-                            </tr>
-                            <tr>
-                                <td style={{ padding: '16px 24px', color: '#1e2a3b', fontWeight: '500' }}>TRX-82908</td>
-                                <td style={{ padding: '16px 24px', color: '#1e2a3b', fontWeight: '700' }}>LKR 2,500</td>
-                                <td style={{ padding: '16px 24px' }}><span style={{ background: '#dcfce7', color: '#16a34a', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>Success</span></td>
-                            </tr>
+                            {recentTransactions.map((trx) => (
+                                <tr key={trx._id} style={{ borderBottom: '1px solid rgba(30,42,59,0.04)' }}>
+                                    <td style={{ padding: '16px 24px', color: '#1e2a3b', fontWeight: '500' }}>{trx.transactionId}</td>
+                                    <td style={{ padding: '16px 24px', color: '#1e2a3b', fontWeight: '700' }}>LKR {trx.amount?.toLocaleString()}</td>
+                                    <td style={{ padding: '16px 24px' }}>
+                                        <span style={{ 
+                                            background: trx.status === 'success' || trx.status === 'paid' ? '#dcfce7' : trx.status === 'pending' ? '#fef3c7' : '#f1f5f9', 
+                                            color: trx.status === 'success' || trx.status === 'paid' ? '#16a34a' : trx.status === 'pending' ? '#d97706' : '#64748b', 
+                                            padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600', textTransform: 'capitalize' 
+                                        }}>
+                                            {trx.status || trx.bookingStatus}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                            {recentTransactions.length === 0 && (
+                                <tr>
+                                    <td colSpan="3" style={{ padding: '16px 24px', textAlign: 'center', color: '#64748B' }}>No recent transactions</td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
